@@ -1,0 +1,31 @@
+﻿@model List<CarsInsideGarage.Models.ViewModels.CarViewModel>
+@{
+    ViewData["Title"] = "All Cars";
+}
+<h1>All Cars in the Garage</h1>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>License Plate</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var car in Model)
+        {
+            <tr>
+                <td>@car.LicensePlate</td>
+                <td>
+                    <a asp-controller="Cars"
+                       asp-action="Details"
+                       asp-route-id="@car.Id"
+                       class="btn btn-sm btn-info">
+                        Details
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
