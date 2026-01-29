@@ -1,0 +1,9 @@
+﻿@model CarsInsideGarage.Models.ViewModels.DeleteConfirmationViewModel
+
+<h1>Car Removed</h1>
+<div class="alert alert-warning">
+    <h4>SUCCESSFULLY REMOVED</h4>
+    <p>The car <strong>@Model.LicensePlate</strong> left the garage at @Model.ExitTime.ToString("HH:mm").</p>
+</div>
+
+<a asp-action="Index" class="btn btn-primary">Back to Garage Map</a>

@@ -9,20 +9,15 @@ namespace CarsInsideGarage.Mappings
     {
         public MappingProfile()
         {
-            // Entity to DTO mappings
-            CreateMap<Car, CarDto>();
-            CreateMap<Garage, GarageDto>();
-            CreateMap<Location, LocationDto>();
-            CreateMap<GarageFee, FeeDto>();
-            CreateMap<ParkingSession, SessionDto>();
+            //  DTO <=> Entity
+            CreateMap<Car, CarDto>().ReverseMap();
+            CreateMap<Garage, GarageDto>().ReverseMap();
+            CreateMap<Location, LocationDto>().ReverseMap();
+            CreateMap<GarageFee, FeeDto>().ReverseMap();
+            CreateMap<ParkingSession, SessionDto>().ReverseMap();
 
-
-            // DtO to Entity mappings
-            CreateMap<CarDto, Car>();
-
-
-            // DTO to ViewModels mappings
-            CreateMap<CarDto, CarViewModel>();
+            // DTO <=> ViewModel
+            CreateMap<CarDto, CarViewModel>().ReverseMap();
 
         }
     }

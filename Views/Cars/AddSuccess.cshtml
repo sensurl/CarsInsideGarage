@@ -1,0 +1,20 @@
+﻿@model CarsInsideGarage.Models.ViewModels.CarViewModel
+
+@{
+    ViewData["Title"] = "Car status";
+}
+
+<h1>Car status</h1>
+<div>
+    <h4>Success!</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            The car with license plate <strong style="color:forestgreen"> @Model.LicensePlate </strong> has been successfully added to the garage.
+        </dt>
+        
+    </dl>
+</div>
+
+<h5>Review Data:</h5>
+<partial name="_CarForm" model="Model" />

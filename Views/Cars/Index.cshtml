@@ -2,14 +2,20 @@
 @{
     ViewData["Title"] = "All Cars";
 }
-<h1>All Cars in the Garage</h1>
 
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>All Cars in the Garage</h1>
+    <a asp-action="Create" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Register New Car
+    </a>
+</div>
 
 <table class="table table-striped">
     <thead>
         <tr>
             <th>License Plate</th>
-            <th></th>
+            <th class="text-end">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -18,12 +24,22 @@
             <tr>
                 <td>@car.LicensePlate</td>
                 <td>
-                    <a asp-controller="Cars"
-                       asp-action="Details"
-                       asp-route-id="@car.Id"
-                       class="btn btn-sm btn-info">
-                        Details
-                    </a>
+                    <div class="btn-group">
+                        <a asp-controller="Cars"
+                           asp-action="Details"
+                           asp-route-id="@car.Id"
+                           class="btn btn-sm btn-info">
+                            Details
+                        </a>
+
+                        <form asp-action="Delete" asp-route-id="@car.Id" method="post"
+                              onsubmit="return confirm('Are you sure you want to remove car @car.LicensePlate?');"
+                              style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
                 </td>
             </tr>
         }

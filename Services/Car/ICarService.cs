@@ -1,5 +1,6 @@
 ﻿using CarsInsideGarage.Data.Entities;
 using CarsInsideGarage.Models.DTOs;
+using CarsInsideGarage.Models.ViewModels;
 using System.Collections.Generic;
 
 namespace CarsInsideGarage.Services.CarService
@@ -10,8 +11,8 @@ namespace CarsInsideGarage.Services.CarService
         Task<CarDto> GetCarByIdAsync(int id);
 
         // Accept the DTO from the UI/Controller
-        void AddCar(CarDto carDto);
+        Task<int> AddCarAsync(CarDto carDto);
 
-        void RemoveCar(int id);
+        Task<DeleteConfirmationViewModel> RemoveCarAsync(int id);
     }
 }
