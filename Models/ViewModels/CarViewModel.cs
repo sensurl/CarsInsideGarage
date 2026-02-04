@@ -1,8 +1,13 @@
-﻿namespace CarsInsideGarage.Models.ViewModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CarsInsideGarage.Models.ViewModels
 {
     public class CarViewModel
     {
+        [Key]
         public int Id { get; set; }
-        public string LicensePlate { get; set; }
+        [Required]
+        [StringLength(12, MinimumLength = 4)]
+        public string LicensePlate { get; set; } = null!;
     }
 }

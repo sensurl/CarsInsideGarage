@@ -6,17 +6,12 @@ using System.Collections.Generic;
 
 namespace CarsInsideGarage.Models.DTOs
 {
-    public class GarageDto
+    public class GarageListDto
     {
-
         public int Id { get; set; }
-        public int LocationId { get; set; }
         public string Name { get; set; } = null!;
-
         public int Capacity { get; set; }
-
-        public int GarageFeeId { get; set; }
-        public ICollection<SessionDto> Sessions { get; set; } = new HashSet<SessionDto>();
+        public int FreeSpots { get; set; }
 
     }
 }

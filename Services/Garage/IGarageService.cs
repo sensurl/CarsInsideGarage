@@ -4,11 +4,13 @@ namespace CarsInsideGarage.Services.Garage
 {
     public interface IGarageService
     {
-        //IEnumerable<GarageDto> GetAllGarages();
+        Task<IEnumerable<GarageListDto>> GetAllAsync();
+        Task<GarageDetailsDto?> GetGarageDetailsAsync(int id);
 
-        //Models.DTOs.GarageDto? GetGarageById(int id);
-
-        //GarageDto? GetGarageDetails(int id);
-        //int FreeSpotsCount(int garageId);
+        Task CreateAsync(
+            string name,
+            int capacity,
+            int locationId,
+            int garageFeeId);
     }
 }

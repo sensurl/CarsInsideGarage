@@ -5,6 +5,7 @@ using CarsInsideGarage.Data.Enums;
 using CarsInsideGarage.Mappings;
 using CarsInsideGarage.Services.Car;
 using CarsInsideGarage.Services.CarService;
+using CarsInsideGarage.Services.Garage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,6 +26,8 @@ var mapperConfig = new MapperConfiguration(cfg =>
 mapperConfig.AssertConfigurationIsValid();
 
 builder.Services.AddScoped<ICarService, CarService>();
+builder.Services.AddScoped<IGarageService, GarageService>();
+
 
 var app = builder.Build();
 

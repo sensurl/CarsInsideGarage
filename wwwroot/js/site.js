@@ -1,4 +1,11 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿document.addEventListener("DOMContentLoaded", function () {
+    // Find any input field meant for a License Plate
+    const plateInputs = document.querySelectorAll('input[name*="LicensePlate"]');
 
-// Write your JavaScript code.
+    plateInputs.forEach(input => {
+        input.addEventListener('input', function () {
+            // Force uppercase and remove spaces while they type
+            this.value = this.value.toUpperCase().replace(/\s/g, '');
+        });
+    });
+});

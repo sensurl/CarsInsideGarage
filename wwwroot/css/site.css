@@ -1,22 +1,62 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+/* Custom Palette: Deep Greys, Black, and White */
+:root {
+    --primary-dark: #212529; /* Near Black */
+    --secondary-grey: #6c757d; /* Classic Grey */
+    --light-grey: #f8f9fa; /* Off White */
+    --accent-silver: #dee2e6; /* Silver */
 }
 
 body {
-  margin-bottom: 60px;
+    background-color: #f4f4f4;
+    color: var(--primary-dark);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary-dark) !important;
+    border-bottom: 3px solid var(--secondary-grey);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.navbar-brand, .nav-link {
+    color: white !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    border-radius: 0; 
+    padding: 8px 20px;
+}
+
+    .btn-primary:hover {
+        background-color: var(--secondary-grey);
+        border-color: var(--secondary-grey);
+    }
+
+.card {
+    border: none;
+    border-radius: 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.card-header {
+    background-color: var(--primary-dark);
+    color: white;
+    border-radius: 0 !important;
+}
+
+.table thead {
+    background-color: var(--accent-silver);
+    color: var(--primary-dark);
+}
+
+/* Success messaging */
+.text-forestgreen {
+    color: #2d5a27;
+    font-weight: bold;
 }
