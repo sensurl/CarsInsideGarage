@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarsInsideGarage.Migrations
 {
     [DbContext(typeof(GarageDbContext))]
-    [Migration("20260123154042_InitialUpdatedGarageLogicMigrationWithSeed")]
-    partial class InitialUpdatedGarageLogicMigrationWithSeed
+    [Migration("20260209141709_InitialRecreate")]
+    partial class InitialRecreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -169,7 +169,7 @@ namespace CarsInsideGarage.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Location");
+                    b.ToTable("Locations");
 
                     b.HasData(
                         new

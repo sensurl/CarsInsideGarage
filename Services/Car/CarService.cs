@@ -64,13 +64,13 @@ namespace CarsInsideGarage.Services.Car
             return carEntity.Id;
         }
         
-        public async Task<DeleteConfirmationViewModel> RemoveCarAsync(int id)
+        public async Task<CarDeleteConfirmationViewModel> RemoveCarAsync(int id)
         {
             var car = await _context.Cars.FindAsync(id);
             if (car == null) return null;
 
             // Capture the data BEFORE it's deleted
-            var vm = new DeleteConfirmationViewModel
+            var vm = new CarDeleteConfirmationViewModel
             {
                 LicensePlate = car.LicensePlate,
                 ExitTime = DateTime.Now

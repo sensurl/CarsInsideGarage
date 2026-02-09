@@ -1,4 +1,5 @@
-﻿using CarsInsideGarage.Models.DTOs;
+﻿using CarsInsideGarage.Data.Enums;
+using CarsInsideGarage.Models.DTOs;
 
 namespace CarsInsideGarage.Services.Garage
 {
@@ -10,7 +11,9 @@ namespace CarsInsideGarage.Services.Garage
         Task CreateAsync(
             string name,
             int capacity,
-            int locationId,
+            Area area,
+            string coordinates,
             int garageFeeId);
     }
 }
+
