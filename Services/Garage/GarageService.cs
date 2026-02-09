@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CarsInsideGarage.Data;
-using CarsInsideGarage.Data.Enums;
 using CarsInsideGarage.Data.Entities;
+using CarsInsideGarage.Data.Enums;
 using CarsInsideGarage.Models.DTOs;
+using CarsInsideGarage.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -62,5 +63,28 @@ namespace CarsInsideGarage.Services.Garage
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<GarageDeleteConfirmationViewModel> DeleteGarageAsync(int id)
+        {
+            // 1. Fetch with Location included
+            var garage = await _context.Garages
+                .Include(g => g.Location)
+                .FirstOrDefaultAsync(g => g.Id == id);
+
+            if (garage == null) throw new Exception("Garage not found");
+
+            // 2. Capture the data into the VM before deleting
+            var result = new GarageDeleteConfirmationViewModel
+            {
+                Name = garage.Name,
+                Coordinates = garage.Location?.AddressCoordinates ?? "N/A"
+            };
+
+            // 3. Remove the Garage (Cascade will handle the Location automatically)
+            _context.Garages.Remove(garage);
+            await _context.SaveChangesAsync();
+
+            // 4. Return the captured data
+            return result;
+        }
     }
 }

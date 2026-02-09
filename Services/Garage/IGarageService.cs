@@ -1,5 +1,7 @@
 ﻿using CarsInsideGarage.Data.Enums;
 using CarsInsideGarage.Models.DTOs;
+using CarsInsideGarage.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CarsInsideGarage.Services.Garage
 {
@@ -14,6 +16,9 @@ namespace CarsInsideGarage.Services.Garage
             Area area,
             string coordinates,
             int garageFeeId);
+
+       
+        Task<GarageDeleteConfirmationViewModel> DeleteGarageAsync(int id);
     }
 }
 

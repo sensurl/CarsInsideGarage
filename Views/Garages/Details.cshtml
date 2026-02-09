@@ -1,0 +1,55 @@
+﻿@model CarsInsideGarage.Models.ViewModels.GarageDetailsViewModel
+
+@{
+    ViewData["Title"] = "Garage Details";
+}
+
+<div class="container mt-4">
+    <h1 class="text-white mb-4">Garage Details</h1>
+
+    <div class="card shadow">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">@Model.Name</h2>
+            <span class="badge fs-5" style="background-color: var(--bg-main); color: @(Model.FreeSpots > 0 ? "var(--accent)" : "var(--warning-pink)"); border: 1px solid var(--border);">
+                @Model.FreeSpots Spots Left
+            </span>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="text-muted small text-uppercase fw-bold d-block">Area</label>
+                        <span class="fs-5 text-white">@Model.Area</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="text-muted small text-uppercase fw-bold d-block">GPS Coordinates</label>
+                        <code class="text-info fs-6">@Model.Coordinates</code>
+                    </div>
+                </div>
+
+                <div class="col-md-6 text-end">
+                    <div class="rounded p-4 text-center" style="background-color: var(--bg-main); border: 1px solid var(--border);">
+                        <i class="bi bi-geo-alt-fill" style="color: var(--accent); font-size: 2rem;"></i>
+                        <p class="text-muted mb-0">Map Preview Coming Soon</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer py-3">
+            <div class="d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-primary btn-lg">
+                    Back to Garage Map
+                </a>
+
+                <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to remove @Model.Name?')">
+                        Delete Garage
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

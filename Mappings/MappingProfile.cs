@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CarsInsideGarage.Data.Entities;
+using CarsInsideGarage.Data.Enums;
 using CarsInsideGarage.Models.DTOs;
 using CarsInsideGarage.Models.ViewModels;
 
@@ -37,9 +38,11 @@ namespace CarsInsideGarage.Mappings
 
             // DTO <=> ViewModel
             CreateMap<CarDto, CarViewModel>().ReverseMap();
-            //CreateMap<GarageDetailsDto, GarageDetailsViewModel>();
 
-
+            CreateMap<GarageDetailsDto, GarageDetailsViewModel>()
+                .ForMember(dest => dest.Coordinates, opt => opt.MapFrom(src => src.AddressCoordinates))
+                .ForMember(dest => dest.FreeSpots, opt => opt.MapFrom(src => src.Capacity - src.ActiveCarsCount))
+                .ForMember(dest => dest.Area, opt => opt.MapFrom(src => Enum.Parse<Area>(src.Area)));
 
         }
     }

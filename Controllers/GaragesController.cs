@@ -5,6 +5,7 @@ using CarsInsideGarage.Services.Garage;
 using CarsInsideGarage.Services.Location;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using AutoMapper;
 
 namespace CarsInsideGarage.Controllers
 {
@@ -14,13 +15,15 @@ namespace CarsInsideGarage.Controllers
         private readonly IFeeService _feeService;
         private readonly IGarageService _garageService;
         private readonly GarageDbContext _context;
+        private readonly IMapper _mapper;
 
-        public GaragesController(IGarageService garageService, ILocationService locationService, IFeeService feeService, GarageDbContext context)
+        public GaragesController(IGarageService garageService, ILocationService locationService, IFeeService feeService, GarageDbContext context, IMapper mapper)
         {
             _locationService = locationService;
             _feeService = feeService;
             _garageService = garageService;
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
@@ -31,14 +34,19 @@ namespace CarsInsideGarage.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var garage = await _garageService.GetGarageDetailsAsync(id);
+            // 1. Get the DTO from the service
+            var garageDto = await _garageService.GetGarageDetailsAsync(id);
 
-            if (garage == null)
+            if (garageDto == null)
                 return NotFound();
 
-            return View(garage);
-        }
+            // 2. MAP the DTO to the ViewModel
+            // Note: Ensure you have private readonly IMapper _mapper; injected in the constructor
+            var viewModel = _mapper.Map<GarageDetailsViewModel>(garageDto);
 
+            // 3. Pass the ViewModel to the View
+            return View(viewModel);
+        }
 
         [HttpGet]
         public async Task<IActionResult> Create()
@@ -67,9 +75,9 @@ namespace CarsInsideGarage.Controllers
                     vm.AddressCoordinates,
                     vm.SelectedFeeId);
 
-                return RedirectToAction(nameof(Index));
+                return View("CreateSuccess", vm);
             }
-            catch (Exception) // You can be more specific here (e.g., DbUpdateException)
+            catch (Exception)
             {
                 ModelState.AddModelError("AddressCoordinates", "These coordinates are already assigned to another garage.");
                 await PopulateDropdownsAsync(vm);
@@ -77,12 +85,25 @@ namespace CarsInsideGarage.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var deleteVm = await _garageService.DeleteGarageAsync(id);
+
+                return View("DeleteSuccess", deleteVm);
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+        }
+
         private async Task PopulateDropdownsAsync(GarageCreateViewModel vm)
         {
             
             var fees = await _feeService.GetAllAsync();
-
-           
 
             vm.Fees = fees.Select(f => new SelectListItem
             {
