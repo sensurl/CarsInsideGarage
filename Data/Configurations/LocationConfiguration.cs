@@ -12,20 +12,21 @@ namespace CarsInsideGarage.Data.Configurations
         {
             builder.HasKey(l => l.Id);
 
-            // VALUE CONVERTER:
-            // This tells EF Core: "When saving to DB, convert Enum to String. 
-            // When reading from DB, convert String back to Enum."
+            // Enforce unique coordinates at the DB level
+            builder.HasIndex(l => l.AddressCoordinates)
+                   .IsUnique();
+
             builder.Property(l => l.Area)
-                .HasConversion(
-                    v => v.ToString(),                    // To Database
-                    v => (Area)Enum.Parse(typeof(Area), v) // From Database
-                )
-                .HasMaxLength(20) // Always set a max length for string columns!
-                .IsRequired();
+                   .HasConversion(
+                       v => v.ToString(),
+                       v => (Area)Enum.Parse(typeof(Area), v)
+                   )
+                   .HasMaxLength(20)
+                   .IsRequired();
 
             builder.Property(l => l.AddressCoordinates)
-                .IsRequired()
-                .HasMaxLength(50);
+                   .IsRequired()
+                   .HasMaxLength(50);
 
             // Seed data
             builder.HasData(

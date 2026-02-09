@@ -7,18 +7,20 @@
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h3 class="card-title mb-0">Manual Car Entry</h3>
+            <div class="card-header">
+                <h3 class="mb-0">Manual Car Entry</h3>
             </div>
             <div class="card-body">
-                <form asp-action="Create" method="post">
-
-                    <partial name="_CarForm" model="Model" />
-
-                    <div class="mt-4">
-                        <button type="submit" class="btn btn-primary">Save to Registry</button>
-                        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                <form asp-action="Create" class="needs-spinner">
+                    <div class="mb-3">
+                        <label class="form-label">License Plate Number</label>
+                        <input asp-for="LicensePlate" class="form-control" placeholder="e.g. B 1234 AB" />
                     </div>
+
+                    <button type="submit" class="btn btn-register w-100">
+                        <span class="spinner-border spinner-btn" role="status"></span>
+                        Register Car
+                    </button>
                 </form>
             </div>
         </div>

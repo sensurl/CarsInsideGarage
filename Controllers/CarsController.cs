@@ -100,7 +100,7 @@ namespace CarsInsideGarage.Controllers
             var data = TempData["DeleteInfo"] as string;
             if (string.IsNullOrEmpty(data)) return RedirectToAction("Index");
 
-            var viewModel = System.Text.Json.JsonSerializer.Deserialize<DeleteConfirmationViewModel>(data);
+            var viewModel = System.Text.Json.JsonSerializer.Deserialize<CarDeleteConfirmationViewModel>(data);
             return View(viewModel);
         }
     }

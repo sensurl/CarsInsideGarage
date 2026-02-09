@@ -3,6 +3,7 @@ using System;
 using CarsInsideGarage.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarsInsideGarage.Migrations
 {
     [DbContext(typeof(GarageDbContext))]
-    partial class GarageDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260209154640_InitialRecreateAndUpdatedLocation")]
+    partial class InitialRecreateAndUpdatedLocation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.2");

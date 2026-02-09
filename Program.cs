@@ -4,10 +4,12 @@ using CarsInsideGarage.Data.Entities;
 using CarsInsideGarage.Data.Enums;
 using CarsInsideGarage.Mappings;
 using CarsInsideGarage.Services.Car;
-using CarsInsideGarage.Services.CarService;
 using CarsInsideGarage.Services.Garage;
+using CarsInsideGarage.Services.Fee;
+using CarsInsideGarage.Services.Location;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using CarsInsideGarage.Services.CarService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +29,8 @@ mapperConfig.AssertConfigurationIsValid();
 
 builder.Services.AddScoped<ICarService, CarService>();
 builder.Services.AddScoped<IGarageService, GarageService>();
+builder.Services.AddScoped<IFeeService, FeeService>();
+builder.Services.AddScoped<ILocationService, LocationService>();
 
 
 var app = builder.Build();

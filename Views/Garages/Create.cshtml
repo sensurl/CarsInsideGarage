@@ -1,0 +1,62 @@
+﻿@using CarsInsideGarage.Data.Enums;
+@model CarsInsideGarage.Models.ViewModels.GarageCreateViewModel
+
+@{
+    ViewData["Title"] = "Create Garage";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header">
+                <h3 class="mb-0">New Garage Entry</h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" class="needs-spinner">
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Capacity" class="form-label"></label>
+                        <input asp-for="Capacity" class="form-control" />
+                        <span asp-validation-for="Capacity" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="SelectedArea" class="form-label">City Area</label>
+                        <select asp-for="SelectedArea" asp-items="Html.GetEnumSelectList<Area>()" class="form-select">
+                            <option value="">-- Select Area --</option>
+                        </select>
+                        <span asp-validation-for="SelectedArea" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="AddressCoordinates" class="form-label">Coordinates</label>
+                        <input asp-for="AddressCoordinates" class="form-control" placeholder="42.6977, 23.3219" />
+                        <span asp-validation-for="AddressCoordinates" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="SelectedFeeId" class="form-label">Fee Plan</label>
+                        <select asp-for="SelectedFeeId" asp-items="Model.Fees" class="form-select">
+                            <option value="">-- Select Fee Plan --</option>
+                        </select>
+                        <span asp-validation-for="SelectedFeeId" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-register w-100">
+                        <span class="spinner-border spinner-btn" role="status"></span>
+                        Register Garage
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

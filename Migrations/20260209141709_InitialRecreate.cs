@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CarsInsideGarage.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialUpdatedGarageLogicMigrationWithSeed : Migration
+    public partial class InitialRecreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -42,7 +42,7 @@ namespace CarsInsideGarage.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Location",
+                name: "Locations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -52,7 +52,7 @@ namespace CarsInsideGarage.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Location", x => x.Id);
+                    table.PrimaryKey("PK_Locations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -76,9 +76,9 @@ namespace CarsInsideGarage.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Garages_Location_LocationId",
+                        name: "FK_Garages_Locations_LocationId",
                         column: x => x.LocationId,
-                        principalTable: "Location",
+                        principalTable: "Locations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -139,7 +139,7 @@ namespace CarsInsideGarage.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Location",
+                table: "Locations",
                 columns: new[] { "Id", "AddressCoordinates", "Area" },
                 values: new object[,]
                 {
@@ -217,7 +217,7 @@ namespace CarsInsideGarage.Migrations
                 name: "GarageFees");
 
             migrationBuilder.DropTable(
-                name: "Location");
+                name: "Locations");
         }
     }
 }

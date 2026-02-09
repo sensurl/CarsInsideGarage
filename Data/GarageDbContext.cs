@@ -16,15 +16,9 @@ namespace CarsInsideGarage.Data
         public DbSet<ParkingSession> ParkingSessions { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            modelBuilder.ApplyConfiguration(new CarConfiguration());
-            modelBuilder.ApplyConfiguration(new FeeConfiguration());
-            modelBuilder.ApplyConfiguration(new GarageConfiguration());
-            modelBuilder.ApplyConfiguration(new LocationConfiguration());
-            modelBuilder.ApplyConfiguration(new SessionConfiguration());
-
             base.OnModelCreating(modelBuilder);
-        
+
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(GarageDbContext).Assembly);
         }
 
     }

@@ -13,6 +13,6 @@ namespace CarsInsideGarage.Services.CarService
         // Accept the DTO from the UI/Controller
         Task<int> AddCarAsync(CarDto carDto);
 
-        Task<DeleteConfirmationViewModel> RemoveCarAsync(int id);
+        Task<CarDeleteConfirmationViewModel> RemoveCarAsync(int id);
     }
 }
