@@ -1,0 +1,35 @@
+﻿@model CarsInsideGarage.Models.ViewModels.FeeCreateViewModel
+
+@{
+    ViewData["Title"] = "Fee Plan Removed";
+}
+
+<div class="container mt-5 text-center">
+    <div class="mb-4">
+        <i class="bi bi-x-octagon-fill" style="font-size: 4rem; color: var(--warning-pink);"></i>
+    </div>
+
+    <h1 class="display-4 text-white fw-bold">Rate Plan Deleted</h1>
+
+    <div class="alert alert-warning mx-auto shadow-lg" style="max-width: 600px; padding: 2rem;">
+        <h4 class="fw-bold">STRUCTURE REMOVED</h4>
+        <hr style="border-color: var(--warning-pink); opacity: 0.3;" />
+
+        <p class="fs-5 mb-0">
+            The plan with rates
+            <span class="text-accent">H: @Model.HourlyRate</span> /
+            <span class="text-accent">D: @Model.DailyRate</span>
+            is no longer available.
+        </p>
+
+        <p class="mt-3 mb-0 small text-muted">
+            Existing garages using this plan will retain their current settings until updated.
+        </p>
+    </div>
+
+    <div class="mt-5">
+        <a asp-controller="Garages" asp-action="Index" class="btn btn-primary btn-lg px-5">
+            Back to Garage Map
+        </a>
+    </div>
+</div>

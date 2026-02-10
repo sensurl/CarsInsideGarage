@@ -32,21 +32,22 @@ namespace CarsInsideGarage.Controllers
             return View(garages);
         }
 
+        
+
         public async Task<IActionResult> Details(int id)
         {
-            // 1. Get the DTO from the service
-            var garageDto = await _garageService.GetGarageDetailsAsync(id);
+            // TEMPORARY: until Identity exists
+            bool isOwner = true; // change to false to simulate driver
 
-            if (garageDto == null)
+            var model = await _garageService
+                .GetDetailsViewModelAsync(id, isOwner);
+
+            if (model == null)
                 return NotFound();
 
-            // 2. MAP the DTO to the ViewModel
-            // Note: Ensure you have private readonly IMapper _mapper; injected in the constructor
-            var viewModel = _mapper.Map<GarageDetailsViewModel>(garageDto);
-
-            // 3. Pass the ViewModel to the View
-            return View(viewModel);
+            return View(model);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Create()

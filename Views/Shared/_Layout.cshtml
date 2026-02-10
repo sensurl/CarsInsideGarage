@@ -20,17 +20,44 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" style="color: var(--text-main);" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" style="color: var(--text-main);" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Cars" asp-action="Index">List All Cars</a>
+                            <a class="nav-link" style="color: var(--text-main);" asp-area="" asp-controller="Cars" asp-action="Index">List All Cars</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Garages" asp-action="Index">List All Garages</a>
+                            <a class="nav-link" style="color: var(--text-main);" asp-area="" asp-controller="Garages" asp-action="Index">List All Garages</a>
                         </li>
+
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark"
+                               href="#"
+                               role="button"
+                               data-bs-toggle="dropdown">
+                                Owner Panel
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-controller="Garages"
+                                       asp-action="Index">
+                                        Manage Garages
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-controller="Fees"
+                                       asp-action="Index">
+                                        Manage Fees
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
                     </ul>
                 </div>
             </div>

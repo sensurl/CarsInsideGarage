@@ -18,7 +18,16 @@ namespace CarsInsideGarage.Models.ViewModels
         [StringLength(40)]
         public string Coordinates { get; set; } = null!;
 
+
         [Required]
-        public int FreeSpots { get; set; } 
+        public int FreeSpots { get; set; }
+
+        public decimal HourlyRate { get; set; }
+        public decimal DailyRate { get; set; }
+        public decimal MonthlyRate { get; set; }
+
+        public bool CanSeeRevenue { get; set; }
+
+        public decimal TotalRevenue { get; set; }
     }
 }

@@ -57,11 +57,58 @@ namespace CarsInsideGarage.Services.Garage
 
         public async Task<GarageDetailsDto?> GetGarageDetailsAsync(int id)
         {
-            return await _context.Garages
-                .Where(g => g.Id == id)
-                .ProjectTo<GarageDetailsDto>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
+            var garage = await _context.Garages
+                .Include(g => g.Sessions)
+                .Include(g => g.Location)
+                .Include(g => g.GarageFee)
+                .FirstOrDefaultAsync(g => g.Id == id);
+
+            if (garage == null)
+                return null;
+
+            var dto = _mapper.Map<GarageDetailsDto>(garage);
+
+            dto.TotalRevenue = CalculateTotalRevenue(garage.Sessions);
+
+            return dto;
         }
+
+        public async Task<GarageDetailsViewModel?> GetDetailsViewModelAsync(
+    int garageId,
+    bool isOwner)
+        {
+            var garage = await _context.Garages
+                .Include(g => g.Location)
+                .Include(g => g.GarageFee)
+                .Include(g => g.Sessions)
+                .FirstOrDefaultAsync(g => g.Id == garageId);
+
+            if (garage == null) return null;
+
+            var vm = new GarageDetailsViewModel
+            {
+                Id = garage.Id,
+                Name = garage.Name,
+                Area = garage.Location.Area,
+                Coordinates = garage.Location.AddressCoordinates,
+                FreeSpots = garage.Capacity
+                    - garage.Sessions.Count(s => s.ExitTime == null),
+
+                // Prices (always visible)
+                HourlyRate = garage.GarageFee.HourlyRate,
+                DailyRate = garage.GarageFee.DailyRate,
+                MonthlyRate = garage.GarageFee.MonthlyRate,
+
+                // Revenue (owner only)
+                CanSeeRevenue = isOwner,
+                TotalRevenue = isOwner
+                    ? garage.Sessions.Sum(s => s.AmountPaid)
+                    : 0
+            };
+
+            return vm;
+        }
+
 
         public async Task<GarageDeleteConfirmationViewModel> DeleteGarageAsync(int id)
         {
@@ -85,6 +132,33 @@ namespace CarsInsideGarage.Services.Garage
 
             // 4. Return the captured data
             return result;
+        }
+
+
+        /* Revenue = SUM of accrued revenue for all parking sessions (past + active)
+         *Revenue is calculated from EntryTime → ExitTime (or NOW if still inside), 
+         *Uses the snapshotted rates on the session
+          */
+        private decimal CalculateTotalRevenue(IEnumerable<ParkingSession> sessions)
+        {
+            var now = DateTime.UtcNow;
+            decimal total = 0;
+
+            foreach (var session in sessions)
+            {
+                var endTime = session.ExitTime ?? now;
+                var duration = endTime - session.EntryTime;
+
+                // Simple & exam-safe:
+                var totalHours = (decimal)duration.TotalHours;
+
+                if (totalHours < 0)
+                    continue;
+
+                total += totalHours * session.HourlyRate;
+            }
+
+            return decimal.Round(total, 2);
         }
     }
 }

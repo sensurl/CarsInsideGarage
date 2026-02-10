@@ -8,7 +8,7 @@ namespace CarsInsideGarage.Services.Garage
     public interface IGarageService
     {
         Task<IEnumerable<GarageListDto>> GetAllAsync();
-        Task<GarageDetailsDto?> GetGarageDetailsAsync(int id);
+        Task<GarageDetailsViewModel?> GetDetailsViewModelAsync(int garageId, bool isOwner);
 
         Task CreateAsync(
             string name,

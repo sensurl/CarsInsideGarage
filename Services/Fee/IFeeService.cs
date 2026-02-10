@@ -6,7 +6,8 @@ namespace CarsInsideGarage.Services.Fee
     {
         // Returns all fee structures for the dropdown
         Task<IEnumerable<FeeDto>> GetAllAsync();
+        Task CreateAsync(FeeDto feeDto);
+        Task DeleteAsync(int id);
 
-        Task<FeeDto?> GetByIdAsync(int id);
     }
 }

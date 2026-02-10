@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CarsInsideGarage.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialRecreate : Migration
+    public partial class SchemaRemake : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -93,7 +93,10 @@ namespace CarsInsideGarage.Migrations
                     CarId = table.Column<int>(type: "INTEGER", nullable: false),
                     EntryTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ExitTime = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    TotalAmountPaid = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    HourlyRate = table.Column<decimal>(type: "TEXT", nullable: false),
+                    DailyRate = table.Column<decimal>(type: "TEXT", nullable: false),
+                    MonthlyRate = table.Column<decimal>(type: "TEXT", nullable: false),
+                    AmountPaid = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     IsCleared = table.Column<bool>(type: "INTEGER", nullable: false),
                     GarageId1 = table.Column<int>(type: "INTEGER", nullable: true)
                 },
@@ -160,12 +163,12 @@ namespace CarsInsideGarage.Migrations
 
             migrationBuilder.InsertData(
                 table: "ParkingSessions",
-                columns: new[] { "Id", "CarId", "EntryTime", "ExitTime", "GarageId", "GarageId1", "IsCleared", "TotalAmountPaid" },
+                columns: new[] { "Id", "AmountPaid", "CarId", "DailyRate", "EntryTime", "ExitTime", "GarageId", "GarageId1", "HourlyRate", "IsCleared", "MonthlyRate" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2024, 1, 1, 10, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 1, 1, 12, 0, 0, 0, DateTimeKind.Unspecified), 1, null, true, 5.00m },
-                    { 2, 2, new DateTime(2024, 2, 2, 10, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 2, 2, 12, 0, 0, 0, DateTimeKind.Unspecified), 1, null, false, 0.00m },
-                    { 3, 3, new DateTime(2024, 3, 3, 10, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 3, 3, 12, 0, 0, 0, DateTimeKind.Unspecified), 2, null, true, 25.00m }
+                    { 1, 5.00m, 1, 0m, new DateTime(2024, 1, 1, 10, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 1, 1, 12, 0, 0, 0, DateTimeKind.Unspecified), 1, null, 0m, true, 0m },
+                    { 2, 0.00m, 2, 0m, new DateTime(2024, 2, 2, 10, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 2, 2, 12, 0, 0, 0, DateTimeKind.Unspecified), 1, null, 0m, false, 0m },
+                    { 3, 25.00m, 3, 0m, new DateTime(2024, 3, 3, 10, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 3, 3, 12, 0, 0, 0, DateTimeKind.Unspecified), 2, null, 0m, true, 0m }
                 });
 
             migrationBuilder.CreateIndex(
@@ -183,6 +186,12 @@ namespace CarsInsideGarage.Migrations
                 name: "IX_Garages_LocationId",
                 table: "Garages",
                 column: "LocationId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Locations_AddressCoordinates",
+                table: "Locations",
+                column: "AddressCoordinates",
                 unique: true);
 
             migrationBuilder.CreateIndex(

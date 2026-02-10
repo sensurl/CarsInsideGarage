@@ -35,6 +35,34 @@
                         <p class="text-muted mb-0">Map Preview Coming Soon</p>
                     </div>
                 </div>
+
+                <div class="mt-4 p-3 rounded"
+                     style="background-color: var(--bg-main); border: 1px solid var(--border);">
+                    <label class="text-muted small text-uppercase fw-bold d-block">
+                        Parking Fees
+                    </label>
+
+                    <ul class="list-unstyled mb-0">
+                        <li>Hourly: <strong>@Model.HourlyRate.ToString("C")</strong></li>
+                        <li>Daily: <strong>@Model.DailyRate.ToString("C")</strong></li>
+                        <li>Monthly: <strong>@Model.MonthlyRate.ToString("C")</strong></li>
+                    </ul>
+                </div>
+
+
+                @if (Model.CanSeeRevenue)
+                {
+                    <div class="mt-4 p-3 rounded"
+                         style="background-color: var(--bg-main); border: 1px solid var(--border);">
+                        <label class="text-muted small text-uppercase fw-bold d-block">
+                            Total Revenue
+                        </label>
+                        <span class="fs-4 text-success fw-bold">
+                            @Model.TotalRevenue.ToString("C")
+                        </span>
+                    </div>
+                }
+
             </div>
         </div>
 

@@ -16,7 +16,7 @@ namespace CarsInsideGarage.Models.DTOs
         
         public DateTime? ExitTime { get; set; }
 
-        public decimal TotalAmountPaid { get; set; }
+        public decimal AmountPaid { get; set; }
         public bool IsCleared { get; set; }
     }
 }

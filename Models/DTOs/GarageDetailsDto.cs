@@ -10,8 +10,12 @@
         public string AddressCoordinates { get; set; } = null!;
 
         public decimal HourlyRate { get; set; }
+        public decimal DailyRate { get; set; }
+        public decimal MonthlyRate { get; set; }
 
         public int ActiveCarsCount { get; set; }
+
+        public decimal TotalRevenue { get; set; }
 
         public IEnumerable<SessionDto> ActiveSessions { get; set; }
             = new List<SessionDto>();

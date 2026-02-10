@@ -198,8 +198,15 @@ namespace CarsInsideGarage.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<decimal>("AmountPaid")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("CarId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("DailyRate")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("EntryTime")
                         .HasColumnType("TEXT");
@@ -213,12 +220,14 @@ namespace CarsInsideGarage.Migrations
                     b.Property<int?>("GarageId1")
                         .HasColumnType("INTEGER");
 
+                    b.Property<decimal>("HourlyRate")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("IsCleared")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("TotalAmountPaid")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<decimal>("MonthlyRate")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -234,32 +243,41 @@ namespace CarsInsideGarage.Migrations
                         new
                         {
                             Id = 1,
+                            AmountPaid = 5.00m,
                             CarId = 1,
+                            DailyRate = 0m,
                             EntryTime = new DateTime(2024, 1, 1, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ExitTime = new DateTime(2024, 1, 1, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             GarageId = 1,
+                            HourlyRate = 0m,
                             IsCleared = true,
-                            TotalAmountPaid = 5.00m
+                            MonthlyRate = 0m
                         },
                         new
                         {
                             Id = 2,
+                            AmountPaid = 0.00m,
                             CarId = 2,
+                            DailyRate = 0m,
                             EntryTime = new DateTime(2024, 2, 2, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ExitTime = new DateTime(2024, 2, 2, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             GarageId = 1,
+                            HourlyRate = 0m,
                             IsCleared = false,
-                            TotalAmountPaid = 0.00m
+                            MonthlyRate = 0m
                         },
                         new
                         {
                             Id = 3,
+                            AmountPaid = 25.00m,
                             CarId = 3,
+                            DailyRate = 0m,
                             EntryTime = new DateTime(2024, 3, 3, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ExitTime = new DateTime(2024, 3, 3, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             GarageId = 2,
+                            HourlyRate = 0m,
                             IsCleared = true,
-                            TotalAmountPaid = 25.00m
+                            MonthlyRate = 0m
                         });
                 });
 

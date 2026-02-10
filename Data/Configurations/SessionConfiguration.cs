@@ -19,7 +19,7 @@ namespace CarsInsideGarage.Data.Configurations
             builder.Property(e => e.IsCleared)
                    .IsRequired();
 
-            builder.Property(e => e.TotalAmountPaid)
+            builder.Property(e => e.AmountPaid)
                  .HasPrecision(18, 2)
                    .IsRequired()
                    .HasColumnType("decimal(18,2)");
@@ -44,7 +44,7 @@ namespace CarsInsideGarage.Data.Configurations
                     CarId = 1,
                     EntryTime = new DateTime(2024, 1, 1, 10, 0, 0),
                     ExitTime = new DateTime(2024, 1, 1, 12, 0, 0),
-                    TotalAmountPaid = 5.00m,
+                    AmountPaid = 5.00m,
                     IsCleared = true
                 },
                 new ParkingSession
@@ -54,7 +54,7 @@ namespace CarsInsideGarage.Data.Configurations
                     CarId = 2,
                     EntryTime = new DateTime(2024, 2, 2, 10, 0, 0),
                     ExitTime = new DateTime(2024, 2, 2, 12, 0, 0),
-                    TotalAmountPaid = 0.00m,
+                    AmountPaid = 0.00m,
                     IsCleared = false
                 },
                 new ParkingSession
@@ -64,7 +64,7 @@ namespace CarsInsideGarage.Data.Configurations
                     CarId = 3,
                     EntryTime = new DateTime(2024, 3, 3, 10, 0, 0),
                     ExitTime = new DateTime(2024, 3, 3, 12, 0, 0),
-                    TotalAmountPaid = 25.00m,
+                    AmountPaid = 25.00m,
                     IsCleared = true
                 }
             );

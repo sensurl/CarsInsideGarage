@@ -1,7 +1,8 @@
-﻿using CarsInsideGarage.Models.DTOs;
-using Microsoft.EntityFrameworkCore;
-using AutoMapper;
+﻿using AutoMapper;
 using CarsInsideGarage.Data;
+using CarsInsideGarage.Data.Entities;
+using CarsInsideGarage.Models.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarsInsideGarage.Services.Fee
 {
@@ -23,18 +24,21 @@ namespace CarsInsideGarage.Services.Fee
             return _mapper.Map<List<FeeDto>>(fees);
         }
 
-        public async Task<FeeDto?> GetByIdAsync(int id)
+        public async Task CreateAsync(FeeDto feeDto)
         {
-            // Returns null if not found.
-            var feeEntity = await _context.GarageFees
-                .FirstOrDefaultAsync(f => f.Id == id);
+            var entity = _mapper.Map<GarageFee>(feeDto);
+            _context.GarageFees.Add(entity);
+            await _context.SaveChangesAsync();
+        }
 
-            if (feeEntity == null)
+        public async Task DeleteAsync(int id)
+        {
+            var entity = await _context.GarageFees.FindAsync(id);
+            if (entity != null)
             {
-                return null; // "I searched, but found nothing."
+                _context.GarageFees.Remove(entity);
+                await _context.SaveChangesAsync();
             }
-
-            return _mapper.Map<FeeDto>(feeEntity);
         }
     }
 }
