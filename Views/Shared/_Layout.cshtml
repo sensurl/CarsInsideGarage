@@ -55,6 +55,38 @@
                                         Manage Fees
                                     </a>
                                 </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle"
+                                       href="#"
+                                       role="button"
+                                       data-bs-toggle="dropdown">
+                                        Owner Panel
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a class="dropdown-item"
+                                               asp-controller="Garages"
+                                               asp-action="Index">
+                                                Manage Garages
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item"
+                                               asp-controller="Fees"
+                                               asp-action="Index">
+                                                Manage Fees
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item"
+                                               asp-controller="ParkingSessions"
+                                               asp-action="Active">
+                                                Active Sessions
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
                             </ul>
                         </li>
 

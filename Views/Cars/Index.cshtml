@@ -20,7 +20,7 @@
         @foreach (var car in Model)
         {
             <tr>
-                <td>@car.LicensePlate</td>
+                <td>@car.CarPlateNumber</td>
                 <td>
                     <div class="btn-group">
                         <a asp-controller="Cars" asp-action="Details" asp-route-id="@car.Id" class="btn btn-sm btn-info">

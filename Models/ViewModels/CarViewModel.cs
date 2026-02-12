@@ -6,8 +6,9 @@ namespace CarsInsideGarage.Models.ViewModels
     {
         [Key]
         public int Id { get; set; }
+
         [Required]
         [StringLength(12, MinimumLength = 4)]
-        public string LicensePlate { get; set; } = null!;
+        public string CarPlateNumber { get; set; } = null!;
     }
 }

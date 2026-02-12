@@ -1,4 +1,6 @@
-﻿@model CarsInsideGarage.Models.ViewModels.FeeCreateViewModel
+﻿@using System.Globalization
+
+@model CarsInsideGarage.Models.ViewModels.FeeCreateViewModel
 
 <div class="container-fluid">
     <div class="row justify-content-center">
@@ -12,7 +14,7 @@
                 <h4 class="mb-2">Pricing Success!</h4>
                 <hr class="mt-0 mb-2" />
                 <p class="mb-0">
-                    Hourly: <strong style="color: var(--accent)">@Model.HourlyRate.ToString("C")</strong>
+                    Hourly: <strong style="color: var(--accent)">@Model.HourlyRate.ToString("C", new CultureInfo("fr-FR"))</strong>
                 </p>
                 <small class="text-muted">This plan is now available for new garages.</small>
             </div>

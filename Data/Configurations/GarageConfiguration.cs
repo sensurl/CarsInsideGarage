@@ -17,7 +17,7 @@ namespace CarsInsideGarage.Data.Configurations
                   .HasMaxLength(50);
 
             // Configuring the One-to-One or One-to-Many Relationship
-            // Here we say: One Garage HAS ONE GarageFee.
+            // One Garage HAS ONE GarageFee.
             builder.HasOne(g => g.GarageFee)
                 .WithMany() // A Fee set could potentially be used by many garages
                 .HasForeignKey(g => g.GarageFeeId)
@@ -30,7 +30,7 @@ namespace CarsInsideGarage.Data.Configurations
                 .HasForeignKey<Garage>(g => g.LocationId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Cascade means: If you delete the Garage, delete the Location record too.
+            // Cascade: If you delete the Garage, delete the Location record too.
 
             // Seed data
             builder.HasData(

@@ -1,11 +1,12 @@
-﻿using CarsInsideGarage.Data;
+﻿using AutoMapper;
+using CarsInsideGarage.Data;
 using CarsInsideGarage.Models.ViewModels;
 using CarsInsideGarage.Services.Fee;
 using CarsInsideGarage.Services.Garage;
 using CarsInsideGarage.Services.Location;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarsInsideGarage.Controllers
 {
@@ -32,22 +33,24 @@ namespace CarsInsideGarage.Controllers
             return View(garages);
         }
 
-        
 
-        public async Task<IActionResult> Details(int id)
+
+        public async Task<IActionResult> Details(int id, bool isOwner = true)
         {
-            // TEMPORARY: until Identity exists
-            bool isOwner = true; // change to false to simulate driver
+            var garageDto = await _garageService.GetDetailsViewModelAsync(id, isOwner);
+            if (garageDto == null) return NotFound();
 
-            var model = await _garageService
-                .GetDetailsViewModelAsync(id, isOwner);
+            var viewModel = _mapper.Map<GarageDetailsViewModel>(garageDto);
 
-            if (model == null)
-                return NotFound();
+            // Pick the first car in the database to simulate "The Current User"
+            var car = await _context.Cars.FirstOrDefaultAsync();
+            if (car != null)
+            {
+                ViewBag.CurrentCarId = car.Id;
+            }
 
-            return View(model);
+            return View(viewModel);
         }
-
 
         [HttpGet]
         public async Task<IActionResult> Create()

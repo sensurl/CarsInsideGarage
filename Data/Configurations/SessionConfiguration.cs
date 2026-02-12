@@ -29,12 +29,14 @@ namespace CarsInsideGarage.Data.Configurations
                    .WithMany() // A Garage can have many ParkingSessions
                    .HasForeignKey(ps => ps.GarageId)
                    .OnDelete(DeleteBehavior.Restrict);
-            // We use Restrict so you can't delete a Garage that has history!
+            // Restrict: you can't delete a Garage that has history!
 
             builder.HasOne(ps => ps.Car)
                    .WithMany() // A Car can have many ParkingSessions
                    .HasForeignKey(ps => ps.CarId)
                    .OnDelete(DeleteBehavior.Cascade);
+
+            // Seed data
 
             builder.HasData(
                 new ParkingSession

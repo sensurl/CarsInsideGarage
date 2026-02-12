@@ -40,7 +40,7 @@ namespace CarsInsideGarage.Services.Car
 
             if (carEntity == null)
             {
-                // You could return null, or handle this with an exception
+                // Could return null, or handle this with an exception
                 return null; // "I searched, but found nothing."
             }
 
@@ -49,15 +49,15 @@ namespace CarsInsideGarage.Services.Car
 
         public async Task<int> AddCarAsync(CarDto carDto)
         {
-            carDto.LicensePlate = carDto.LicensePlate.Trim().Replace(" ", "").ToUpper();
+            carDto.CarPlateNumber = carDto.CarPlateNumber.Trim().Replace(" ", "").ToUpper();
 
-            // 1. Check the DB first (before doing any mapping work)
-            var exists = await _context.Cars.AnyAsync(c => c.LicensePlate == carDto.LicensePlate);
+            // 1. Check the DB first before doing any mapping
+            var exists = await _context.Cars.AnyAsync(c => c.CarPlateNumber == carDto.CarPlateNumber);
 
             if (exists) throw new Exception("A car with this license plate already exists.");
             
 
-            // 2. ONLY if it doesn't exist, do the mapping and saving
+            // 2. If it doesn't exist, do the mapping and saving
             var carEntity = _mapper.Map<CarsInsideGarage.Data.Entities.Car>(carDto);
              _context.Cars.Add(carEntity);
             await _context.SaveChangesAsync();
@@ -72,7 +72,7 @@ namespace CarsInsideGarage.Services.Car
             // Capture the data BEFORE it's deleted
             var vm = new CarDeleteConfirmationViewModel
             {
-                LicensePlate = car.LicensePlate,
+                CarPlateNumber = car.CarPlateNumber,
                 ExitTime = DateTime.Now
             };
 

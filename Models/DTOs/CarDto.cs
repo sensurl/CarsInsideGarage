@@ -4,6 +4,6 @@
     {
         public int Id { get; set; }
 
-        public string LicensePlate { get; set; } = null!;
+        public string CarPlateNumber { get; set; } = null!;
     }
 }

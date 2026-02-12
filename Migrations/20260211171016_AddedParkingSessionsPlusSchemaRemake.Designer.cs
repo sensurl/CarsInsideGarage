@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarsInsideGarage.Migrations
 {
     [DbContext(typeof(GarageDbContext))]
-    [Migration("20260210171237_SchemaRemake")]
-    partial class SchemaRemake
+    [Migration("20260211171016_AddedParkingSessionsPlusSchemaRemake")]
+    partial class AddedParkingSessionsPlusSchemaRemake
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,14 +26,14 @@ namespace CarsInsideGarage.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("LicensePlate")
+                    b.Property<string>("CarPlateNumber")
                         .IsRequired()
                         .HasMaxLength(12)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LicensePlate")
+                    b.HasIndex("CarPlateNumber")
                         .IsUnique();
 
                     b.ToTable("Cars", (string)null);
@@ -42,17 +42,17 @@ namespace CarsInsideGarage.Migrations
                         new
                         {
                             Id = 1,
-                            LicensePlate = "ABC123"
+                            CarPlateNumber = "ABC123"
                         },
                         new
                         {
                             Id = 2,
-                            LicensePlate = "XYZ789"
+                            CarPlateNumber = "XYZ789"
                         },
                         new
                         {
                             Id = 3,
-                            LicensePlate = "LMN456"
+                            CarPlateNumber = "LMN456"
                         });
                 });
 

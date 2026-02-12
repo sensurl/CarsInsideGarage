@@ -1,4 +1,6 @@
-﻿@model CarsInsideGarage.Models.ViewModels.GarageDetailsViewModel
+﻿@using System.Globalization
+
+@model CarsInsideGarage.Models.ViewModels.GarageDetailsViewModel
 
 @{
     ViewData["Title"] = "Garage Details";
@@ -34,6 +36,24 @@
                         <i class="bi bi-geo-alt-fill" style="color: var(--accent); font-size: 2rem;"></i>
                         <p class="text-muted mb-0">Map Preview Coming Soon</p>
                     </div>
+                    
+
+                    @if (Model.FreeSpots > 0)
+                    {
+                        <a asp-controller="ParkingSessions"
+                           asp-action="Start"
+                           asp-route-garageId="@Model.Id"
+                           asp-route-carId="@ViewBag.CurrentCarId"
+                           class="btn btn-success btn-lg px-5 shadow-sm">
+                            <i class="bi bi-p-square-fill me-2"></i> Park My Car Here
+                        </a>
+                    }
+                    else
+                    {
+                        <button class="btn btn-secondary btn-lg" disabled>Garage Full</button>
+                    }
+
+
                 </div>
 
                 <div class="mt-4 p-3 rounded"
@@ -43,9 +63,9 @@
                     </label>
 
                     <ul class="list-unstyled mb-0">
-                        <li>Hourly: <strong>@Model.HourlyRate.ToString("C")</strong></li>
-                        <li>Daily: <strong>@Model.DailyRate.ToString("C")</strong></li>
-                        <li>Monthly: <strong>@Model.MonthlyRate.ToString("C")</strong></li>
+                        <li>Hourly: <strong>@Model.HourlyRate.ToString("C", new CultureInfo("fr-FR"))</strong></li>
+                        <li>Daily: <strong>@Model.DailyRate.ToString("C", new CultureInfo("fr-FR"))</strong></li>
+                        <li>Monthly: <strong>@Model.MonthlyRate.ToString("C", new CultureInfo("fr-FR"))</strong></li>
                     </ul>
                 </div>
 
@@ -58,7 +78,7 @@
                             Total Revenue
                         </label>
                         <span class="fs-4 text-success fw-bold">
-                            @Model.TotalRevenue.ToString("C")
+                            @Model.TotalRevenue.ToString("C", new CultureInfo("fr-FR"))
                         </span>
                     </div>
                 }

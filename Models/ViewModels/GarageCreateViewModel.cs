@@ -12,11 +12,11 @@ namespace CarsInsideGarage.Models.ViewModels
         [Range(1, 1000, ErrorMessage = "Capacity must be between 1 and 1000")]
         public int Capacity { get; set; }
 
-        // Capture Area from the Enum
+       
         [Required(ErrorMessage = "Please select an area")]
         public Area SelectedArea { get; set; }
 
-        // Capture Coordinates string
+      
         [Required(ErrorMessage = "Coordinates are required")]
         [Display(Name = "e.g 42.659892717892355, 23.315800826629413")]
         public string AddressCoordinates { get; set; } = null!;

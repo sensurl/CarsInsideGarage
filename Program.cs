@@ -4,12 +4,14 @@ using CarsInsideGarage.Data.Entities;
 using CarsInsideGarage.Data.Enums;
 using CarsInsideGarage.Mappings;
 using CarsInsideGarage.Services.Car;
-using CarsInsideGarage.Services.Garage;
+using CarsInsideGarage.Services.CarService;
 using CarsInsideGarage.Services.Fee;
+using CarsInsideGarage.Services.Garage;
+using CarsInsideGarage.Services.GarageSession;
 using CarsInsideGarage.Services.Location;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using CarsInsideGarage.Services.CarService;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,12 +27,23 @@ var mapperConfig = new MapperConfiguration(cfg =>
 {
     cfg.AddProfile<MappingProfile>();
 });
-mapperConfig.AssertConfigurationIsValid();
+
+try
+{
+    mapperConfig.AssertConfigurationIsValid();
+}
+catch (AutoMapperConfigurationException ex)
+{
+
+    Debug.WriteLine(ex.Message);
+    throw;
+}
 
 builder.Services.AddScoped<ICarService, CarService>();
 builder.Services.AddScoped<IGarageService, GarageService>();
 builder.Services.AddScoped<IFeeService, FeeService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<IParkingSessionService, ParkingSessionService>();
 
 
 var app = builder.Build();

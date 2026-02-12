@@ -56,7 +56,7 @@ namespace CarsInsideGarage.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("LicensePlate", ex.Message);
+                ModelState.AddModelError("CarPlateNumber", ex.Message);
                 return View(carViewModel);
             }
         }

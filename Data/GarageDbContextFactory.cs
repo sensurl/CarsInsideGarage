@@ -8,7 +8,7 @@ namespace CarsInsideGarage.Data
         public GarageDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<GarageDbContext>();
-            optionsBuilder.UseSqlite("Data Source=study.db"); // same as your appsettings.json
+            optionsBuilder.UseSqlite("Data Source=study.db"); // same in appsettings.json
 
             return new GarageDbContext(optionsBuilder.Options);
         }

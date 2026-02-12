@@ -29,20 +29,20 @@ namespace CarsInsideGarage.Services.Garage
 
         public async Task CreateAsync(string name, int capacity, Area area, string coordinates, int feeId)
         {
-            // 1. Create the new Location entity first
+            // Create the new Location entity first
             var newLocation = new CarsInsideGarage.Data.Entities.Location
             {
                 Area = area,
                 AddressCoordinates = coordinates
             };
 
-            // 2. Add Location to context
+            // Add Location to context
             _context.Locations.Add(newLocation);
 
             // We save here so newLocation.Id is populated by the DB
             await _context.SaveChangesAsync();
 
-            // 3. Create the Garage using the new Location's ID
+            // Create the Garage using the new Location's ID
             var newGarage = new CarsInsideGarage.Data.Entities.Garage
             {
                 Name = name,
@@ -112,25 +112,25 @@ namespace CarsInsideGarage.Services.Garage
 
         public async Task<GarageDeleteConfirmationViewModel> DeleteGarageAsync(int id)
         {
-            // 1. Fetch with Location included
+            // Fetch with Location included
             var garage = await _context.Garages
                 .Include(g => g.Location)
                 .FirstOrDefaultAsync(g => g.Id == id);
 
             if (garage == null) throw new Exception("Garage not found");
 
-            // 2. Capture the data into the VM before deleting
+            // Capture the data into the VM before deleting
             var result = new GarageDeleteConfirmationViewModel
             {
                 Name = garage.Name,
                 Coordinates = garage.Location?.AddressCoordinates ?? "N/A"
             };
 
-            // 3. Remove the Garage (Cascade will handle the Location automatically)
+            // Remove the Garage (Cascade will handle the Location automatically)
             _context.Garages.Remove(garage);
             await _context.SaveChangesAsync();
 
-            // 4. Return the captured data
+            // Return the captured data
             return result;
         }
 
@@ -149,7 +149,7 @@ namespace CarsInsideGarage.Services.Garage
                 var endTime = session.ExitTime ?? now;
                 var duration = endTime - session.EntryTime;
 
-                // Simple & exam-safe:
+               
                 var totalHours = (decimal)duration.TotalHours;
 
                 if (totalHours < 0)

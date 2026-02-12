@@ -2,7 +2,7 @@
 {
     public class CarDeleteConfirmationViewModel
     {
-        public string LicensePlate { get; set; }
+        public string CarPlateNumber { get; set; }
         public DateTime ExitTime { get; set; }
     }
 }

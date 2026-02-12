@@ -1,6 +1,6 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
     // Find any input field meant for a License Plate
-    const plateInputs = document.querySelectorAll('input[name*="LicensePlate"]');
+    const plateInputs = document.querySelectorAll('input[name*="CarPlateNumber"]');
 
     plateInputs.forEach(input => {
         input.addEventListener('input', function () {

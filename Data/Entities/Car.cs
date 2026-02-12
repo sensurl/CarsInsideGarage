@@ -10,8 +10,7 @@ namespace CarsInsideGarage.Data.Entities
         [Key]
         public int Id { get; set; }
 
-        public string LicensePlate { get; set; } = null!;
-        // Consider uppercasing and removing spaces before save
-        // That belongs to a Service, not Entity.
+        public string CarPlateNumber { get; set; } = null!;
+
     }
 }

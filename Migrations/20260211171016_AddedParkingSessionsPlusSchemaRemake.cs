@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CarsInsideGarage.Migrations
 {
     /// <inheritdoc />
-    public partial class SchemaRemake : Migration
+    public partial class AddedParkingSessionsPlusSchemaRemake : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +19,7 @@ namespace CarsInsideGarage.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    LicensePlate = table.Column<string>(type: "TEXT", maxLength: 12, nullable: false)
+                    CarPlateNumber = table.Column<string>(type: "TEXT", maxLength: 12, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -124,7 +124,7 @@ namespace CarsInsideGarage.Migrations
 
             migrationBuilder.InsertData(
                 table: "Cars",
-                columns: new[] { "Id", "LicensePlate" },
+                columns: new[] { "Id", "CarPlateNumber" },
                 values: new object[,]
                 {
                     { 1, "ABC123" },
@@ -172,9 +172,9 @@ namespace CarsInsideGarage.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cars_LicensePlate",
+                name: "IX_Cars_CarPlateNumber",
                 table: "Cars",
-                column: "LicensePlate",
+                column: "CarPlateNumber",
                 unique: true);
 
             migrationBuilder.CreateIndex(
