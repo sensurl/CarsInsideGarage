@@ -17,6 +17,48 @@ namespace CarsInsideGarage.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.2");
 
+            modelBuilder.Entity("CarsInsideGarage.Data.Entities.AddressCoordinates", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("Latitude")
+                        .HasPrecision(9, 6)
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Longitude")
+                        .HasPrecision(9, 6)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Latitude", "Longitude")
+                        .IsUnique();
+
+                    b.ToTable("AddressesCoordinates");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Latitude = 42.659893m,
+                            Longitude = 23.315801m
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Latitude = 42.661221m,
+                            Longitude = 23.350871m
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Latitude = 42.718979m,
+                            Longitude = 23.276871m
+                        });
+                });
+
             modelBuilder.Entity("CarsInsideGarage.Data.Entities.Car", b =>
                 {
                     b.Property<int>("Id")
@@ -154,10 +196,8 @@ namespace CarsInsideGarage.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("AddressCoordinates")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("TEXT");
+                    b.Property<int>("AddressCoordinatesId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Area")
                         .IsRequired()
@@ -166,8 +206,7 @@ namespace CarsInsideGarage.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressCoordinates")
-                        .IsUnique();
+                    b.HasIndex("AddressCoordinatesId");
 
                     b.ToTable("Locations");
 
@@ -175,19 +214,19 @@ namespace CarsInsideGarage.Migrations
                         new
                         {
                             Id = 1,
-                            AddressCoordinates = "42.659892717892355, 23.315800826629413",
+                            AddressCoordinatesId = 1,
                             Area = "Center"
                         },
                         new
                         {
                             Id = 2,
-                            AddressCoordinates = "42.66122100925116, 23.350871009687925",
+                            AddressCoordinatesId = 2,
                             Area = "Mladost"
                         },
                         new
                         {
                             Id = 3,
-                            AddressCoordinates = "42.71897920798329, 23.276870966086467",
+                            AddressCoordinatesId = 3,
                             Area = "Lyulin"
                         });
                 });
@@ -298,6 +337,17 @@ namespace CarsInsideGarage.Migrations
                     b.Navigation("GarageFee");
 
                     b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("CarsInsideGarage.Data.Entities.Location", b =>
+                {
+                    b.HasOne("CarsInsideGarage.Data.Entities.AddressCoordinates", "Coordinates")
+                        .WithMany()
+                        .HasForeignKey("AddressCoordinatesId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Coordinates");
                 });
 
             modelBuilder.Entity("CarsInsideGarage.Data.Entities.ParkingSession", b =>

@@ -6,6 +6,11 @@
         <div class="card-header bg-dark text-white">
             <h4 class="mb-0">Current Session: @Model.CarPlateNumber</h4>
         </div>
+        <div class="mb-3">
+            <label class="text-muted small fw-bold">Garage</label>
+            <div class="fs-5">@Model.GarageName</div>
+        </div>
+
         <div class="card-body">
             @if (TempData["Error"] != null)
             {

@@ -43,3 +43,17 @@ document.getElementById("btnSearchArea").addEventListener("click", () => {
     // TODO: Geocode and show on map
     console.log("Search for:", query);
 });
+
+function findNearest() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+
+            window.location.href = `/Garages/Nearest?lat=${lat}&lng=${lng}`;
+        });
+    } else {
+        alert("Geolocation is not supported.");
+    }
+}
+

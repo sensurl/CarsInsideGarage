@@ -14,6 +14,7 @@ namespace CarsInsideGarage.Data
         public DbSet<GarageFee> GarageFees { get; set; } = null!;
         public DbSet<Location> Locations { get; set; } = null!;
         public DbSet<ParkingSession> ParkingSessions { get; set; } = null!;
+        public DbSet<AddressCoordinates> AddressesCoordinates { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

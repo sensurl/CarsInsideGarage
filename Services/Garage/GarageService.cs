@@ -6,6 +6,7 @@ using CarsInsideGarage.Data.Enums;
 using CarsInsideGarage.Models.DTOs;
 using CarsInsideGarage.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 
 namespace CarsInsideGarage.Services.Garage
@@ -27,39 +28,49 @@ namespace CarsInsideGarage.Services.Garage
                 .ToListAsync();
         }
 
-        public async Task CreateAsync(string name, int capacity, Area area, string coordinates, int feeId)
+        public async Task CreateAsync(GarageDetailsDto dto)
         {
-            // Create the new Location entity first
+            var parsedCoordinates = ParseCoordinates(dto.AddressCoordinates);
+
+            var existing = await _context.AddressesCoordinates
+     .FirstOrDefaultAsync(c =>
+         c.Latitude == parsedCoordinates.Latitude &&
+         c.Longitude == parsedCoordinates.Longitude);
+
+            if (existing != null)
+            {
+                parsedCoordinates = existing;
+            }
+            else
+            {
+                _context.AddressesCoordinates.Add(parsedCoordinates);
+                await _context.SaveChangesAsync();
+            }
+
+
             var newLocation = new CarsInsideGarage.Data.Entities.Location
             {
-                Area = area,
-                AddressCoordinates = coordinates
+                Area = Enum.Parse<Area>(dto.Area),
+                AddressCoordinatesId = parsedCoordinates.Id
             };
 
-            // Add Location to context
             _context.Locations.Add(newLocation);
-
-            // We save here so newLocation.Id is populated by the DB
             await _context.SaveChangesAsync();
 
-            // Create the Garage using the new Location's ID
-            var newGarage = new CarsInsideGarage.Data.Entities.Garage
-            {
-                Name = name,
-                Capacity = capacity,
-                LocationId = newLocation.Id, // Linking the One-to-One relationship
-                GarageFeeId = feeId
-            };
+            var newGarage = _mapper.Map<CarsInsideGarage.Data.Entities.Garage>(dto);
+            newGarage.LocationId = newLocation.Id;
 
             _context.Garages.Add(newGarage);
             await _context.SaveChangesAsync();
         }
+
 
         public async Task<GarageDetailsDto?> GetGarageDetailsAsync(int id)
         {
             var garage = await _context.Garages
                 .Include(g => g.Sessions)
                 .Include(g => g.Location)
+                .ThenInclude(g => g.Coordinates)
                 .Include(g => g.GarageFee)
                 .FirstOrDefaultAsync(g => g.Id == id);
 
@@ -73,12 +84,11 @@ namespace CarsInsideGarage.Services.Garage
             return dto;
         }
 
-        public async Task<GarageDetailsViewModel?> GetDetailsViewModelAsync(
-    int garageId,
-    bool isOwner)
+        public async Task<GarageDetailsViewModel?> GetDetailsViewModelAsync(int garageId,bool isOwner)
         {
             var garage = await _context.Garages
                 .Include(g => g.Location)
+                .ThenInclude(l => l.Coordinates)
                 .Include(g => g.GarageFee)
                 .Include(g => g.Sessions)
                 .FirstOrDefaultAsync(g => g.Id == garageId);
@@ -90,7 +100,7 @@ namespace CarsInsideGarage.Services.Garage
                 Id = garage.Id,
                 Name = garage.Name,
                 Area = garage.Location.Area,
-                Coordinates = garage.Location.AddressCoordinates,
+                Coordinates = garage.Location.Coordinates.ToString(),
                 FreeSpots = garage.Capacity
                     - garage.Sessions.Count(s => s.ExitTime == null),
 
@@ -115,6 +125,7 @@ namespace CarsInsideGarage.Services.Garage
             // Fetch with Location included
             var garage = await _context.Garages
                 .Include(g => g.Location)
+                .ThenInclude(l => l.Coordinates)
                 .FirstOrDefaultAsync(g => g.Id == id);
 
             if (garage == null) throw new Exception("Garage not found");
@@ -123,7 +134,7 @@ namespace CarsInsideGarage.Services.Garage
             var result = new GarageDeleteConfirmationViewModel
             {
                 Name = garage.Name,
-                Coordinates = garage.Location?.AddressCoordinates ?? "N/A"
+                Coordinates = garage.Location?.Coordinates.ToString() ?? "N/A"
             };
 
             // Remove the Garage (Cascade will handle the Location automatically)
@@ -149,7 +160,7 @@ namespace CarsInsideGarage.Services.Garage
                 var endTime = session.ExitTime ?? now;
                 var duration = endTime - session.EntryTime;
 
-               
+
                 var totalHours = (decimal)duration.TotalHours;
 
                 if (totalHours < 0)
@@ -160,5 +171,18 @@ namespace CarsInsideGarage.Services.Garage
 
             return decimal.Round(total, 2);
         }
+
+        private AddressCoordinates ParseCoordinates(string coordinates)
+        {
+            var parts = coordinates.Split(',', StringSplitOptions.TrimEntries);
+
+            return new AddressCoordinates
+            {
+                Latitude = decimal.Parse(parts[0], CultureInfo.InvariantCulture),
+                Longitude = decimal.Parse(parts[1], CultureInfo.InvariantCulture)
+
+            };
+        }
+
     }
 }

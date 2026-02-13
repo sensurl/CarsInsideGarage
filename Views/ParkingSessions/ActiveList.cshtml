@@ -1,0 +1,46 @@
+﻿@model IEnumerable<CarsInsideGarage.Models.ViewModels.ActiveSessionListViewModel>
+
+@{
+    ViewData["Title"] = "Current Occupancy";
+}
+
+<div class="container mt-4">
+    <h2 class="text-white mb-4">Active Parking Sessions</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            There are currently no active parking sessions.
+        </div>
+    }
+    else
+    {
+        <div class="card shadow">
+            <div class="card-body p-0">
+                <table class="table table-dark table-hover mb-0">
+                    <thead class="table-secondary text-dark">
+                        <tr>
+                            <th>Garage</th>
+                            <th>License Plate</th>
+                            <th>Entry Time</th>
+                            <th>Amount Paid (€)</th>
+                            <th>Duration (hrs)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var session in Model)
+                        {
+                            <tr>
+                                <td>@session.GarageName</td>
+                                <td class="fw-bold">@session.CarPlateNumber</td>
+                                <td>@session.EntryTime.ToLocalTime()</td>
+                                <td>@session.AmountPaid.ToString("F2")</td>
+                                <td>@session.DurationHours.ToString("F1")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

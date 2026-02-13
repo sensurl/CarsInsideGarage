@@ -6,7 +6,9 @@ namespace CarsInsideGarage.Data.Entities
     {
         public int Id { get; set; }
         public Area Area { get; set; }
-        public string AddressCoordinates { get; set; } = null!;
+
+        public int AddressCoordinatesId { get; set; }  
+        public AddressCoordinates Coordinates { get; set; } = null!;
 
     }
 }

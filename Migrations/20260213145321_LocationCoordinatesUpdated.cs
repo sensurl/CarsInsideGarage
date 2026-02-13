@@ -8,11 +8,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CarsInsideGarage.Migrations
 {
     /// <inheritdoc />
-    public partial class AddedParkingSessionsPlusSchemaRemake : Migration
+    public partial class LocationCoordinatesUpdated : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "AddressesCoordinates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Latitude = table.Column<decimal>(type: "TEXT", precision: 9, scale: 6, nullable: false),
+                    Longitude = table.Column<decimal>(type: "TEXT", precision: 9, scale: 6, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AddressesCoordinates", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Cars",
                 columns: table => new
@@ -48,11 +62,17 @@ namespace CarsInsideGarage.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Area = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
-                    AddressCoordinates = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false)
+                    AddressCoordinatesId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Locations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Locations_AddressesCoordinates_AddressCoordinatesId",
+                        column: x => x.AddressCoordinatesId,
+                        principalTable: "AddressesCoordinates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -123,6 +143,16 @@ namespace CarsInsideGarage.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "AddressesCoordinates",
+                columns: new[] { "Id", "Latitude", "Longitude" },
+                values: new object[,]
+                {
+                    { 1, 42.659893m, 23.315801m },
+                    { 2, 42.661221m, 23.350871m },
+                    { 3, 42.718979m, 23.276871m }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Cars",
                 columns: new[] { "Id", "CarPlateNumber" },
                 values: new object[,]
@@ -143,12 +173,12 @@ namespace CarsInsideGarage.Migrations
 
             migrationBuilder.InsertData(
                 table: "Locations",
-                columns: new[] { "Id", "AddressCoordinates", "Area" },
+                columns: new[] { "Id", "AddressCoordinatesId", "Area" },
                 values: new object[,]
                 {
-                    { 1, "42.659892717892355, 23.315800826629413", "Center" },
-                    { 2, "42.66122100925116, 23.350871009687925", "Mladost" },
-                    { 3, "42.71897920798329, 23.276870966086467", "Lyulin" }
+                    { 1, 1, "Center" },
+                    { 2, 2, "Mladost" },
+                    { 3, 3, "Lyulin" }
                 });
 
             migrationBuilder.InsertData(
@@ -172,6 +202,12 @@ namespace CarsInsideGarage.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AddressesCoordinates_Latitude_Longitude",
+                table: "AddressesCoordinates",
+                columns: new[] { "Latitude", "Longitude" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Cars_CarPlateNumber",
                 table: "Cars",
                 column: "CarPlateNumber",
@@ -189,10 +225,9 @@ namespace CarsInsideGarage.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Locations_AddressCoordinates",
+                name: "IX_Locations_AddressCoordinatesId",
                 table: "Locations",
-                column: "AddressCoordinates",
-                unique: true);
+                column: "AddressCoordinatesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ParkingSessions_CarId",
@@ -227,6 +262,9 @@ namespace CarsInsideGarage.Migrations
 
             migrationBuilder.DropTable(
                 name: "Locations");
+
+            migrationBuilder.DropTable(
+                name: "AddressesCoordinates");
         }
     }
 }

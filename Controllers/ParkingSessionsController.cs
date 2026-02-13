@@ -1,7 +1,10 @@
-﻿using CarsInsideGarage.Services.GarageSession;
+﻿using CarsInsideGarage.Data;
+using CarsInsideGarage.Models.DTOs;
+using CarsInsideGarage.Models.ViewModels;
+using CarsInsideGarage.Services.GarageSession;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CarsInsideGarage.Data;
+using AutoMapper;
 
 namespace CarsInsideGarage.Controllers
 {
@@ -9,11 +12,13 @@ namespace CarsInsideGarage.Controllers
     {
         private readonly IParkingSessionService _service;
         private readonly GarageDbContext _context;
+        private readonly IMapper _mapper;
 
-        public ParkingSessionsController(IParkingSessionService service, GarageDbContext dbContext)
+        public ParkingSessionsController(IParkingSessionService service, GarageDbContext dbContext, IMapper mapper)
         {
             _service = service;
             _context = dbContext;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Active(int carId)
@@ -25,6 +30,22 @@ namespace CarsInsideGarage.Controllers
 
             return View(session);
         }
+
+        public async Task<IActionResult> ActiveList()
+        {
+            var sessions = await _context.ParkingSessions
+                .Include(s => s.Car)
+                .Include(s => s.Garage)
+                .Where(s => s.ExitTime == null)
+                .ToListAsync();
+
+            var dtos = _mapper.Map<IEnumerable<ActiveSessionListDto>>(sessions);
+
+            var vm = _mapper.Map<IEnumerable<ActiveSessionListViewModel>>(dtos);
+
+            return View(vm);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Pay(int sessionId, decimal amount)

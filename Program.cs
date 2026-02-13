@@ -44,6 +44,7 @@ builder.Services.AddScoped<IGarageService, GarageService>();
 builder.Services.AddScoped<IFeeService, FeeService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IParkingSessionService, ParkingSessionService>();
+builder.Services.AddScoped<IGarageLocationService, GarageLocationService>();
 
 
 var app = builder.Build();

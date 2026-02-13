@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CarsInsideGarage.Data;
+using CarsInsideGarage.Models.DTOs;
 using CarsInsideGarage.Models.ViewModels;
 using CarsInsideGarage.Services.Fee;
 using CarsInsideGarage.Services.Garage;
@@ -72,13 +73,8 @@ namespace CarsInsideGarage.Controllers
 
             try
             {
-                await _garageService.CreateAsync(
-                    vm.Name,
-                    vm.Capacity,
-                    vm.SelectedArea,
-                    vm.AddressCoordinates,
-                    vm.SelectedFeeId);
-
+                var dto = _mapper.Map<GarageDetailsDto>(vm);
+                await _garageService.CreateAsync(dto);
                 return View("CreateSuccess", vm);
             }
             catch (Exception)
@@ -115,5 +111,19 @@ namespace CarsInsideGarage.Controllers
                 Text = $"H: {f.HourlyRate} / D: {f.DailyRate} / M: {f.MonthlyRate}"
             });
         }
+
+        public async Task<IActionResult> RevenueReport()
+        {
+            var garages = await _context.Garages
+                .Include(g => g.Sessions)
+                .ToListAsync();
+
+            var dtos = _mapper.Map<IEnumerable<RevenueReportDto>>(garages);
+            var vm = _mapper.Map<IEnumerable<RevenueReportViewModel>>(dtos);
+
+            return View(vm);
+        }
+
+
     }
 }
