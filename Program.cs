@@ -9,6 +9,7 @@ using CarsInsideGarage.Services.Fee;
 using CarsInsideGarage.Services.Garage;
 using CarsInsideGarage.Services.GarageSession;
 using CarsInsideGarage.Services.Location;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
@@ -16,6 +17,10 @@ using System.Diagnostics;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<GarageDbContext>()
+    .AddDefaultTokenProviders();
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<GarageDbContext>(options =>
@@ -51,6 +56,20 @@ var app = builder.Build();
 
 // --- Ensure tables exist and seed initial data ---
 
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    string[] roles = { "Driver", "GarageOwner", "Admin" };
+
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole(role));
+    }
+}
+
+
 // Configure HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
@@ -61,6 +80,8 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

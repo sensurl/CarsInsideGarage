@@ -54,6 +54,33 @@
                                 <li><a class="dropdown-item" asp-controller="Garages" asp-action="Create">Register New Garage</a></li>
                             </ul>
                         </li>
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item ms-auto d-flex align-items-center text-light">
+                                <span class="me-3">
+                                    Hello @User.Identity.Name
+                                </span>
+                                <form asp-controller="Account" asp-action="Logout" method="post">
+                                    <button type="submit" class="btn btn-outline-light btn-sm">
+                                        Logout
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item ms-auto">
+                                <a class="nav-link text-success" asp-controller="Account" asp-action="Login">
+                                    Login
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-warning" asp-controller="Account" asp-action="Register">
+                                    Register
+                                </a>
+                            </li>
+                        }
+
                     </ul>
                 </div>
             </div>

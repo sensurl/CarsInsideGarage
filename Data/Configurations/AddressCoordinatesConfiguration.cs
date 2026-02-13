@@ -26,7 +26,8 @@ namespace CarsInsideGarage.Data.Configurations
                    .IsUnique();
 
          
-            builder.HasData(
+            /*
+			builder.HasData(
                 new AddressCoordinates
                 {
                     Id = 1,
@@ -46,6 +47,7 @@ namespace CarsInsideGarage.Data.Configurations
                     Longitude = 23.276871m
                 }
             );
+			*/
         }
     }
     

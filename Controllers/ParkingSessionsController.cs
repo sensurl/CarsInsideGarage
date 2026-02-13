@@ -1,10 +1,11 @@
-﻿using CarsInsideGarage.Data;
+﻿using AutoMapper;
+using CarsInsideGarage.Data;
 using CarsInsideGarage.Models.DTOs;
 using CarsInsideGarage.Models.ViewModels;
 using CarsInsideGarage.Services.GarageSession;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 
 namespace CarsInsideGarage.Controllers
 {
@@ -21,6 +22,7 @@ namespace CarsInsideGarage.Controllers
             _mapper = mapper;
         }
 
+       // [Authorize(Roles = "Driver")]
         public async Task<IActionResult> Active(int carId)
         {
             var session = await _service.GetActiveSessionByCarAsync(carId);
@@ -46,7 +48,7 @@ namespace CarsInsideGarage.Controllers
             return View(vm);
         }
 
-
+      
         [HttpPost]
         public async Task<IActionResult> Pay(int sessionId, decimal amount)
         {

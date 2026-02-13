@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace CarsInsideGarage.Data.Entities
 {
@@ -23,6 +24,10 @@ namespace CarsInsideGarage.Data.Entities
 
         // Cars inside a garage are derived from active sessions, not a direct relationship.
         // Garage ← ParkingSession → Car
+
+        // LINK TO IDENTITY USER
+        public string UserId { get; set; } = null!;
+        public ApplicationUser User { get; set; } = null!;
 
     }
 }

@@ -27,7 +27,8 @@ namespace CarsInsideGarage.Data.Configurations
                   .IsRequired()
                   .HasColumnType("decimal(18,2)");
 
-            // Seed data
+            /*
+			// Seed data
             builder.HasData(
                 new Entities.GarageFee
                 {
@@ -44,6 +45,8 @@ namespace CarsInsideGarage.Data.Configurations
                     MonthlyRate = 400.00m
                 }
             );
+			*/
+			
         }
     
     }

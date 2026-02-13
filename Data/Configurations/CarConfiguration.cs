@@ -24,7 +24,8 @@ namespace CarsInsideGarage.Data.Configurations
                 .IsUnique();
 
 
-            // Seed data
+            /*
+			// Seed data
             builder.HasData(
                 new Entities.Car
                 {
@@ -42,6 +43,7 @@ namespace CarsInsideGarage.Data.Configurations
                     CarPlateNumber = "LMN456"
                 }
                 );
+			*/
         }
     }
 }

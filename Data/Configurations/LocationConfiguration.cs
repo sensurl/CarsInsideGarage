@@ -26,7 +26,8 @@ namespace CarsInsideGarage.Data.Configurations
                    .HasForeignKey(l => l.AddressCoordinatesId)
                    .OnDelete(DeleteBehavior.Restrict);
 
-            // NOW seed using FK
+            /*
+			// Seed using FK
             builder.HasData(
                 new Location
                 {
@@ -47,6 +48,7 @@ namespace CarsInsideGarage.Data.Configurations
                     AddressCoordinatesId = 3
                 }
             );
+			*/
         }
     }
 

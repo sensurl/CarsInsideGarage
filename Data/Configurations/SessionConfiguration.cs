@@ -36,7 +36,8 @@ namespace CarsInsideGarage.Data.Configurations
                    .HasForeignKey(ps => ps.CarId)
                    .OnDelete(DeleteBehavior.Cascade);
 
-            // Seed data
+            /*
+			// Seed data
 
             builder.HasData(
                 new ParkingSession
@@ -70,6 +71,7 @@ namespace CarsInsideGarage.Data.Configurations
                     IsCleared = true
                 }
             );
+			*/
         }
     
     }

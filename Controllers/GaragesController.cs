@@ -5,6 +5,7 @@ using CarsInsideGarage.Models.ViewModels;
 using CarsInsideGarage.Services.Fee;
 using CarsInsideGarage.Services.Garage;
 using CarsInsideGarage.Services.Location;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ namespace CarsInsideGarage.Controllers
             _mapper = mapper;
         }
 
+       // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var garages = await _garageService.GetAllAsync();
@@ -112,6 +114,7 @@ namespace CarsInsideGarage.Controllers
             });
         }
 
+       // [Authorize(Roles = "Owner")]
         public async Task<IActionResult> RevenueReport()
         {
             var garages = await _context.Garages

@@ -1,10 +1,11 @@
 ﻿using CarsInsideGarage.Data.Configurations;
 using CarsInsideGarage.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace CarsInsideGarage.Data
 {
-    public class GarageDbContext : DbContext
+    public class GarageDbContext : IdentityDbContext<ApplicationUser>
     {
         public GarageDbContext(DbContextOptions<GarageDbContext> options) : base(options)
         {

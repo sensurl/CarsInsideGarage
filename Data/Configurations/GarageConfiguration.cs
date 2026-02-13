@@ -32,7 +32,8 @@ namespace CarsInsideGarage.Data.Configurations
 
             // Cascade: If you delete the Garage, delete the Location record too.
 
-            // Seed data
+/*
+// Seed data
             builder.HasData(
                 new Garage
                 {
@@ -61,6 +62,9 @@ namespace CarsInsideGarage.Data.Configurations
                 }
 
             );
-        }
+
+*/
+
+                    }
     }
 }
