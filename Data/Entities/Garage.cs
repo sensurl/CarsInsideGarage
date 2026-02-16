@@ -8,14 +8,15 @@ namespace CarsInsideGarage.Data.Entities
         [Key]
         public int Id { get; set; }
 
-        public int LocationId { get; set; }
-        public Location Location { get; set; } = null!;
+
 
         public string Name { get; set; } = null!;
 
-        public int Capacity { get; set; } 
+        public int Capacity { get; set; }
+        public int LocationId { get; set; }
+        public Location Location { get; set; } = null!;
 
-        public int GarageFeeId { get; set; }
+        public int ParkingFeeId { get; set; }
         public GarageFee GarageFee { get; set; } = null!;
 
 

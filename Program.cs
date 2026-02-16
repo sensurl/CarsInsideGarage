@@ -24,7 +24,12 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<GarageDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    var environment = builder.Environment.EnvironmentName;
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+    DbContextOptionsFactory.Configure(options, environment, connectionString);
+});
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -51,6 +56,7 @@ builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IParkingSessionService, ParkingSessionService>();
 builder.Services.AddScoped<IGarageLocationService, GarageLocationService>();
 
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
@@ -68,6 +74,8 @@ using (var scope = app.Services.CreateScope())
             await roleManager.CreateAsync(new IdentityRole(role));
     }
 }
+
+Console.WriteLine($"ENVIRONMENT: {builder.Environment.EnvironmentName}");
 
 
 // Configure HTTP request pipeline
@@ -87,5 +95,16 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        var error = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>()?.Error;
+        Console.WriteLine(error?.ToString());
+        await context.Response.WriteAsync("Something went wrong. Check console logs.");
+    });
+});
+
 
 app.Run();

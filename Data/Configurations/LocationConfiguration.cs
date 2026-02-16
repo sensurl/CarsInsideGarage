@@ -1,5 +1,5 @@
 ﻿using CarsInsideGarage.Data.Entities;
-using CarsInsideGarage.Data.Enums; 
+using CarsInsideGarage.Data.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,18 +13,16 @@ namespace CarsInsideGarage.Data.Configurations
             builder.HasKey(l => l.Id);
 
             builder.Property(l => l.Area)
-                   .HasConversion(
-                       v => v.ToString(),
-                       v => (Area)Enum.Parse(typeof(Area), v)
-                   )
-                   .HasMaxLength(20)
-                   .IsRequired();
+                .HasConversion(
+                    v => v.ToString(),
+                    v => (Area)Enum.Parse(typeof(Area), v))
+                .HasMaxLength(20)
+                .IsRequired();
 
-            // RELATIONSHIP
-            builder.HasOne(l => l.Coordinates)
-                   .WithMany()   // assuming no back-reference
-                   .HasForeignKey(l => l.AddressCoordinatesId)
-                   .OnDelete(DeleteBehavior.Restrict);
+            builder.Property(l => l.ParkingCoordinates)
+                .HasColumnType("geography")
+                .IsRequired();
+
 
             /*
 			// Seed using FK

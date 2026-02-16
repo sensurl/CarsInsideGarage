@@ -1,4 +1,5 @@
-﻿namespace CarsInsideGarage.Models.DTOs
+﻿
+namespace CarsInsideGarage.Models.DTOs
 {
     public class GarageDetailsDto
     {
@@ -7,7 +8,11 @@
         public int Capacity { get; set; }
 
         public string Area { get; set; } = null!;
-        public string AddressCoordinates { get; set; } = null!;
+
+        // Spatial coordinates formatted as "lat, lng"
+        public string ParkingCoordinates { get; set; } = null!;
+
+        // public int SelectedFeeId { get; set; }
 
         public decimal HourlyRate { get; set; }
         public decimal DailyRate { get; set; }

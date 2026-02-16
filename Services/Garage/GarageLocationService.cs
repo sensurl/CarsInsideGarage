@@ -6,38 +6,37 @@ using CarsInsideGarage.Data.Enums;
 using CarsInsideGarage.Models.DTOs;
 using CarsInsideGarage.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
+
 
 namespace CarsInsideGarage.Services.Garage
 {
     public class GarageLocationService : IGarageLocationService
     {
         private readonly GarageDbContext _context;
+        private readonly GeometryFactory _geometryFactory;
+
         public GarageLocationService(GarageDbContext context)
         {
             _context = context;
+            _geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
         }
-        public async Task<CarsInsideGarage.Data.Entities.Garage?> GetNearestAsync(double lat, double lng)
+
+
+
+        public async Task<Data.Entities.Garage?> GetNearestAsync(double lat, double lng)
         {
-            var garages = await _context.Garages
+            var userLocation = _geometryFactory.CreatePoint(new Coordinate(lng, lat));
+
+            return await _context.Garages
                 .Include(g => g.Location)
-                    .ThenInclude(l => l.Coordinates)
-                .Include(g => g.Sessions)
-                .Include(g => g.GarageFee)
-                .ToListAsync();
-
-            var nearest = garages
-                .Select(g => new
-                {
-                    Garage = g,
-                    Distance = Math.Sqrt(
-                        Math.Pow((double)g.Location.Coordinates.Latitude - lat, 2) +
-                        Math.Pow((double)g.Location.Coordinates.Longitude - lng, 2))
-                })
-                .OrderBy(x => x.Distance)
-                .FirstOrDefault();
-
-            return nearest?.Garage;
+                .Where(g => g.Location.ParkingCoordinates != null)
+                .OrderBy(g => g.Location.ParkingCoordinates.Distance(userLocation))
+                .FirstOrDefaultAsync();
         }
+
+
 
     }
 }

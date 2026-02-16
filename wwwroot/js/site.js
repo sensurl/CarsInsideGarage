@@ -1,49 +1,51 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
-    // Find any input field meant for a License Plate
-    const plateInputs = document.querySelectorAll('input[name*="CarPlateNumber"]');
 
+    // License plate formatting
+    const plateInputs = document.querySelectorAll('input[name*="CarPlateNumber"]');
     plateInputs.forEach(input => {
         input.addEventListener('input', function () {
-            // Force uppercase and remove spaces while typing
             this.value = this.value.toUpperCase().replace(/\s/g, '');
         });
     });
-});
 
-// Function to handle button loading states
-document.addEventListener("submit", function (e) {
-    const form = e.target;
+    // Form submit spinner
+    document.addEventListener("submit", function (e) {
+        const form = e.target;
+        if (!form.checkValidity()) return;
 
-    // Only show spinner if the HTML5 validation passes
-    if (!form.checkValidity()) {
-        return;
-    }
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const spinner = form.querySelector('.spinner-btn');
 
-    const submitBtn = form.querySelector('button[type="submit"]');
-    const spinner = form.querySelector('.spinner-btn');
-
-    if (submitBtn && spinner) {
-        spinner.style.display = "inline-block";
-        submitBtn.classList.add("disabled");
-        submitBtn.style.opacity = "0.7";
-    }
-});
-
-document.getElementById("btnUseLocation").addEventListener("click", () => {
-    navigator.geolocation.getCurrentPosition(pos => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-        // TODO: Call controller or JS map function
-        console.log("User location:", lat, lng);
+        if (submitBtn && spinner) {
+            spinner.style.display = "inline-block";
+            submitBtn.classList.add("disabled");
+            submitBtn.style.opacity = "0.7";
+        }
     });
+
+    // Use Location button
+    const btnUseLocation = document.getElementById("btnUseLocation");
+    if (btnUseLocation) {
+        btnUseLocation.addEventListener("click", () => {
+            navigator.geolocation.getCurrentPosition(pos => {
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
+                console.log("User location:", lat, lng);
+            });
+        });
+    }
+
+    // Search Area button
+    const btnSearchArea = document.getElementById("btnSearchArea");
+    if (btnSearchArea) {
+        btnSearchArea.addEventListener("click", () => {
+            const query = document.getElementById("searchBox").value;
+            console.log("Search for:", query);
+        });
+    }
 });
 
-document.getElementById("btnSearchArea").addEventListener("click", () => {
-    const query = document.getElementById("searchBox").value;
-    // TODO: Geocode and show on map
-    console.log("Search for:", query);
-});
-
+// Global function
 function findNearest() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -56,4 +58,3 @@ function findNearest() {
         alert("Geolocation is not supported.");
     }
 }
-

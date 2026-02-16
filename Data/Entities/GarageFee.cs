@@ -6,12 +6,17 @@ namespace CarsInsideGarage.Data.Entities
     {
         [Key]
         public int Id { get; set; }
-      
-        
+
+
         public decimal HourlyRate { get; set; }
 
         public decimal DailyRate { get; set; }
 
         public decimal MonthlyRate { get; set; }
+
+        //public string CreatedByUserId { get; set; } = null!;
+        // public ApplicationUser CreatedByUser { get; set; } = null!;
+
+        public ICollection<Garage> Garages { get; set; } = new List<Garage>();
     }
 }

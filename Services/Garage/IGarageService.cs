@@ -10,8 +10,9 @@ namespace CarsInsideGarage.Services.Garage
         Task<IEnumerable<GarageListDto>> GetAllAsync();
         Task<GarageDetailsViewModel?> GetDetailsViewModelAsync(int garageId, bool isOwner);
 
-        Task CreateAsync(GarageDetailsDto dto);
-       
+        Task<int> CreateAsync(GarageCreateDto dto, string userId);
+
+
         Task<GarageDeleteConfirmationViewModel> DeleteGarageAsync(int id);
     }
 }

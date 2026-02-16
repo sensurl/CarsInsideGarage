@@ -24,17 +24,18 @@ namespace CarsInsideGarage.Data.Configurations
                    .IsRequired()
                    .HasColumnType("decimal(18,2)");
 
-            // Configuring the relationships
+            // Relationship with Garage
             builder.HasOne(ps => ps.Garage)
-                   .WithMany() // A Garage can have many ParkingSessions
+                   .WithMany(g => g.Sessions)
                    .HasForeignKey(ps => ps.GarageId)
                    .OnDelete(DeleteBehavior.Restrict);
-            // Restrict: you can't delete a Garage that has history!
 
+            // Relationship with Car
             builder.HasOne(ps => ps.Car)
-                   .WithMany() // A Car can have many ParkingSessions
+                   .WithMany(c => c.Sessions)
                    .HasForeignKey(ps => ps.CarId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.Restrict);
+
 
             /*
 			// Seed data
@@ -73,6 +74,6 @@ namespace CarsInsideGarage.Data.Configurations
             );
 			*/
         }
-    
+
     }
 }

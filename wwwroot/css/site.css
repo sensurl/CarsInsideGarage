@@ -14,7 +14,7 @@
     --text-main: #f1f5f9;
     --text-muted: #94a3b8;
     --text-dark: #0f172a;
-    --text-hover-grey: #cbd5e1; 
+    --text-hover-grey: #cbd5e1;
     /* Borders */
     --border: #334155;
     --warning-pink: #e722cb;
@@ -122,15 +122,15 @@ body {
         display: inline-block; /* Required for transform to work well */
     }
 
-.btn-danger:hover {
-    background-color: var(--delete-hover) !important;
-    color: white !important;
-}
-
-    /* When the button is hovered, make the icon pop! */
-    .btn-danger:hover i {
-        transform: scale(1.3) rotate(-10deg); /* Makes the trash can grow and tilt */
+    .btn-danger:hover {
+        background-color: var(--delete-hover) !important;
+        color: white !important;
     }
+
+        /* When the button is hovered, make the icon pop! */
+        .btn-danger:hover i {
+            transform: scale(1.3) rotate(-10deg); /* Makes the trash can grow and tilt */
+        }
 
 /* --- Alerts --- */
 .alert-warning {

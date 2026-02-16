@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CarsInsideGarage.Data;
+using CarsInsideGarage.Data.Entities;
 using CarsInsideGarage.Models.DTOs;
 using CarsInsideGarage.Models.ViewModels;
 using CarsInsideGarage.Services.Fee;
@@ -29,7 +30,7 @@ namespace CarsInsideGarage.Controllers
             _mapper = mapper;
         }
 
-       // [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var garages = await _garageService.GetAllAsync();
@@ -45,13 +46,16 @@ namespace CarsInsideGarage.Controllers
 
             var viewModel = _mapper.Map<GarageDetailsViewModel>(garageDto);
 
+            //ToDo -- isOwner true must be removed; actually Details is the only place the Driver can register their car!  so this must be Public!
+
             // Pick the first car in the database to simulate "The Current User"
+            /*
             var car = await _context.Cars.FirstOrDefaultAsync();
             if (car != null)
             {
                 ViewBag.CurrentCarId = car.Id;
             }
-
+*/
             return View(viewModel);
         }
 
@@ -65,27 +69,39 @@ namespace CarsInsideGarage.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Create(GarageCreateViewModel vm)
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "GarageOwner")]
+        public async Task<IActionResult> Create(GarageCreateViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                await PopulateDropdownsAsync(vm);
-                return View(vm);
+                await PopulateDropdownsAsync(model);
+                return View(model);
             }
 
-            try
+            // 🔥 1. Get logged-in user
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            // 🔥 2. Map VM → DTO
+            var dto = new GarageCreateDto
             {
-                var dto = _mapper.Map<GarageDetailsDto>(vm);
-                await _garageService.CreateAsync(dto);
-                return View("CreateSuccess", vm);
-            }
-            catch (Exception)
-            {
-                ModelState.AddModelError("AddressCoordinates", "These coordinates are already assigned to another garage.");
-                await PopulateDropdownsAsync(vm);
-                return View(vm);
-            }
+                Name = model.Name,
+                Capacity = model.Capacity,
+                Area = model.SelectedArea.ToString(),
+                ParkingCoordinates = model.ParkingCoordinates,
+                ParkingFeeId = model.ParkingFeeId
+            };
+
+            // 🔥 3. Call service
+            var createdGarageId = await _garageService.CreateAsync(dto, userId);
+
+            return RedirectToAction(nameof(Details), new { id = createdGarageId });
         }
+
+
 
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
@@ -104,7 +120,7 @@ namespace CarsInsideGarage.Controllers
 
         private async Task PopulateDropdownsAsync(GarageCreateViewModel vm)
         {
-            
+
             var fees = await _feeService.GetAllAsync();
 
             vm.Fees = fees.Select(f => new SelectListItem
@@ -114,7 +130,7 @@ namespace CarsInsideGarage.Controllers
             });
         }
 
-       // [Authorize(Roles = "Owner")]
+        // [Authorize(Roles = "GarageOwner")]
         public async Task<IActionResult> RevenueReport()
         {
             var garages = await _context.Garages

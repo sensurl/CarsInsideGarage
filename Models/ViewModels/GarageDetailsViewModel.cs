@@ -1,5 +1,7 @@
 ﻿using CarsInsideGarage.Data.Enums;
 using System.ComponentModel.DataAnnotations;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 
 namespace CarsInsideGarage.Models.ViewModels
 {
@@ -16,7 +18,7 @@ namespace CarsInsideGarage.Models.ViewModels
 
         [Required]
         [StringLength(40)]
-        public string Coordinates { get; set; } = null!;
+        public string ParkingCoordinates { get; set; } = null!;
 
 
         [Required]

@@ -1,12 +1,16 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CarsInsideGarage.Data;
 using CarsInsideGarage.Data.Entities;
 using CarsInsideGarage.Models.DTOs;
 using CarsInsideGarage.Models.ViewModels;
 using CarsInsideGarage.Services.Car;
 using CarsInsideGarage.Services.CarService;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
@@ -16,21 +20,62 @@ namespace CarsInsideGarage.Services.Car
 {
     public class CarService : ICarService
     {
-        private readonly Data.GarageDbContext _context;
+        private readonly GarageDbContext _context;
         private readonly IMapper _mapper;
-        public CarService(Data.GarageDbContext context, IMapper mapper)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+
+        private readonly GeometryFactory _geometryFactory =
+            NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
+
+        public CarService(GarageDbContext context,
+        IMapper mapper,
+        IHttpContextAccessor httpContextAccessor,
+        UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
+            _userManager = userManager;
         }
-        
+
+
         public async Task<IEnumerable<CarDto>> GetAllCarsAsync()
         {
-            var cars = await _context.Cars.ToListAsync();
+            // 1. Get the current logged-in user
+            var user = _httpContextAccessor.HttpContext?.User;
+            var userId = _userManager.GetUserId(user);
 
-            return _mapper.Map<List<CarDto>>(cars);
 
+            // In case of user not logged in (no user), return an empty list 
+            if (user == null || !user.Identity.IsAuthenticated)
+            {
+                return Enumerable.Empty<CarDto>();
+            }
+
+            // 2. Start the query
+            var query = _context.Cars.AsQueryable();
+
+            // 3. Filter: If not an Admin, only show own cars
+            if (user != null && !user.IsInRole("Admin"))
+            {
+                query = query.Where(c => c.UserId == userId);
+            }
+
+            // 4. Project directly to DTO and return the result
+            return await query
+                .ProjectTo<CarDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            //var cars = await _context.Cars.ToListAsync();
+
+            //return _mapper.Map<List<CarDto>>(cars);
         }
+
+
+
+
 
         public async Task<CarDto> GetCarByIdAsync(int id)
         {
@@ -49,21 +94,34 @@ namespace CarsInsideGarage.Services.Car
 
         public async Task<int> AddCarAsync(CarDto carDto)
         {
+            // 1. Clean up the plate number
             carDto.CarPlateNumber = carDto.CarPlateNumber.Trim().Replace(" ", "").ToUpper();
 
-            // 1. Check the DB first before doing any mapping
+            // 2. Security: Get the ID of the person currently logged in
+            var userClaims = _httpContextAccessor.HttpContext?.User;
+            var userId = _userManager.GetUserId(userClaims);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new Exception("You must be logged in to register a car.");
+            }
+
+            // 3. Check for duplicates
             var exists = await _context.Cars.AnyAsync(c => c.CarPlateNumber == carDto.CarPlateNumber);
-
             if (exists) throw new Exception("A car with this license plate already exists.");
-            
 
-            // 2. If it doesn't exist, do the mapping and saving
+            // 4. Map DTO to Entity
             var carEntity = _mapper.Map<CarsInsideGarage.Data.Entities.Car>(carDto);
-             _context.Cars.Add(carEntity);
+
+            // 5. MANUAL LINK: Assign the logged-in User's ID to the car
+            carEntity.UserId = userId;
+
+            _context.Cars.Add(carEntity);
             await _context.SaveChangesAsync();
+
             return carEntity.Id;
         }
-        
+
         public async Task<CarDeleteConfirmationViewModel> RemoveCarAsync(int id)
         {
             var car = await _context.Cars.FindAsync(id);

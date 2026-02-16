@@ -21,6 +21,7 @@ namespace CarsInsideGarage.Services.GarageSession
         public async Task StartSessionAsync(int garageId, int carId)
         {
             var garage = await _context.Garages
+    .Include(g => g.Location)
                 .Include(g => g.GarageFee)
                 .FirstOrDefaultAsync(g => g.Id == garageId);
 

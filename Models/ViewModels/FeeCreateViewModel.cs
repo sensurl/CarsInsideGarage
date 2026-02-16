@@ -4,7 +4,7 @@ namespace CarsInsideGarage.Models.ViewModels
 {
     public class FeeCreateViewModel
     {
-        public int Id { get; set; } 
+        public int Id { get; set; }
 
         [Required]
         [Range(1, 10)]

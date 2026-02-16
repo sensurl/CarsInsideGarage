@@ -3,6 +3,7 @@
 <div class="card shadow p-4">
     <h3 class="text-white mb-4">Create New Garage</h3>
     <form asp-action="Create" class="needs-spinner">
+        <div asp-validation-summary="All" class="text-danger"></div>
 
         <div class="mb-3">
             <label asp-for="Name" class="form-label">Garage Name</label>
@@ -10,9 +11,17 @@
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="Capacity" class="form-label">Capacity</label>
-            <input asp-for="Capacity" class="form-control" />
+        <div class="mb-3 text-start">
+            <label asp-for="Capacity" class="form-label text-muted small fw-bold">Capacity</label>
+            <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary text-accent">#</span>
+                <input asp-for="Capacity"
+                       type="number"
+                       step="1"
+                       min="1"
+                       class="form-control"
+                       onfocus="this.select();" />
+            </div>
             <span asp-validation-for="Capacity" class="text-danger"></span>
         </div>
 
@@ -24,18 +33,19 @@
             <span asp-validation-for="SelectedArea" class="text-danger"></span>
         </div>
 
+
         <div class="mb-3">
-            <label asp-for="AddressCoordinates" class="form-label">Coordinates</label>
-            <input asp-for="AddressCoordinates" class="form-control" placeholder="e.g. 42.697, 23.321" />
-            <span asp-validation-for="AddressCoordinates" class="text-danger"></span>
+            <label asp-for="ParkingCoordinates" class="form-label">Coordinates</label>
+            <input asp-for="ParkingCoordinates" class="form-control" placeholder="e.g. 42.697, 23.321" />
+            <span asp-validation-for="ParkingCoordinates" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="SelectedFeeId" class="form-label">Fee Structure</label>
-            <select asp-for="SelectedFeeId" asp-items="@Model.Fees" class="form-select">
+            <label asp-for="ParkingFeeId" class="form-label">Fee Structure</label>
+            <select asp-for="ParkingFeeId" asp-items="@Model.Fees" class="form-select">
                 <option value="">-- Select Rates --</option>
             </select>
-            <span asp-validation-for="SelectedFeeId" class="text-danger"></span>
+            <span asp-validation-for="ParkingFeeId" class="text-danger"></span>
         </div>
 
         <button type="submit" class="btn btn-register w-100 mt-3">

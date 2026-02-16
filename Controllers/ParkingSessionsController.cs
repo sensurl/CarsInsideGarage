@@ -6,6 +6,7 @@ using CarsInsideGarage.Services.GarageSession;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CarsInsideGarage.Controllers
 {
@@ -22,16 +23,25 @@ namespace CarsInsideGarage.Controllers
             _mapper = mapper;
         }
 
-       // [Authorize(Roles = "Driver")]
-        public async Task<IActionResult> Active(int carId)
+        [Authorize(Roles = "Driver")]
+        public async Task<IActionResult> Active()
         {
-            var session = await _service.GetActiveSessionByCarAsync(carId);
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            var car = await _context.Cars
+                .FirstOrDefaultAsync(c => c.UserId == userId);
+
+            if (car == null)
+                return View("NoActiveSession");
+
+            var session = await _service.GetActiveSessionByCarAsync(car.Id);
 
             if (session == null)
                 return View("NoActiveSession");
 
             return View(session);
         }
+
 
         public async Task<IActionResult> ActiveList()
         {
@@ -48,46 +58,48 @@ namespace CarsInsideGarage.Controllers
             return View(vm);
         }
 
-      
+
         [HttpPost]
         public async Task<IActionResult> Pay(int sessionId, decimal amount)
         {
             try
             {
                 await _service.PayAsync(sessionId, amount);
-
-                // Get the CarId via the service
-                int carId = await _service.GetCarIdBySessionId(sessionId);
-
-                return RedirectToAction("Active", new { carId });
+                return RedirectToAction("Active");
             }
             catch (Exception ex)
             {
                 // Showing why payment failed (e.g. negative amount)
                 TempData["Error"] = ex.Message;
-                int carId = await _service.GetCarIdBySessionId(sessionId);
-                return RedirectToAction("Active", new { carId });
+
+                return RedirectToAction("Active");
             }
         }
 
+        [Authorize(Roles = "Driver")]
         [HttpGet]
-        public async Task<IActionResult> Start(int garageId, int carId)
+        public async Task<IActionResult> Start(int garageId)
         {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            var car = await _context.Cars
+                .FirstOrDefaultAsync(c => c.UserId == userId);
+
+            if (car == null)
+                return RedirectToAction("Index", "Cars");
+
             try
             {
-                // 1. Call the service to create the entry in the DB
-                await _service.StartSessionAsync(garageId, carId);
-
-                // 2. Redirect to the "Active" view so the user sees their ticket
-                return RedirectToAction("Active", new { carId = carId });
+                await _service.StartSessionAsync(garageId, car.Id);
+                return RedirectToAction("Active");
             }
             catch (Exception ex)
             {
-                // If the car is already parked, show the error
                 TempData["Error"] = ex.Message;
-                return RedirectToAction("Index", "Cars");
+                return RedirectToAction("Index", "Garages");
             }
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Exit(int sessionId)
@@ -111,7 +123,7 @@ namespace CarsInsideGarage.Controllers
         }
 
 
-        
+
     }
 
 }

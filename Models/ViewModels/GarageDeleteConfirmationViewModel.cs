@@ -1,9 +1,12 @@
-﻿namespace CarsInsideGarage.Models.ViewModels
+﻿using NetTopologySuite;
+using NetTopologySuite.Geometries;
+
+namespace CarsInsideGarage.Models.ViewModels
 {
     public class GarageDeleteConfirmationViewModel
     {
         public string Name { get; set; } = null!;
-        
-        public string Coordinates { get; set; } = null!; 
+
+        public string ParkingCoordinates { get; set; } = null!;
     }
 }
