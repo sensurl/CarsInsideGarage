@@ -21,15 +21,11 @@ namespace CarsInsideGarage.Data.Configurations
                 .HasForeignKey(g => g.ParkingFeeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
-            // Linkage: One Garage has One Location
+            // One Garage has One Location
             builder.HasOne(g => g.Location)
-    .WithOne()
-    .HasForeignKey<Garage>(g => g.LocationId)
-    .OnDelete(DeleteBehavior.Cascade);
-
-
-            // Cascade: If you delete the Garage, delete the Location record too.
+                .WithOne()
+                .HasForeignKey<Garage>(g => g.LocationId)
+                .OnDelete(DeleteBehavior.Cascade); // Deleting Garage deletes the Location record too.
 
             /*
             // Seed data
@@ -61,9 +57,7 @@ namespace CarsInsideGarage.Data.Configurations
                             }
 
                         );
-
             */
-
         }
     }
 }

@@ -4,10 +4,7 @@ namespace CarsInsideGarage.Data
 {
     public static class DbContextOptionsFactory
     {
-        public static void Configure(
-            DbContextOptionsBuilder options,
-            string environment,
-            string connectionString)
+        public static void Configure(DbContextOptionsBuilder options, string environment, string connectionString)
         {
             if (environment == "Development")
             {

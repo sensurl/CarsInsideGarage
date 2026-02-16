@@ -1,4 +1,5 @@
 ﻿@using System.Globalization
+
 @model CarsInsideGarage.Models.ViewModels.SessionActiveViewModel
 
 <div class="container mt-5">
@@ -22,6 +23,7 @@
                     <p class="text-muted mb-1">Entry Time</p>
                     <h5>@Model.EntryTime.ToString("MMM dd, HH:mm")</h5>
                 </div>
+
                 <div class="col-sm-6 text-end">
                     <p class="text-muted mb-1">Accrued Amount</p>
                     <h2 class="fw-bold">@Model.AccruedAmount.ToString("C", new CultureInfo("fr-FR"))</h2>

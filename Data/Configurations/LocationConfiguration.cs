@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CarsInsideGarage.Data.Configurations
 {
-
     public class LocationConfiguration : IEntityTypeConfiguration<Location>
     {
         public void Configure(EntityTypeBuilder<Location> builder)
@@ -22,7 +21,6 @@ namespace CarsInsideGarage.Data.Configurations
             builder.Property(l => l.ParkingCoordinates)
                 .HasColumnType("geography")
                 .IsRequired();
-
 
             /*
 			// Seed using FK
@@ -49,5 +47,4 @@ namespace CarsInsideGarage.Data.Configurations
 			*/
         }
     }
-
 }

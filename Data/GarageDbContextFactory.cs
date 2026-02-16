@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 
 namespace CarsInsideGarage.Data
 {
@@ -26,7 +25,5 @@ namespace CarsInsideGarage.Data
 
             return new GarageDbContext(optionsBuilder.Options);
         }
-
-
     }
 }

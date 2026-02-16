@@ -4,7 +4,6 @@
     {
         public int Id { get; set; }
 
-
         public decimal HourlyRate { get; set; }
 
         public decimal DailyRate { get; set; }

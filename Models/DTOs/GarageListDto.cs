@@ -1,9 +1,3 @@
-using CarsInsideGarage.Models;
-using CarsInsideGarage.Data.Entities;
-using CarsInsideGarage.Data.Enums;
-using System.Collections.Generic;
-
-
 namespace CarsInsideGarage.Models.DTOs
 {
     public class GarageListDto
@@ -15,14 +9,3 @@ namespace CarsInsideGarage.Models.DTOs
 
     }
 }
-
-
-
-
-
-
-
-
-
-
-

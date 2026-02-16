@@ -9,5 +9,4 @@
         public DateTime ExitTime { get; set; }
         public decimal AmountPaid { get; set; }
     }
-
 }

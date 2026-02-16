@@ -11,34 +11,32 @@ namespace CarsInsideGarage.Mappings
         public MappingProfile()
         {
             // =========================
-            // Entity → DTO
+            // Entity => DTO
             // =========================
 
             CreateMap<Garage, GarageListDto>()
                 .ForMember(d => d.FreeSpots,
-                    opt => opt.MapFrom(g =>
-                        g.Capacity - g.Sessions.Count(s => s.ExitTime == null)));
+                    opt => opt.MapFrom(g => g.Capacity - g.Sessions.Count(s => s.ExitTime == null)));
 
             CreateMap<Garage, GarageDetailsDto>()
-     .ForMember(d => d.Area,
-         opt => opt.MapFrom(g => g.Location.Area.ToString()))
-     .ForMember(d => d.ParkingCoordinates,
-         opt => opt.Ignore()) // handled in service
-     .ForMember(d => d.HourlyRate,
-         opt => opt.MapFrom(g => g.GarageFee.HourlyRate))
-     .ForMember(d => d.DailyRate,
-         opt => opt.MapFrom(g => g.GarageFee.DailyRate))
-     .ForMember(d => d.MonthlyRate,
-         opt => opt.MapFrom(g => g.GarageFee.MonthlyRate))
-     .ForMember(d => d.ActiveCarsCount,
-         opt => opt.MapFrom(g =>
-             g.Sessions.Count(s => s.ExitTime == null)))
-     .ForMember(d => d.TotalRevenue,
-         opt => opt.Ignore())
-     .ForMember(d => d.ActiveSessions,
-         opt => opt.MapFrom(g =>
-             g.Sessions.Where(s => s.ExitTime == null)));
-
+                .ForMember(d => d.Area,
+                    opt => opt.MapFrom(g => g.Location.Area.ToString()))
+                .ForMember(d => d.ParkingCoordinates,
+                    opt => opt.Ignore()) // handled in service
+                .ForMember(d => d.HourlyRate,
+                    opt => opt.MapFrom(g => g.GarageFee.HourlyRate))
+                .ForMember(d => d.DailyRate,
+                    opt => opt.MapFrom(g => g.GarageFee.DailyRate))
+                .ForMember(d => d.MonthlyRate,
+                    opt => opt.MapFrom(g => g.GarageFee.MonthlyRate))
+                .ForMember(d => d.ActiveCarsCount,
+                    opt => opt.MapFrom(g =>
+                        g.Sessions.Count(s => s.ExitTime == null)))
+                .ForMember(d => d.TotalRevenue,
+                    opt => opt.Ignore())
+                .ForMember(d => d.ActiveSessions,
+                    opt => opt.MapFrom(g =>
+                        g.Sessions.Where(s => s.ExitTime == null)));
 
             CreateMap<Garage, RevenueReportDto>()
                 .ForMember(dest => dest.GarageId,
@@ -62,7 +60,7 @@ namespace CarsInsideGarage.Mappings
                         (DateTime.UtcNow - src.EntryTime).TotalHours));
 
             // =========================
-            // DTO <=> Entity
+            // Entity <=> DTO
             // =========================
 
             CreateMap<Car, CarDto>().ReverseMap();
@@ -75,8 +73,7 @@ namespace CarsInsideGarage.Mappings
                 .ForMember(dest => dest.CarPlateNumber,
                     opt => opt.MapFrom(src => src.Car.CarPlateNumber))
                 .ForMember(dest => dest.GarageName,
-                    opt => opt.MapFrom(src => src.Garage.Name))
-                .ReverseMap();
+                    opt => opt.MapFrom(src => src.Garage.Name)).ReverseMap();
 
             // =========================
             // DTO <=> ViewModel
@@ -86,6 +83,11 @@ namespace CarsInsideGarage.Mappings
 
             CreateMap<FeeDto, FeeCreateViewModel>().ReverseMap();
 
+
+            // =========================
+            // DTO => ViewModel
+            // =========================
+
             CreateMap<ActiveSessionListDto, ActiveSessionListViewModel>();
 
             CreateMap<RevenueReportDto, RevenueReportViewModel>();
@@ -93,23 +95,16 @@ namespace CarsInsideGarage.Mappings
             CreateMap<GarageDetailsDto, GarageDetailsViewModel>()
                 .ForMember(dest => dest.ParkingCoordinates,
                     opt => opt.MapFrom(src => src.ParkingCoordinates))
-
-
                 .ForMember(dest => dest.FreeSpots,
                     opt => opt.MapFrom(src =>
                         src.Capacity - src.ActiveCarsCount))
-
                 .ForMember(dest => dest.Area,
                     opt => opt.MapFrom(src =>
                         Enum.Parse<Area>(src.Area)))
-
                 .ForMember(dest => dest.CanSeeRevenue,
                     opt => opt.MapFrom(src => true))
-
                 .ForMember(dest => dest.TotalRevenue,
                     opt => opt.MapFrom(src => src.TotalRevenue));
-
-
 
             CreateMap<SessionDto, SessionActiveViewModel>()
                 .ForMember(dest => dest.AccruedAmount,
@@ -122,16 +117,20 @@ namespace CarsInsideGarage.Mappings
             CreateMap<SessionDto, SessionHistoryViewModel>();
 
             // =========================
-            // ViewModel → DTO
+            // ViewModel => DTO
             // =========================
 
             CreateMap<SessionCreateViewModel, SessionDto>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.GarageName, opt => opt.Ignore())
-                .ForMember(dest => dest.CarPlateNumber, opt => opt.Ignore())
+                .ForMember(dest => dest.Id, 
+                    opt => opt.Ignore())
+                .ForMember(dest => dest.GarageName, 
+                    opt => opt.Ignore())
+                .ForMember(dest => dest.CarPlateNumber, 
+                    opt => opt.Ignore())
                 .ForMember(dest => dest.EntryTime,
                     opt => opt.MapFrom(src => DateTime.UtcNow))
-                .ForMember(dest => dest.ExitTime, opt => opt.Ignore())
+                .ForMember(dest => dest.ExitTime, 
+                    opt => opt.Ignore())
                 .ForMember(dest => dest.AmountPaid,
                     opt => opt.MapFrom(src => 0m))
                 .ForMember(dest => dest.IsCleared,

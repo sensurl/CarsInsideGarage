@@ -1,6 +1,4 @@
-﻿using CarsInsideGarage.Data.Entities;
-
-namespace CarsInsideGarage.Models.DTOs
+﻿namespace CarsInsideGarage.Models.DTOs
 {
     public class SessionDto
     {

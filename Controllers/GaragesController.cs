@@ -79,13 +79,11 @@ namespace CarsInsideGarage.Controllers
                 return View(model);
             }
 
-            // 🔥 1. Get logged-in user
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
-
-            // 🔥 2. Map VM → DTO
+          
             var dto = new GarageCreateDto
             {
                 Name = model.Name,
@@ -95,7 +93,6 @@ namespace CarsInsideGarage.Controllers
                 ParkingFeeId = model.ParkingFeeId
             };
 
-            // 🔥 3. Call service
             var createdGarageId = await _garageService.CreateAsync(dto, userId);
 
             return RedirectToAction(nameof(Details), new { id = createdGarageId });

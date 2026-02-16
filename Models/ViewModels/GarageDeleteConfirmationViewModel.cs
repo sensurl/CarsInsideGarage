@@ -1,7 +1,4 @@
-﻿using NetTopologySuite;
-using NetTopologySuite.Geometries;
-
-namespace CarsInsideGarage.Models.ViewModels
+﻿namespace CarsInsideGarage.Models.ViewModels
 {
     public class GarageDeleteConfirmationViewModel
     {

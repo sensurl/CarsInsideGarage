@@ -4,17 +4,11 @@ using CarsInsideGarage.Data;
 using CarsInsideGarage.Data.Entities;
 using CarsInsideGarage.Models.DTOs;
 using CarsInsideGarage.Models.ViewModels;
-using CarsInsideGarage.Services.Car;
 using CarsInsideGarage.Services.CarService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Threading.Tasks;
 
 namespace CarsInsideGarage.Services.Car
 {
@@ -24,15 +18,10 @@ namespace CarsInsideGarage.Services.Car
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<ApplicationUser> _userManager;
-
-
         private readonly GeometryFactory _geometryFactory =
             NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
 
-        public CarService(GarageDbContext context,
-        IMapper mapper,
-        IHttpContextAccessor httpContextAccessor,
-        UserManager<ApplicationUser> userManager)
+        public CarService(GarageDbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _mapper = mapper;
@@ -40,13 +29,15 @@ namespace CarsInsideGarage.Services.Car
             _userManager = userManager;
         }
 
+        // ================================
+        // LIST
+        // ================================
 
         public async Task<IEnumerable<CarDto>> GetAllCarsAsync()
         {
-            // 1. Get the current logged-in user
+            // 1. Identify logged-in user and their role
             var user = _httpContextAccessor.HttpContext?.User;
             var userId = _userManager.GetUserId(user);
-
 
             // In case of user not logged in (no user), return an empty list 
             if (user == null || !user.Identity.IsAuthenticated)
@@ -67,15 +58,11 @@ namespace CarsInsideGarage.Services.Car
             return await query
                 .ProjectTo<CarDto>(_mapper.ConfigurationProvider)
                 .ToListAsync();
-
-            //var cars = await _context.Cars.ToListAsync();
-
-            //return _mapper.Map<List<CarDto>>(cars);
         }
 
-
-
-
+        // ================================
+        // SEARCH
+        // ================================
 
         public async Task<CarDto> GetCarByIdAsync(int id)
         {
@@ -92,12 +79,17 @@ namespace CarsInsideGarage.Services.Car
             return _mapper.Map<CarDto>(carEntity);
         }
 
+
+        // ================================
+        // CREATE
+        // ================================
+
         public async Task<int> AddCarAsync(CarDto carDto)
         {
             // 1. Clean up the plate number
             carDto.CarPlateNumber = carDto.CarPlateNumber.Trim().Replace(" ", "").ToUpper();
 
-            // 2. Security: Get the ID of the person currently logged in
+            // 2. Identify logged-in user and their role
             var userClaims = _httpContextAccessor.HttpContext?.User;
             var userId = _userManager.GetUserId(userClaims);
 
@@ -107,13 +99,13 @@ namespace CarsInsideGarage.Services.Car
             }
 
             // 3. Check for duplicates
-            var exists = await _context.Cars.AnyAsync(c => c.CarPlateNumber == carDto.CarPlateNumber);
+            var exists = await _context.Cars
+                .AnyAsync(c => c.CarPlateNumber == carDto.CarPlateNumber);
+
             if (exists) throw new Exception("A car with this license plate already exists.");
 
-            // 4. Map DTO to Entity
             var carEntity = _mapper.Map<CarsInsideGarage.Data.Entities.Car>(carDto);
 
-            // 5. MANUAL LINK: Assign the logged-in User's ID to the car
             carEntity.UserId = userId;
 
             _context.Cars.Add(carEntity);
@@ -121,6 +113,11 @@ namespace CarsInsideGarage.Services.Car
 
             return carEntity.Id;
         }
+
+
+        // ================================
+        // DELETE
+        // ================================
 
         public async Task<CarDeleteConfirmationViewModel> RemoveCarAsync(int id)
         {
@@ -137,7 +134,7 @@ namespace CarsInsideGarage.Services.Car
             _context.Cars.Remove(car);
             await _context.SaveChangesAsync();
 
-            return vm; // Returning the "Ghost" to the Controller
+            return vm; // Returning the "Ghost" of the deleted Car to the Controller
         }
     }
 }

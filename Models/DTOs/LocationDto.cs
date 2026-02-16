@@ -1,6 +1,4 @@
 ﻿using CarsInsideGarage.Data.Enums;
-using NetTopologySuite;
-using NetTopologySuite.Geometries;
 
 namespace CarsInsideGarage.Models.DTOs
 {

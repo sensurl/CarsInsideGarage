@@ -18,5 +18,4 @@
 
         public decimal Remaining => TotalDue - AmountPaid;
     }
-
 }

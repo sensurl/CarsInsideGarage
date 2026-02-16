@@ -54,6 +54,7 @@
                                 <li><a class="dropdown-item" asp-controller="Garages" asp-action="Create">Register New Garage</a></li>
                             </ul>
                         </li>
+
                         @if (User.Identity != null && User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item ms-auto d-flex align-items-center text-light">
@@ -80,8 +81,8 @@
                                 </a>
                             </li>
                         }
-
                     </ul>
+
                 </div>
             </div>
         </nav>

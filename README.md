@@ -27,9 +27,12 @@ YOUR ULTIMATE PARKING ASSISTANT is made to assist car drivers find a parking spo
 
 ## 📖 About the Project
 
-This is a simple task management web application built as part of the *ASP.NET Fundamentals* course. It demonstrates core concepts like MVC architecture, Entity Framework Core, and RESTful API design.
+This is a task management web application built as part of the *ASP.NET Fundamentals* course of SoftUni. It demonstrates core concepts like MVC architecture, Entity Framework Core, and RESTful API design.
 
-The application helps drivers find parking with ease while giving property owners an easy way to earn extra cash. It matches a driver’s location or destination with nearby available parking spots and handles everything from fee management to automated billing, providing a one-click revenue report to owners. It’s designed to also be suitable to private driveway owners giving them the chance to rent out their space 24/7, whether they’re at work, traveling, or just out shopping.
+
+## ⚙️ What tasks we manage?
+
+The application helps drivers find a parking spot with ease while giving property owners an accessible way to earn extra cash. It matches a driver’s location or destination with nearby available parking spots and handles everything from fee management to automated billing, providing a one-click revenue report to owners. It’s designed to also be suitable to private driveway owners who can now rent out their space 24/7, whether they’re at work, traveling, or just out shopping.
 
 ---
 
@@ -113,7 +116,7 @@ CarsInsideGarage/
 ## ✨ Features
 
 - [ ] User registration and login (ASP.NET Identity)
-- [ ] CRUD operations for [Car, Garage]
+- [ ] CRUD operations for [Car, Garage, Fee]
 - [ ] RESTful API endpoints
 - [ ] Input validation (server-side & client-side)
 - [ ] Responsive UI with Bootstrap
@@ -122,15 +125,23 @@ CarsInsideGarage/
 
 ## 💻 Usage
 
-Describe how to use the main features of the app after launching it. Add screenshots if possible.
+To access the features of the app after launching it:
 
 ```
 1. Navigate to /Register to create an account.
 2. Log in at /Login.
 3. Use the dashboard to manage your [Car, Garage].
+[Owners]
+1. Create a parking fee.
+2. Create a parking lot/spot.
+[Drivers]
+1. Search for available parking spots near your location or destination. /ToDo
+2. Choose a parking spot and click "Park My Car Here" to access it then register your car's plate number. /in v.2 car plate shall be read automatically
+3. Go to the same parking spot and again click "Park My Car Here" to use a spot.
+4. When leaving the parking lot, click "Pay" to end the session then "Exit" to leave the parking lot.
 ```
 
-> 💡 **Tip:** You can add screenshots using: `![Screenshot](docs/screenshot.png)`
+> 💡 Take a look at the screenshots: `![Screenshot](docs/screenshot.png)`
 
 ---
 
@@ -202,4 +213,4 @@ Project Link: https://github.com/sensurl/CarsInsideGarage
 
 ---
 
-*Built as part of the **ASP.NET Fundamentals** course.*
+*Built as part of the **ASP.NET Fundamentals** course of SoftUni - January 2026.*

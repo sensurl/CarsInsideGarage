@@ -9,7 +9,7 @@ namespace CarsInsideGarage.Models.DTOs
 
         public string Area { get; set; } = null!;
 
-        // Spatial coordinates formatted as "lat, lng"
+        // Spatial Point coordinates formatted as "lat, lng"
         public string ParkingCoordinates { get; set; } = null!;
 
         // public int SelectedFeeId { get; set; }
@@ -22,7 +22,6 @@ namespace CarsInsideGarage.Models.DTOs
 
         public decimal TotalRevenue { get; set; }
 
-        public IEnumerable<SessionDto> ActiveSessions { get; set; }
-            = new List<SessionDto>();
+        public IEnumerable<SessionDto> ActiveSessions { get; set; } = new List<SessionDto>();
     }
 }

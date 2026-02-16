@@ -1,16 +1,7 @@
 ﻿using AutoMapper;
 using CarsInsideGarage.Data;
-using CarsInsideGarage.Data.Entities;
 using CarsInsideGarage.Models.DTOs;
-using CarsInsideGarage.Models.ViewModels;
-using CarsInsideGarage.Services.Car;
-using CarsInsideGarage.Services.CarService;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Threading.Tasks;
 
 namespace CarsInsideGarage.Services.Location
 {

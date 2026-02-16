@@ -1,5 +1,4 @@
-﻿using CarsInsideGarage.Data.Configurations;
-using CarsInsideGarage.Data.Entities;
+﻿using CarsInsideGarage.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
@@ -10,6 +9,7 @@ namespace CarsInsideGarage.Data
         public GarageDbContext(DbContextOptions<GarageDbContext> options) : base(options)
         {
         }
+
         public DbSet<Garage> Garages { get; set; } = null!;
         public DbSet<Car> Cars { get; set; } = null!;
         public DbSet<GarageFee> GarageFees { get; set; } = null!;
@@ -22,6 +22,5 @@ namespace CarsInsideGarage.Data
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(GarageDbContext).Assembly);
         }
-
     }
 }

@@ -7,8 +7,5 @@
         public string Area { get; set; } = null!;
         public string ParkingCoordinates { get; set; } = null!;
         public int ParkingFeeId { get; set; }
-
-
     }
-
 }

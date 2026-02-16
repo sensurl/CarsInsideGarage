@@ -1,7 +1,6 @@
 using AutoMapper;
 using CarsInsideGarage.Data;
 using CarsInsideGarage.Data.Entities;
-using CarsInsideGarage.Data.Enums;
 using CarsInsideGarage.Mappings;
 using CarsInsideGarage.Services.Car;
 using CarsInsideGarage.Services.CarService;
@@ -60,7 +59,7 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-// --- Ensure tables exist and seed initial data ---
+// --- Ensure ApplicationUser tables exist and seed initial data ---
 
 using (var scope = app.Services.CreateScope())
 {
@@ -105,6 +104,5 @@ app.UseExceptionHandler(errorApp =>
         await context.Response.WriteAsync("Something went wrong. Check console logs.");
     });
 });
-
 
 app.Run();

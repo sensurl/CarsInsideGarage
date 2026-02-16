@@ -1,14 +1,7 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using CarsInsideGarage.Data;
-using CarsInsideGarage.Data.Entities;
-using CarsInsideGarage.Data.Enums;
-using CarsInsideGarage.Models.DTOs;
-using CarsInsideGarage.Models.ViewModels;
+﻿using CarsInsideGarage.Data;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
-
 
 namespace CarsInsideGarage.Services.Garage
 {
@@ -23,8 +16,6 @@ namespace CarsInsideGarage.Services.Garage
             _geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
         }
 
-
-
         public async Task<Data.Entities.Garage?> GetNearestAsync(double lat, double lng)
         {
             var userLocation = _geometryFactory.CreatePoint(new Coordinate(lng, lat));
@@ -35,8 +26,5 @@ namespace CarsInsideGarage.Services.Garage
                 .OrderBy(g => g.Location.ParkingCoordinates.Distance(userLocation))
                 .FirstOrDefaultAsync();
         }
-
-
-
     }
 }

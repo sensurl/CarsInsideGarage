@@ -12,7 +12,7 @@
 
         public decimal AmountPaid { get; set; }
 
-        // Calculated in controller/service
+        // Calculated in GarageSession/ParkingSessionService
         public double DurationHours { get; set; }
     }
 }

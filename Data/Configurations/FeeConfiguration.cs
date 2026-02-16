@@ -46,8 +46,6 @@ namespace CarsInsideGarage.Data.Configurations
                 }
             );
 			*/
-
         }
-
     }
 }

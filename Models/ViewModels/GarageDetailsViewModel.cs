@@ -1,7 +1,5 @@
 ﻿using CarsInsideGarage.Data.Enums;
 using System.ComponentModel.DataAnnotations;
-using NetTopologySuite;
-using NetTopologySuite.Geometries;
 
 namespace CarsInsideGarage.Models.ViewModels
 {

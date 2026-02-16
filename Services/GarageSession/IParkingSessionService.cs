@@ -8,12 +8,7 @@ namespace CarsInsideGarage.Services.GarageSession
         Task EndSessionAsync(int sessionId);
         Task<IEnumerable<SessionActiveViewModel>> GetActiveSessionsAsync(int garageId);
         Task PayAsync(int sessionId, decimal amount);
-
         Task<SessionActiveViewModel?> GetActiveSessionByCarAsync(int carId);
-
         Task<int> GetCarIdBySessionId(int sessionId);
-
-
     }
-
 }

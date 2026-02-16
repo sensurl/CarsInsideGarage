@@ -19,8 +19,9 @@ namespace CarsInsideGarage.Data.Entities
         /* Accounting: 
          * GarageFee = “What this garage charges today”
          * ParkingSession = “What THIS customer agreed to pay on entry”
-         These must not be the same object.
+         These are not the same object.
          */
+
         public decimal HourlyRate { get; set; }
         public decimal DailyRate { get; set; }
         public decimal MonthlyRate { get; set; }
@@ -28,5 +29,4 @@ namespace CarsInsideGarage.Data.Entities
         public decimal AmountPaid { get; set; }
         public bool IsCleared { get; set; }
     }
-
 }

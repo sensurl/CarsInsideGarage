@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using CarsInsideGarage.Data;
 using CarsInsideGarage.Data.Entities;
 using CarsInsideGarage.Data.Enums;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
-using System.Drawing;
 using System.Globalization;
 
 namespace CarsInsideGarage.Services.Garage
@@ -20,15 +18,9 @@ namespace CarsInsideGarage.Services.Garage
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly GeometryFactory _geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
 
-
-        private readonly GeometryFactory _geometryFactory =
-            NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
-
-        public GarageService(GarageDbContext context,
-        IMapper mapper,
-        IHttpContextAccessor httpContextAccessor,
-        UserManager<ApplicationUser> userManager)
+        public GarageService(GarageDbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _mapper = mapper;
@@ -42,12 +34,9 @@ namespace CarsInsideGarage.Services.Garage
 
         public async Task<IEnumerable<GarageListDto>> GetAllAsync()
         {
-
-
             //// 1. Get the current logged-in user
             //var user = _httpContextAccessor.HttpContext?.User;
             //var userId = _userManager.GetUserId(user);
-
 
             //// In case of user not logged in (no user), return an empty list 
 
@@ -75,12 +64,12 @@ namespace CarsInsideGarage.Services.Garage
             return _mapper.Map<List<GarageListDto>>(garages);
         }
 
+
         // ================================
         // CREATE
         // ================================
 
         public async Task<int> CreateAsync(GarageCreateDto dto, string currentUserId)
-
         {
 
             var location = new CarsInsideGarage.Data.Entities.Location
@@ -175,7 +164,7 @@ namespace CarsInsideGarage.Services.Garage
         public async Task<GarageDeleteConfirmationViewModel> DeleteGarageAsync(int id)
         {
             var garage = await _context.Garages
-    .Include(g => g.Location)
+                .Include(g => g.Location)
                 .Include(g => g.Location)
                 .FirstOrDefaultAsync(g => g.Id == id);
 
@@ -193,6 +182,7 @@ namespace CarsInsideGarage.Services.Garage
 
             return result;
         }
+
 
         // ================================
         // HELPERS

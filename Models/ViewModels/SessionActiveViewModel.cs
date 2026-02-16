@@ -16,5 +16,4 @@
 
         public bool CanExit => RemainingAmount <= 0;
     }
-
 }

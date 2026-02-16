@@ -1,7 +1,6 @@
 ﻿using CarsInsideGarage.Data.Enums;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
-using System.Drawing;
 
 namespace CarsInsideGarage.Data.Entities
 {
@@ -12,7 +11,6 @@ namespace CarsInsideGarage.Data.Entities
 
         // Spatial point
         public NetTopologySuite.Geometries.Point ParkingCoordinates { get; set; } = null!;
-
 
     }
 }

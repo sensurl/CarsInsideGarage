@@ -110,8 +110,6 @@ namespace CarsInsideGarage.Controllers
             {
                 await _service.EndSessionAsync(sessionId);
 
-                // UX Decision: Instead of Redirecting to "Active" (which will show 'No Session'), 
-                // maybe redirect to Car Details or a 'Goodbye' success page.
                 return RedirectToAction("Active", new { carId });
             }
             catch (Exception ex)
@@ -121,9 +119,5 @@ namespace CarsInsideGarage.Controllers
                 return RedirectToAction("Active", new { carId });
             }
         }
-
-
-
     }
-
 }

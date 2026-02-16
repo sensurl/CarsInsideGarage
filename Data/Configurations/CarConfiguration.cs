@@ -2,7 +2,6 @@
 using CarsInsideGarage.Data.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Reflection.Emit;
 
 namespace CarsInsideGarage.Data.Configurations
 {
@@ -12,7 +11,6 @@ namespace CarsInsideGarage.Data.Configurations
         {
             builder.ToTable("Cars");
 
-            // Configure the Car builder
             builder.HasKey(c => c.Id);
 
             builder.Property(c => c.CarPlateNumber)
@@ -22,7 +20,6 @@ namespace CarsInsideGarage.Data.Configurations
             // Ensure License Plate is unique to avoid duplicate car entities
             builder.HasIndex(c => c.CarPlateNumber)
                 .IsUnique();
-
 
             /*
 			// Seed data

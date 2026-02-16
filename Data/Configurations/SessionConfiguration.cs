@@ -36,7 +36,6 @@ namespace CarsInsideGarage.Data.Configurations
                    .HasForeignKey(ps => ps.CarId)
                    .OnDelete(DeleteBehavior.Restrict);
 
-
             /*
 			// Seed data
 
@@ -74,6 +73,5 @@ namespace CarsInsideGarage.Data.Configurations
             );
 			*/
         }
-
     }
 }

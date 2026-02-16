@@ -27,6 +27,7 @@ namespace CarsInsideGarage.Services.Fee
         public async Task CreateAsync(FeeDto feeDto)
         {
             var entity = _mapper.Map<GarageFee>(feeDto);
+
             _context.GarageFees.Add(entity);
             await _context.SaveChangesAsync();
         }
@@ -34,6 +35,7 @@ namespace CarsInsideGarage.Services.Fee
         public async Task DeleteAsync(int id)
         {
             var entity = await _context.GarageFees.FindAsync(id);
+
             if (entity != null)
             {
                 _context.GarageFees.Remove(entity);
