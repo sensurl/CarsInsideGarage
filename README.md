@@ -207,7 +207,7 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 ## 📬 Contact
 
-**Your Name** – [@sensurl](https://github.com/sensurl)
+[@sensurl](https://github.com/sensurl)
 
 Project Link: https://github.com/sensurl/CarsInsideGarage
 
