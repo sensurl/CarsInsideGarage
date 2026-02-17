@@ -43,7 +43,7 @@ The application helps drivers find a parking spot with ease while giving propert
 | ASP.NET Core MVC      | 10.0     | Web framework                    |
 | Entity Framework Core | 10.0     | ORM / Database access            |
 | SQL Server / SQLite   | -        | Database                         |
-| SQLServer/NetTopologySuite| 10.0 | Geography Point                  |
+| SqlServer.NetTopologySuite |10.0 | Geography Point                  |
 | Bootstrap             | 5.3      | Frontend styling                 |
 | Razor Pages / Views   | -        | Server-side HTML rendering       |
 
@@ -56,7 +56,7 @@ Make sure you have the following installed before running the project:
 
 - [.NET SDK 8.0+](https://dotnet.microsoft.com/download)
 - [Visual Studio 2022](https://visualstudio.microsoft.com/) or [VS Code](https://code.visualstudio.com/)
-- [SQL Server](https://www.microsoft.com/en-us/sql-server) or SQLite (if used)
+- [SQL Server](https://www.microsoft.com/en-us/sql-server)
 - [Git](https://git-scm.com/)
 
 ---
@@ -77,21 +77,22 @@ dotnet restore
 
 4. Set Environment and Update Database
 
-The project logic relies on the Staging environment. Run the command that matches your terminal:
+The project logic relies on the Staging environment. 
+Run the command that matches your terminal:
 
-Windows (Command Prompt - CMD):
+For Windows (Command Prompt - CMD):
 
 DOS
 set ASPNETCORE_ENVIRONMENT=Staging
 dotnet ef database update
 
-Windows (PowerShell):
+For Windows (PowerShell):
 
 PowerShell
 $env:ASPNETCORE_ENVIRONMENT='Staging'
 dotnet ef database update
 
-macOS / Linux / Git Bash:
+For macOS / Linux / Git Bash:
 
 Bash
 export ASPNETCORE_ENVIRONMENT=Staging
@@ -103,7 +104,7 @@ When running the app, ensure the environment flag is passed to maintain the "Sta
 Bash
 dotnet run --environment Staging
 
-The app will be available at https://localhost:7212 or http://localhost:5190.
+The app is available at https://localhost:7212 or http://localhost:5190.
 
 ## 📁 Project Structure
 
@@ -127,7 +128,7 @@ CarsInsideGarage/
 ## ✨ Features
 
 - [ ] User registration and login (ASP.NET Identity)
-- [ ] CRUD operations for [Car, Garage, Fee]
+- [ ] CRUD operations for [Car, Garage, Fee, Location]
 - [ ] RESTful API endpoints
 - [ ] Input validation (server-side & client-side)
 - [ ] Responsive UI with Bootstrap
@@ -136,20 +137,24 @@ CarsInsideGarage/
 
 ## 💻 Usage
 
-To access the features of the app after launching it:
+To access the features of the app after launching:
 
 ```
 1. Navigate to /Register to create an account.
-2. Log in at /Login.
-3. Use the dashboard to manage your [Car, Garage].
+2. Log in at /Login and choose Role [Owner or Driver].
+3. Use the dashboard to manage your [Car or Garage].
 [Owners]
 1. Create a parking fee.
 2. Create a parking lot/spot.
 [Drivers]
 1. Search for available parking spots near your location or destination. /ToDo
-2. Choose a parking spot and click "Park My Car Here" to access it then register your car's plate number. /in v.2 car plate shall be read automatically
-3. Go to the same parking spot and again click "Park My Car Here" to use a spot.
-4. When leaving the parking lot, click "Pay" to end the session then "Exit" to leave the parking lot.
+2. Choose a parking spot and click "Park My Car Here" to access it
+3. Register your car's plate number. /in v.2 car plate shall be read automatically/
+4. Go to the same parking spot and again click "Park My Car Here" to use a spot.
+5. When leaving the parking lot, click "Pay" to end the session.
+6. "Exit" to leave the parking lot.
+[Owners]
+3. Your Parking Revenue shows the income accumulated in real time.
 ```
 
 > 💡 Take a look at the screenshots: (docs/screenshots.png)
@@ -164,18 +169,19 @@ Connection string is configured in `appsettings.Staging.json`:
 
 ```json
 "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost,1433;Database=ParkingLots;User Id=sa;Password=#3edc00okM;TrustServerCertificate=True"
+    "DefaultConnection": "Server=localhost,1433;Database=ParkingLots;User Id=sa;Password=MYPASSWORD;TrustServerCertificate=True"
 }
 ```
 
-To create and seed the database:
+To create the database:
 
 ```bash
-dotnet ef migrations add InitialCreate
 export ASPNETCORE_ENVIRONMENT=Staging
 dotnet ef database update
 ```
 
+**Database is empty and has no seeded data. 
+Registering an Owner and a Driver and their corresponding entity [Car, Garage] is a prerequisite.**
 ---
 
 ## ⚙️ Configuration
@@ -185,7 +191,7 @@ Key settings in `appsettings.Staging.json`:
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost,1433;Database=ParkingLots;User Id=sa;Password=#3edc00okM;TrustServerCertificate=True"
+    "DefaultConnection": "Server=localhost,1433;Database=ParkingLots;User Id=sa;Password=MYPASSWORD;TrustServerCertificate=True"
   },
   "Logging": {
     "LogLevel": {
