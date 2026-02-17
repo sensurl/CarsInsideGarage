@@ -92,11 +92,17 @@
                     <i class="bi bi-arrow-left me-1"></i> Back to Garage Map
                 </a>
 
-                <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
-                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to remove @Model.Name?')">
-                        Delete Garage
-                    </button>
-                </form>
+                @if (User.IsInRole("GarageOwner"))
+                {
+                    <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('Are you sure you want to remove @Model.Name?')">
+                            Delete Garage
+                        </button>
+                    </form>
+                }
             </div>
         </div>
     </div>
