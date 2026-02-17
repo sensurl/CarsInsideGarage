@@ -116,7 +116,7 @@ namespace CarsInsideGarage.Services.Car
 
 
         // ================================
-        // DELETE
+        // DELETE - ToDo!!!
         // ================================
 
         public async Task<CarDeleteConfirmationViewModel> RemoveCarAsync(int id)
