@@ -99,8 +99,9 @@ namespace CarsInsideGarage.Controllers
         }
 
 
-
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "GarageOwner")]
         public async Task<IActionResult> Delete(int id)
         {
             try
