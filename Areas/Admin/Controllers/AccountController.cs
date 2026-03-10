@@ -3,7 +3,7 @@ using CarsInsideGarage.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CarsInsideGarage.Controllers
+namespace CarsInsideGarage.Areas.Admin.Controllers
 {
     public class AccountController : Controller
     {
