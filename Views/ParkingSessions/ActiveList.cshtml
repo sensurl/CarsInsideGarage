@@ -1,0 +1,66 @@
+﻿@using System.Globalization
+
+@model IEnumerable<CarsInsideGarage.Models.ViewModels.ActiveSessionListViewModel>
+
+@{
+    ViewData["Title"] = "Current Occupancy";
+}
+
+<div class="container mt-4">
+    <h2 class="text-white mb-4">Active Parking Sessions</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning shadow-sm">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            There are currently no active parking sessions.
+        </div>
+    }
+    else
+    {
+        <div class="card shadow">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th class="ps-4">GARAGE</th>
+                                <th>LICENSE PLATE</th>
+                                <th>ENTRY TIME</th>
+                                <th>AMOUNT PAID</th>
+                                <th class="pe-4 text-end">DURATION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var session in Model)
+                            {
+                                <tr>
+                                    <td class="ps-4 text-muted">@session.GarageName</td>
+                                    <td>
+                                        <span class="badge border border-secondary text-accent" style="background-color: var(--bg-main);">
+                                            @session.CarPlateNumber
+                                        </span>
+                                    </td>
+                                    <td class="small">@session.EntryTime.ToString("g", CultureInfo.CurrentCulture)</td>
+                                    <td class="text-success fw-bold">
+                                        @session.AmountPaid.ToString("C", new CultureInfo("fr-FR"))
+                                    </td>
+                                    <td class="pe-4 text-end">
+                                        <span class="text-info">@session.DurationHours.ToString("F1")</span>
+                                        <span class="small text-muted">hrs</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="mt-4">
+        <a asp-controller="Garages" asp-action="Index" class="btn btn-info btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Back to Garage Map
+        </a>
+    </div>
+</div>

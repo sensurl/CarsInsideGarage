@@ -1,0 +1,42 @@
+﻿@model List<CarsInsideGarage.Models.ViewModels.CarViewModel>
+
+@{
+    ViewData["Title"] = "All Cars";
+}
+
+<h1 class="mb-3">All Cars in the Garage</h1>
+
+<a asp-action="Create" class="btn btn-primary mb-3">
+    <i class="bi bi-plus-circle"></i> Register New Car
+</a>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>License Plate</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var car in Model)
+        {
+            <tr>
+                <td>@car.CarPlateNumber</td>
+                <td>
+                    <div class="btn-group">
+                        <a asp-controller="Cars" asp-action="Details" asp-route-id="@car.Id" class="btn btn-sm btn-info">
+                            Details
+                        </a>
+
+                        <form asp-action="Delete" asp-route-id="@car.Id" method="post"
+                              onsubmit="return confirm('Are you sure?');" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

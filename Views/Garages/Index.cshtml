@@ -1,0 +1,34 @@
+﻿@model IEnumerable<CarsInsideGarage.Models.DTOs.GarageListDto>
+@{
+    ViewData["Title"] = "Garages";
+}
+
+<h1 class="mb-3">Garages</h1>
+
+<a asp-action="Create" class="btn btn-primary mb-3">
+    + Add New Garage
+</a>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Free Spots</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var garage in Model)
+        {
+            <tr>
+                <td>@garage.Name</td>
+                <td>@garage.FreeSpots</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@garage.Id" class="btn btn-sm btn-info">
+                        Details
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
