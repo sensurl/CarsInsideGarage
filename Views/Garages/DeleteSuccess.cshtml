@@ -1,0 +1,40 @@
+﻿@model CarsInsideGarage.Models.ViewModels.GarageDeleteConfirmationViewModel
+
+@{
+    ViewData["Title"] = "Garage Removed";
+}
+
+<div class="container mt-5 text-center">
+    <div class="mb-4">
+        <i class="bi bi-trash3-fill" style="font-size: 4rem; color: var(--warning-pink);"></i>
+    </div>
+
+    <h1 class="display-4 text-white fw-bold">Garage Removed from Map</h1>
+
+    <div class="alert alert-warning mx-auto shadow-lg" style="max-width: 700px; padding: 2rem;">
+        <h4 class="fw-bold">SUCCESSFULLY DECOMMISSIONED</h4>
+        <hr style="border-color: var(--warning-pink); opacity: 0.3;" />
+
+        <p class="fs-5 mb-4">
+            The garage <strong style="color: var(--accent)">@Model.Name</strong>
+            located at coordinates <code class="text-info">@Model.ParkingCoordinates</code>
+            has been erased from our registry.
+        </p>
+
+        <div class="p-3 rounded mb-3" style="background-color: var(--bg-main); border: 1px solid var(--border);">
+            <span class="text-muted italic small text-uppercase fw-bold">Status Update:</span>
+            <p class="mb-0 text-white">"WE ARE SORRY TO SEE YOU GO."</p>
+        </div>
+
+        <p class="small text-muted mb-0">
+            Leave us a <a asp-controller="Home" asp-action="Privacy" style="color: var(--accent); text-decoration: underline;">feedback</a>
+            on how can we improve our service.
+        </p>
+    </div>
+
+    <div class="mt-5">
+        <a asp-action="Index" class="btn btn-primary btn-lg px-5">
+            <i class="bi bi-map-fill"></i> Back to Garage Map
+        </a>
+    </div>
+</div>

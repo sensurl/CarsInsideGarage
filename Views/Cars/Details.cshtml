@@ -1,0 +1,18 @@
+﻿@model CarsInsideGarage.Models.ViewModels.CarViewModel
+
+@{
+    ViewData["Title"] = "Car Details";
+}
+<h1>Car Details</h1>
+
+<partial name="_CarForm" model="Model" />
+<a asp-controller="ParkingSessions"
+   asp-action="Active"
+   asp-route-carId="@Model.Id"
+   class="btn btn-sm btn-outline-primary">
+    View Parking
+</a>
+
+<div class="mt-4">
+    <a asp-action="Index" class="btn btn-primary btn-lg">Back to Garage Map</a>
+</div>

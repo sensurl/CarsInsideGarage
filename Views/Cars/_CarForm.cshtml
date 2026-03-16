@@ -1,0 +1,7 @@
+﻿@model CarsInsideGarage.Models.ViewModels.CarViewModel
+
+<div class="form-group mb-3">
+    <label asp-for="CarPlateNumber" class="form-label"></label>
+    <input asp-for="CarPlateNumber" class="form-control" placeholder="e.g. ABC123" />
+    <span asp-validation-for="CarPlateNumber" class="text-danger"></span>
+</div>

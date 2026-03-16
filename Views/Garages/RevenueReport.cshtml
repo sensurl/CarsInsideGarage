@@ -1,0 +1,82 @@
+﻿@using System.Globalization
+
+@model IEnumerable<CarsInsideGarage.Models.ViewModels.RevenueReportViewModel>
+
+@{
+    ViewData["Title"] = "Revenue Report";
+    var grandTotal = Model.Sum(g => g.TotalRevenue);
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="text-white mb-1"><i class="bi bi-graph-up-arrow me-2"></i>Finance & Accounting</h1>
+            <p class="text-muted">Business overview and total earnings across all facilities.</p>
+        </div>
+        <div class="text-end">
+            <button class="btn btn-outline-info btn-sm" onclick="window.print()">
+                <i class="bi bi-printer me-1"></i> Export PDF
+            </button>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card shadow border-0" style="background-color: var(--bg-main); border: 1px solid var(--border) !important;">
+                <div class="card-body">
+                    <label class="text-muted small text-uppercase fw-bold d-block mb-1">Total Network Revenue</label>
+                    <h2 class="text-success fw-bold mb-0">@grandTotal.ToString("C", new CultureInfo("fr-FR"))</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="rounded p-5 text-center" style="background-color: var(--bg-main); border: 2px dashed var(--border);">
+            <i class="bi bi-cash-stack display-1 text-muted"></i>
+            <h3 class="text-white mt-3">No Transactions Yet</h3>
+            <p class="text-muted">Once cars start exiting your garages, revenue data will appear here.</p>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow border-0 overflow-hidden" style="background-color: var(--bg-main); border: 1px solid var(--border) !important;">
+            <div class="card-header bg-dark border-bottom border-secondary">
+                <h5 class="mb-0 text-white-50">Earnings by Garage</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover mb-0">
+                        <thead>
+                            <tr class="text-muted small text-uppercase">
+                                <th class="ps-4 py-3">Garage Name</th>
+                                <th class="text-end pe-4 py-3">Accumulated Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var garage in Model)
+                            {
+                                <tr style="border-bottom: 1px solid var(--border);">
+                                    <td class="ps-4 py-3 fw-bold text-white">
+                                        <i class="bi bi-building me-2 text-info"></i>@garage.GarageName
+                                    </td>
+                                    <td class="text-end pe-4 py-3">
+                                        <span class="fs-5 fw-bold text-success">
+                                            @garage.TotalRevenue.ToString("C", new CultureInfo("fr-FR"))
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 text-muted small">
+            <i class="bi bi-info-circle me-1"></i>
+            Amounts reflect cleared payments from completed parking sessions only. Active sessions are not included in these totals.
+        </div>
+    }
+</div>
