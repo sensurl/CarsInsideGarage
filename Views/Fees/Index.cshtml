@@ -1,0 +1,36 @@
+﻿@using System.Globalization
+
+@model IEnumerable<CarsInsideGarage.Models.ViewModels.FeeCreateViewModel>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-white">Fee Structures</h1>
+        <a asp-action="Create" class="btn btn-primary">Add New Rate Plan</a>
+    </div>
+
+    <div class="card shadow">
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>Hourly</th>
+                    <th>Daily</th>
+                    <th>Monthly</th>
+                    <th class="text-end">Usage</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var fee in Model)
+                {
+                    <tr>
+                        <td class="text-accent fw-bold">@fee.HourlyRate.ToString("C", new CultureInfo("fr-FR"))</td>
+                        <td>@fee.DailyRate.ToString("C", new CultureInfo("fr-FR"))</td>
+                        <td>@fee.MonthlyRate.ToString("C", new CultureInfo("fr-FR"))</td>
+                        <td class="text-end">
+                            <span class="text-muted small">Available for selection</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
