@@ -168,5 +168,20 @@ namespace CarsInsideGarage.Controllers
 
             return View(vm);
         }
+
+        // =============================
+        // NEARBY GARAGE SEARCH
+        // =============================
+
+        public async Task<IActionResult> Nearby(double lat, double lng)
+        {
+            var user = BuildCurrentUser();
+
+            var garages = await _garageService.GetNearestAsync(lat, lng, user);
+
+            return View(garages);
+        }
+
+
     }
 }

@@ -26,5 +26,19 @@ namespace CarsInsideGarage.Services.Garage
                 .OrderBy(g => g.Location.ParkingCoordinates.Distance(userLocation))
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<IEnumerable<Data.Entities.Garage?>> GetNearestManyAsync(double lat, double lng, int count)
+        {
+            var userLocation = _geometryFactory.CreatePoint(new Coordinate(lng, lat));
+
+            return await _context.Garages
+                .Include(g => g.Location)
+                .Include(g => g.Sessions)
+                .Where(g => g.Location.ParkingCoordinates != null)
+                .OrderBy(g => g.Location.ParkingCoordinates.Distance(userLocation))
+                .Take(count)
+                .ToListAsync();
+        }
+
     }
 }

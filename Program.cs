@@ -1,6 +1,7 @@
 using AutoMapper;
 using CarsInsideGarage.Data;
 using CarsInsideGarage.Data.Entities;
+using CarsInsideGarage.Data.Seed;
 using CarsInsideGarage.Interfaces;
 using CarsInsideGarage.Mappings;
 using CarsInsideGarage.Repositories;
@@ -73,15 +74,10 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    
+    var services = scope.ServiceProvider;
+    await DbSeeder.SeedAsync(services);
 
-    string[] roles = { "Driver", "GarageOwner", "Admin" };
-
-    foreach (var role in roles)
-    {
-        if (!await roleManager.RoleExistsAsync(role))
-            await roleManager.CreateAsync(new IdentityRole(role));
-    }
 
     var mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
     try

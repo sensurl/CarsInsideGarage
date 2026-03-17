@@ -1,0 +1,97 @@
+﻿@model IEnumerable<CarsInsideGarage.Models.DTOs.GarageNearbyDto>
+
+@{
+    ViewData["Title"] = "Nearby Garages";
+}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4 text-center">Nearest Parking Garages</h2>
+
+    <div class="row">
+
+        <!-- LEFT: LIST -->
+        <div class="col-md-5">
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-warning">
+                    No garages found nearby.
+                </div>
+            }
+            else
+            {
+                <div class="list-group">
+                    @foreach (var g in Model)
+                    {
+                        <div class="list-group-item mb-2 shadow-sm">
+                            <h5>@g.Name</h5>
+
+                            <p>
+                                Free spots: <strong>@g.FreeSpots</strong><br />
+                                Distance:
+                                <strong>
+                                    @(g.Distance > 0
+                                        ? Math.Round(g.Distance / 1000, 2) + " km"
+                                        : "N/A")
+                                </strong>
+                            </p>
+
+                            <a asp-controller="Garages"
+                                   asp-action="Details"
+                                   asp-route-id="@g.Id"
+                                   class="btn btn-sm btn-outline-primary">
+                                View Details
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+
+        </div>
+
+        <!-- RIGHT: MAP -->
+        <div class="col-md-7">
+            <div id="map" style="height: 500px; width: 100%;"></div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+        const defaultLat = 42.6977;
+        const defaultLng = 23.3219;
+
+        const map = L.map('map').setView([defaultLat, defaultLng], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Serialize model safely
+        const garages = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model));
+
+        if (garages.length > 0) {
+
+        garages.forEach(g => {
+
+        if (g.latitude && g.longitude) {
+        L.marker([g.latitude, g.longitude])
+        .addTo(map)
+        .bindPopup(`<b>${g.name}</b>`);
+        }
+
+        });
+
+        // Center map on first garage
+        map.setView([garages[0].latitude, garages[0].longitude], 14);
+        }
+        });
+    </script>
+}

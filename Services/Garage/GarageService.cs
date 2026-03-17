@@ -19,15 +19,17 @@ namespace CarsInsideGarage.Services.Garage
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IGarageLocationService _garageLocationService;
         private readonly GeometryFactory _geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
 
         //private readonly GarageDbContext _context;
         
 
-        public GarageService(IUnitOfWork unitOfWork, IMapper mapper)
+        public GarageService(IUnitOfWork unitOfWork, IMapper mapper, IGarageLocationService garageLocationService)
         {
            _unitOfWork = unitOfWork;
             _mapper = mapper;  
+            _garageLocationService = garageLocationService;
         }
 
         // ================================
@@ -253,5 +255,29 @@ MonthlyRate = garage.PricingPolicy.MonthlyRate,
 
             return decimal.Round(total, 2);
         }
+
+        public async Task<IEnumerable<GarageNearbyDto>> GetNearestAsync(
+    double lat, double lng, CurrentUser user)
+        {
+            var garages = await _garageLocationService
+                .GetNearestManyAsync(lat, lng, 10);
+
+            var result = garages.Select(g => new GarageNearbyDto
+            {
+                Id = g.Id,
+                Name = g.Name,
+                FreeSpots = g.Capacity - g.Sessions.Count(s => s.ExitTime == null),
+
+                Latitude = g.Location.ParkingCoordinates.Y,
+                Longitude = g.Location.ParkingCoordinates.X,
+
+                Distance = 0 // ToDo 
+            });
+
+            return result;
+        }
+
+
+
     }
 }
