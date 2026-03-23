@@ -13,6 +13,7 @@ namespace CarsInsideGarage.Data.Configurations
 
             builder.Property(e => e.EntryTime)
                    .IsRequired();
+
             builder.Property(e => e.ExitTime)
                    .IsRequired(false);
 
@@ -35,7 +36,16 @@ namespace CarsInsideGarage.Data.Configurations
                    .WithMany(c => c.Sessions)
                    .HasForeignKey(ps => ps.CarId)
                    .OnDelete(DeleteBehavior.Restrict);
-        }
+
+            builder.Property(p => p.HourlyRate)
+    .HasPrecision(18, 2);
+
+            builder.Property(p => p.DailyRate)
+                .HasPrecision(18, 2);
+
+            builder.Property(p => p.MonthlyRate)
+                .HasPrecision(18, 2);
+            }
     }
 }
 

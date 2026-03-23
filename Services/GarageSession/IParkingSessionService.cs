@@ -13,12 +13,14 @@ namespace CarsInsideGarage.Services.GarageSession
        
         // Zero Client trust methods
         Task<SessionActiveViewModel?> GetActiveSessionForDriverAsync(string userId);
-        Task<int> GetCarIdBySessionIdAsync(int sessionId); // internal usage only
 
-
-        Task<IEnumerable<SessionActiveViewModel>> GetActiveSessionsForGarageOwnerAsync(string userId);
+        // for Owner
+        Task<IEnumerable<ActiveSessionListViewModel>> GetActiveSessionsForGarageOwnerAsync(string userId);
 
         // for Admin dashboard
         Task<IEnumerable<ParkingSession>> GetAllActiveSessionsAsync();
+
+        // internal usage only
+        Task<int> GetCarIdBySessionIdAsync(int sessionId); 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CarsInsideGarage.Data.Entities;
+using CarsInsideGarage.Models.Auth;
 
 namespace CarsInsideGarage.Services.Garage
 {
@@ -8,7 +9,7 @@ namespace CarsInsideGarage.Services.Garage
         {
             Task<CarsInsideGarage.Data.Entities.Garage?> GetNearestAsync(double lat, double lng);
 
-            Task<IEnumerable<CarsInsideGarage.Data.Entities.Garage?>> GetNearestManyAsync(double lat, double lng, int count);
+            Task<IEnumerable<CarsInsideGarage.Data.Entities.Garage>> GetNearestManyAsync(double lat, double lng, int count);
         }
 
     

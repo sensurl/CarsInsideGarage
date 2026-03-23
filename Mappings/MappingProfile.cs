@@ -103,8 +103,19 @@ namespace CarsInsideGarage.Mappings
 
             CreateMap<LocationDto, Location>()
                 .ForMember(dest => dest.ParkingCoordinates,
-                    opt => opt.Ignore()); 
+                    opt => opt.Ignore());
 
+
+            // =========================
+            // Entity => ViewModel
+            // =========================
+
+            CreateMap<ParkingSession, ActiveSessionListViewModel>()
+    .ForMember(dest => dest.SessionId, opt => opt.MapFrom(src => src.Id))
+    .ForMember(dest => dest.GarageName, opt => opt.MapFrom(src => src.Garage != null ? src.Garage.Name : "N/A"))
+    .ForMember(dest => dest.CarPlateNumber, opt => opt.MapFrom(src => src.Car != null ? src.Car.CarPlateNumber : "N/A"))
+    .ForMember(dest => dest.DurationHours, opt => opt.MapFrom(src => (DateTime.UtcNow - src.EntryTime).TotalHours))
+    .ForMember(dest => dest.AmountPaid, opt => opt.MapFrom(src => src.AmountPaid));
 
             // =========================
             // DTO <=> ViewModel
@@ -149,11 +160,13 @@ namespace CarsInsideGarage.Mappings
 
             CreateMap<RevenueReportDto, RevenueReportViewModel>();
 
+            CreateMap<GarageNearbyDto, GarageNearbyViewModel>();
+
             // =========================
             // ViewModel => DTO
             // =========================
 
-            
+
             CreateMap<GarageCreateViewModel, GarageCreateDto>()
     .ForMember(dest => dest.Area,
         opt => opt.MapFrom(src => src.SelectedArea.ToString()));

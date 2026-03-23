@@ -49,21 +49,47 @@
                         <span asp-validation-for="ParkingCoordinates" class="text-danger"></span>
                     </div>
 
-                    <div class="mb-3">
-    <label asp-for="HourlyRate" class="form-label"></label>
-    <input asp-for="HourlyRate" class="form-control" />
-</div>
+                        <div class="mb-3 text-start">
+                        <label asp-for="HourlyRate" class="form-label text-muted small fw-bold">HourlyRate</label>
+                            <div class="input-group">
+                            <span class="input-group-text bg-dark border-secondary text-accent">#</span>
+                            <input asp-for="HourlyRate"
+                                   type="number"
+                                   step="1"
+                                   min="1"
+                                   class="form-control"
+                                   onfocus="this.select();" />
+                            </div>
+                        <span asp-validation-for="HourlyRate" class="text-danger"></span>
+                        </div>
 
-<div class="mb-3">
-    <label asp-for="DailyRate" class="form-label"></label>
-    <input asp-for="DailyRate" class="form-control" />
-</div>
+                        <div class="mb-3 text-start">
+                        <label asp-for="DailyRate" class="form-label text-muted small fw-bold">DailyRate</label>
+                            <div class="input-group">
+                            <span class="input-group-text bg-dark border-secondary text-accent">#</span>
+                            <input asp-for="DailyRate"
+                                   type="number"
+                                   step="1"
+                                   min="1"
+                                   class="form-control"
+                                   onfocus="this.select();" />
+                            </div>
+                        <span asp-validation-for="DailyRate" class="text-danger"></span>
+                        </div>
 
-<div class="mb-3">
-    <label asp-for="MonthlyRate" class="form-label"></label>
-    <input asp-for="MonthlyRate" class="form-control" />
-</div>
-
+                        <div class="mb-3 text-start">
+                        <label asp-for="MonthlyRate" class="form-label text-muted small fw-bold">MonthlyRate</label>
+                            <div class="input-group">
+                            <span class="input-group-text bg-dark border-secondary text-accent">#</span>
+                            <input asp-for="MonthlyRate"
+                                   type="number"
+                                   step="1"
+                                   min="1"
+                                   class="form-control"
+                                   onfocus="this.select();" />
+                            </div>
+                        <span asp-validation-for="MonthlyRate" class="text-danger"></span>
+                        </div>
 
                     <button type="submit" class="btn btn-register w-100">
                         <span class="spinner-border spinner-btn" role="status"></span>

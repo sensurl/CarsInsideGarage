@@ -38,22 +38,29 @@
                     </div>
 
                     @if (User.IsInRole("Driver"))
-                    {
+                        {
                         if (Model.FreeSpots > 0)
-                        {
-                            <a asp-controller="ParkingSessions"
-                               asp-action="Start"
-                               asp-route-garageId="@Model.Id"
-                               asp-route-carId="@ViewBag.CurrentCarId"
-                               class="btn btn-primary btn-lg px-5 shadow-sm">
-                                <i class="bi bi-p-square-fill me-2"></i> Park My Car Here
-                            </a>
-                        }
+                            {
+                                <form asp-controller="ParkingSessions" asp-action="Start" method="post" class="d-inline">
+                                @* Pass the Garage ID hidden so the controller receives 'int garageId' *@
+                                <input type="hidden" name="garageId" value="@Model.Id" />
+            
+                                    <button type="submit" class="btn btn-primary btn-lg px-5 shadow-sm position-relative">
+                                    @* This span matches your site.js .spinner-btn selector *@
+                                    <span class="spinner-border spinner-border-sm spinner-btn me-2" role="status" aria-hidden="true" style="display: none;"></span>
+                
+                                    <i class="bi bi-p-square-fill me-2"></i>
+                                    <span class="btn-text">Park My Car Here</span>
+                                    </button>
+                                </form>
+                            }
                         else
-                        {
-                            <button class="btn btn-outline-secondary btn-lg px-5" disabled>Garage Full</button>
+                            {
+                                <button class="btn btn-outline-secondary btn-lg px-5" disabled>
+                                <i class="bi bi-exclamation-octagon me-2"></i> Garage Full
+                                </button>
+                            }
                         }
-                    }
                 </div>
 
                 <div class="mt-4 p-3 rounded"

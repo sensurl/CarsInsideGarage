@@ -124,15 +124,13 @@ namespace CarsInsideGarage.Controllers
 
         [Authorize(Roles = "GarageOwner,Admin")]
         public async Task<IActionResult> ActiveList()
-        {
-            var sessions = await _service.GetActiveSessionsForGarageOwnerAsync(GetUserId());
-
-            var dtos = _mapper.Map<IEnumerable<ActiveSessionListDto>>(sessions);
-
-            var vm = _mapper.Map<IEnumerable<ActiveSessionListViewModel>>(dtos);
+            {
+            // The service now returns IEnumerable<ActiveSessionListViewModel>
+            var vm = await _service.GetActiveSessionsForGarageOwnerAsync(GetUserId());
 
             return View(vm);
-        }
+
+            }
 
         // =====================================================
         // GARAGE OWNER / ADMIN - STOP SESSION

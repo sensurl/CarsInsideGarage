@@ -17,18 +17,20 @@ namespace CarsInsideGarage.Controllers
     {
         private readonly ILocationService _locationService;
         private readonly IGarageService _garageService;
+		private readonly IGarageLocationService _garageLocationService;
         private readonly GarageDbContext _context;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         
 
-        public GaragesController(IGarageService garageService, ILocationService locationService, GarageDbContext context, IMapper mapper, UserManager<ApplicationUser> userManager)
+        public GaragesController(IGarageService garageService, ILocationService locationService, IGarageLocationService garageLocationService, GarageDbContext context, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
              _garageService = garageService;
             _locationService = locationService;
             _context = context;
             _mapper = mapper;
             _userManager = userManager;
+			_garageLocationService = garageLocationService;
         }
 
         private CurrentUser BuildCurrentUser()
@@ -173,15 +175,28 @@ namespace CarsInsideGarage.Controllers
         // NEARBY GARAGE SEARCH
         // =============================
 
-        public async Task<IActionResult> Nearby(double lat, double lng)
+       
+               
+        [HttpGet]
+        public async Task<IActionResult> GetNearbyGarages(double lat, double lng, int count = 5)
         {
-            var user = BuildCurrentUser();
+            var garages = await _garageLocationService.GetNearestManyAsync(lat, lng, count);
 
-            var garages = await _garageService.GetNearestAsync(lat, lng, user);
+            var dtos = garages.Select(g => new GarageNearbyDto
+                {
+                Id = g.Id,
+                Name = g.Name,
+                Latitude = g.Location!.ParkingCoordinates!.Y,
+                Longitude = g.Location!.ParkingCoordinates!.X,
+                FreeSpots = g.Capacity - (g.Sessions?.Count(s => s.ExitTime == null) ?? 0),
+                Distance = 0
+                }).ToList();
 
-            return View(garages);
+            var viewModels = _mapper.Map<IEnumerable<GarageNearbyViewModel>>(dtos);
+
+            return View(viewModels);
+            }
+       
+
         }
-
-
     }
-}

@@ -52,7 +52,7 @@ namespace CarsInsideGarage.Services.GarageSession
             if (policy == null)
                 throw new Exception("Garage has no pricing policy.");
 
-            // 🔥 SNAPSHOT RATE CALCULATED ONCE
+            // SNAPSHOT RATE CALCULATED ONCE
             var effectiveHourlyRate =
                 policy.GetEffectiveHourlyRate(DateTime.UtcNow);
 
@@ -117,35 +117,20 @@ namespace CarsInsideGarage.Services.GarageSession
         // OWNER ACTIVE LIST (Secure Replacement for ActiveList)
         // =====================================================
 
-        public async Task<IEnumerable<SessionActiveViewModel>> GetActiveSessionsForGarageOwnerAsync(string userId)
-        {
-            var garages = await _unitOfWork.Garages
-                .WhereAsync(g => g.UserId == userId);
-
+        public async Task<IEnumerable<ActiveSessionListViewModel>> GetActiveSessionsForGarageOwnerAsync(string userId)
+            {
+            var garages = await _unitOfWork.Garages.WhereAsync(g => g.UserId == userId);
             var garageIds = garages.Select(g => g.Id).ToList();
 
             var allSessions = new List<ParkingSession>();
-
             foreach (var garageId in garageIds)
-            {
-                var sessions = await _unitOfWork.Sessions
-                    .GetActiveSessionsByGarageIdAsync(garageId);
-
+                {
+                var sessions = await _unitOfWork.Sessions.GetActiveSessionsByGarageIdAsync(garageId);
                 allSessions.AddRange(sessions);
+                }
+
+            return _mapper.Map<IEnumerable<ActiveSessionListViewModel>>(allSessions);
             }
-
-            var dtos = _mapper.Map<List<SessionDto>>(allSessions);
-            var viewModels = _mapper.Map<List<SessionActiveViewModel>>(dtos);
-
-            foreach (var vm in viewModels)
-            {
-                var entity = allSessions.First(s => s.Id == vm.Id);
-                vm.AccruedAmount = _pricingCalculator.CalculateTotal(entity);
-
-            }
-
-            return viewModels;
-        }
 
         // ==========================================
         // PAY (Driver Secure)

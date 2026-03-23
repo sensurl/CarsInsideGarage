@@ -2,6 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
+using AutoMapper;
+using CarsInsideGarage.Data.Entities;
+using CarsInsideGarage.Data.Enums;
+using CarsInsideGarage.Interfaces;
+using CarsInsideGarage.Models.Auth;
+using CarsInsideGarage.Models.DTOs;
+using CarsInsideGarage.Models.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using System.Globalization;
+using System.Runtime.ConstrainedExecution;
 
 namespace CarsInsideGarage.Services.Garage
 {
@@ -21,23 +31,26 @@ namespace CarsInsideGarage.Services.Garage
             var userLocation = _geometryFactory.CreatePoint(new Coordinate(lng, lat));
 
             return await _context.Garages
-                .Include(g => g.Location)
-                .Where(g => g.Location.ParkingCoordinates != null)
-                .OrderBy(g => g.Location.ParkingCoordinates.Distance(userLocation))
-                .FirstOrDefaultAsync();
+            .Include(g => g.Location)
+            .Where(g => g.Location != null && g.Location.ParkingCoordinates != null)
+            .OrderBy(g => g.Location.ParkingCoordinates.Distance(userLocation))
+            .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Data.Entities.Garage?>> GetNearestManyAsync(double lat, double lng, int count)
+
+
+
+        public async Task<IEnumerable<Data.Entities.Garage>> GetNearestManyAsync(double lat, double lng, int count)
         {
             var userLocation = _geometryFactory.CreatePoint(new Coordinate(lng, lat));
 
             return await _context.Garages
-                .Include(g => g.Location)
-                .Include(g => g.Sessions)
-                .Where(g => g.Location.ParkingCoordinates != null)
-                .OrderBy(g => g.Location.ParkingCoordinates.Distance(userLocation))
-                .Take(count)
-                .ToListAsync();
+            .Include(g => g.Location)
+            .Include(g => g.Sessions)
+            .Where(g => g.Location != null && g.Location.ParkingCoordinates != null)
+            .OrderBy(g => g.Location.ParkingCoordinates.Distance(userLocation))
+            .Take(count)
+            .ToListAsync();
         }
 
     }

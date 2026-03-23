@@ -21,6 +21,9 @@
         const spinner = form.querySelector('.spinner-btn');
 
         if (submitBtn && spinner) {
+            const icon = submitBtn.querySelector('i');
+            if (icon) icon.style.display = "none";
+
             spinner.style.display = "inline-block";
             submitBtn.classList.add("disabled");
             submitBtn.style.opacity = "0.7";
@@ -77,7 +80,7 @@
             return;
         }
 
-        window.location.href = `/Garages/Nearby?lat=${selectedLat}&lng=${selectedLng}`;
+        window.location.href = `/Garages/GetNearbyGarages?lat=${selectedLat}&lng=${selectedLng}`;
     }
 
     // =========================
@@ -117,7 +120,7 @@ function findNearest() {
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
 
-            window.location.href = `/Garages/Nearby?lat=${lat}&lng=${lng}`;
+            window.location.href = `/Garages/GetNearbyGarages?lat=${lat}&lng=${lng}`;
         });
     } else {
         alert("Geolocation is not supported.");

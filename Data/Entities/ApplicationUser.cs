@@ -1,6 +1,6 @@
 ﻿using CarsInsideGarage.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using CarsInsideGarage.Interfaces;
+
 
 namespace CarsInsideGarage.Data.Entities
 {
@@ -8,7 +8,7 @@ namespace CarsInsideGarage.Data.Entities
     {
         public ICollection<Car>? Cars { get; set; }
         public ICollection<Garage>? OwnedGarages { get; set; }
-        public bool IsDeleted { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public DateTime? DeletedAt { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    }
+        public bool IsDeleted { get; set; } = false;
+        public DateTime? DeletedAt { get; set; }
+        }
 }

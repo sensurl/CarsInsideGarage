@@ -30,6 +30,9 @@ namespace CarsInsideGarage.Data
             modelBuilder.Entity<Garage>()
                 .HasQueryFilter(g => !g.IsDeleted);
 
+            modelBuilder.Entity<ParkingSession>()
+                .HasQueryFilter(ps => !ps.Car.IsDeleted && ps.ExitTime == null);
+
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(GarageDbContext).Assembly);
         }
     }
