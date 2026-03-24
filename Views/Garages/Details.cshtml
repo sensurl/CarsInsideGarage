@@ -32,9 +32,18 @@
                 </div>
 
                 <div class="col-md-6 text-end">
-                    <div class="rounded p-4 text-center" style="background-color: var(--bg-main); border: 1px solid var(--border);">
-                        <i class="bi bi-geo-alt-fill" style="color: var(--accent); font-size: 2rem;"></i>
-                        <p class="text-muted mb-0">Map Preview Coming Soon</p>
+                    @{
+                        var coords = Model.ParkingCoordinates?.Split(',');
+                        var lat = coords?.Length > 0 ? coords[0].Trim() : "0";
+                        var lng = coords?.Length > 1 ? coords[1].Trim() : "0";
+                    }
+                    <div id="map"
+                         style="height: 250px; width: 100%;"
+                         class="rounded shadow-sm"
+                         data-mode="preview"
+                         data-lat="@lat"
+                         data-lng="@lng"
+                         data-name="@Model.Name">
                     </div>
 
                     @if (User.IsInRole("Driver"))
@@ -46,7 +55,7 @@
                                 <input type="hidden" name="garageId" value="@Model.Id" />
             
                                     <button type="submit" class="btn btn-primary btn-lg px-5 shadow-sm position-relative">
-                                    @* This span matches your site.js .spinner-btn selector *@
+
                                     <span class="spinner-border spinner-border-sm spinner-btn me-2" role="status" aria-hidden="true" style="display: none;"></span>
                 
                                     <i class="bi bi-p-square-fill me-2"></i>
@@ -75,7 +84,6 @@
                         <li>Monthly: <strong>@Model.MonthlyRate.ToString("C", new CultureInfo("fr-FR"))</strong></li>
                     </ul>
                 </div>
-
 
                 @if (Model.CanSeeRevenue)
                 {
@@ -114,3 +122,8 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+}

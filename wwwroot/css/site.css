@@ -245,3 +245,40 @@ body {
         color: var(--accent) !important;
         border-color: var(--accent) !important;
     }
+
+/* Custom Accent Text Utility */
+.text-accent {
+    color: var(--accent) !important;
+}
+
+/* Make Leaflet blend with the dark theme */
+.leaflet-container {
+    background: var(--bg-main) !important;
+    outline: none;
+}
+
+/* Darken the map tiles using CSS filters */
+.leaflet-tile-pane {
+    filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+}
+
+/* Style the Leaflet Popups to match cards */
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+    background-color: var(--bg-surface) !important;
+    color: var(--text-main) !important;
+    border: 1px solid var(--border);
+}
+
+/* Custom Scrollbar for the garage list */
+.garage-list-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.garage-list-container::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+}
+
+    .garage-list-container::-webkit-scrollbar-thumb:hover {
+        background: var(--accent);
+    }

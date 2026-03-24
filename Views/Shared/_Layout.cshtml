@@ -9,12 +9,14 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CarsInsideGarage.styles.css" asp-append-version="true" />
 </head>
+
 <body>
+
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand fw-bold" asp-area="" asp-controller="Home" asp-action="Index">
-                    <i class="bi bi-p-circle-fill"></i> YourParkingSpot
+                    <i class="bi bi-p-circle-fill text-accent"></i> YourParkingSpot
                 </a>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
@@ -22,60 +24,63 @@
                 </button>
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav flex-grow-1 align-items-center">
                         <li class="nav-item">
-                            <a class="nav-link nav-btn text-white" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link nav-btn me-2" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-btn me-2" asp-area="" asp-controller="Garages" asp-action="Index">Find Parking</a>
                         </li>
 
-                        @if (User.IsInRole("Admin"))
+                        @if (User.IsInRole("Driver") || User.IsInRole("Admin"))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link nav-btn text-white" asp-area="Admin"
-                                   asp-controller="Dashboard"
-                                   asp-action="Index">
-                                    Admin Panel
+                            <li class="nav-item dropdown me-2">
+                                <a class="nav-link dropdown-toggle nav-btn" href="#" id="driverDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-car-front-fill me-1"></i> Driver Panel
                                 </a>
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Cars" asp-action="Index">My Vehicles (Registry)</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="ParkingSessions" asp-action="MySessions">Active Sessions</a></li>
+                                </ul>
                             </li>
                         }
 
+                        @if (User.IsInRole("GarageOwner") || User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown me-2">
+                                <a class="nav-link dropdown-toggle nav-btn" href="#" id="ownerDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-person-workspace me-1"></i> Owner Panel
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    <li><a class="dropdown-item text-accent" asp-area="" asp-controller="Garages" asp-action="Create fw-bold"><i class="bi bi-plus-lg me-1"></i>Register New Garage</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Garages" asp-action="Index">My Garages</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="ParkingSessions" asp-action="ActiveList">Current Occupancy</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Fees" asp-action="Index">Manage Fees</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Garages" asp-action="RevenueReport">Revenue & Accounting</a></li>
+                                </ul>
+                            </li>
+                        }
 
-                        <li class="nav-item">
-                            <a class="nav-link nav-btn text-white" asp-controller="Garages" asp-action="Index">Find Parking</a>
-                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item border-start ms-2 ps-2">
+                                <a class="nav-link nav-btn border-info text-info" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                                    <i class="bi bi-shield-lock-fill me-1"></i> Admin Dashboard
+                                </a>
+                            </li>
+                        }
+                    </ul>
 
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle nav-btn text-white-50" href="#" id="ownerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Owner Panel
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="ownerDropdown">
-                                <li><h6 class="dropdown-header">Garage Management</h6></li>
-                                <li><a class="dropdown-item" asp-controller="Garages" asp-action="Index">My Garages</a></li>
-                                <li><a class="dropdown-item" asp-controller="ParkingSessions" asp-action="ActiveList">Current Occupancy</a></li>
-                                <li><a class="dropdown-item" asp-controller="Fees" asp-action="Index">Manage Fees</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><h6 class="dropdown-header">Finance</h6></li>
-                                <li><a class="dropdown-item" asp-controller="Garages" asp-action="RevenueReport">Revenue & Accounting</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="nav-item dropdown border-start ms-2 ps-2">
-                            <a class="nav-link dropdown-toggle nav-btn text-secondary" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
-                                System Admin
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-dark">
-                                <li><a class="dropdown-item" asp-controller="Cars" asp-action="Index">Vehicle Registry (All Cars)</a></li>
-                                <li><a class="dropdown-item" asp-controller="Garages" asp-action="Create">Register New Garage</a></li>
-                            </ul>
-                        </li>
-
+                    <ul class="navbar-nav ms-auto align-items-center">
                         @if (User.Identity != null && User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item ms-auto d-flex align-items-center text-light">
-                                <span class="me-3">
-                                    Hello @User.Identity.Name
+                            <li class="nav-item d-flex align-items-center">
+                                <span class="text-muted small me-3">
+                                    <i class="bi bi-person-circle"></i> @User.Identity.Name
                                 </span>
-                                <form asp-controller="Account" asp-action="Logout" method="post">
-                                    <button type="submit" class="btn btn-outline-light btn-sm">
+                                <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">
                                         Logout
                                     </button>
                                 </form>
@@ -83,19 +88,14 @@
                         }
                         else
                         {
-                            <li class="nav-item ms-auto">
-                                <a class="nav-link text-success" asp-controller="Account" asp-action="Login">
-                                    Login
-                                </a>
+                            <li class="nav-item">
+                                <a class="nav-link text-accent fw-bold me-2" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-warning" asp-controller="Account" asp-action="Register">
-                                    Register
-                                </a>
+                                <a class="btn btn-primary btn-sm" asp-area="" asp-controller="Account" asp-action="Register">Join Now</a>
                             </li>
                         }
                     </ul>
-
                 </div>
             </div>
         </nav>

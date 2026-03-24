@@ -5,93 +5,64 @@
 }
 
 <div class="container mt-4">
+    <h2 class="text-white mb-4"><i class="bi bi-geo-alt-fill text-accent me-2"></i>Nearest Parking Garages</h2>
 
-    <h2 class="mb-4 text-center">Nearest Parking Garages</h2>
-
-    <div class="row">
-
-        <!-- LEFT: LIST -->
-        <div class="col-md-5">
-
+    <div class="row g-4">
+        <div class="col-lg-5">
             @if (!Model.Any())
             {
-                <div class="alert alert-warning">
-                    No garages found nearby.
+                <div class="alert alert-warning shadow-sm">
+                    <i class="bi bi-exclamation-triangle me-2"></i> No garages found nearby. Try searching another area.
                 </div>
             }
             else
             {
-                <div class="list-group">
+                <div class="garage-list-container" style="max-height: 600px; overflow-y: auto; padding-right: 10px;">
                     @foreach (var g in Model)
                     {
-                        <div class="list-group-item mb-2 shadow-sm">
-                            <h5>@g.Name</h5>
+                        <div class="card mb-3 shadow-sm border-0" style="background-color: var(--bg-surface); border: 1px solid var(--border) !important;">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h5 class="text-white mb-1">@g.Name</h5>
+                                    <span class="badge" style="background-color: var(--bg-main); color: var(--accent); border: 1px solid var(--border);">
+                                        @(g.Distance > 0 ? Math.Round(g.Distance / 1000, 2) + " km" : "N/A")
+                                    </span>
+                                </div>
+                                
+                                <p class="text-muted small mb-3">
+                                    <i class="bi bi-p-circle me-1"></i> Available Spots:
+                                    <span class="@(g.FreeSpots > 0 ? "text-accent" : "text-danger") fw-bold">
+                                        @g.FreeSpots
+                                    </span>
+                                </p>
 
-                            <p>
-                                Free spots: <strong>@g.FreeSpots</strong><br />
-                                Distance:
-                                <strong>
-                                    @(g.Distance > 0
-                                        ? Math.Round(g.Distance / 1000, 2) + " km"
-                                        : "N/A")
-                                </strong>
-                            </p>
-
-                            <a asp-controller="Garages"
-                                   asp-action="Details"
-                                   asp-route-id="@g.Id"
-                                   class="btn btn-sm btn-outline-primary">
-                                View Details
-                            </a>
+                                <a asp-controller="Garages"
+                                       asp-action="Details"
+                                       asp-route-id="@g.Id"
+                                       class="btn btn-info btn-sm w-100">
+                                    <i class="bi bi-eye me-1"></i> View Details
+                                </a>
+                            </div>
                         </div>
                     }
                 </div>
             }
-
         </div>
 
-        <!-- RIGHT: MAP -->
-        <div class="col-md-7">
-            <div id="map" style="height: 500px; width: 100%;"></div>
+        <div class="col-lg-7">
+            <div class="sticky-top" style="top: 20px; z-index: 1;">
+                <div id="map"
+                     style="height: 600px; width: 100%;"
+                     class="rounded shadow-lg"
+                     data-mode="nearby"
+                     data-garages='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model))'>
+                </div>
+            </div>
         </div>
-
     </div>
 </div>
 
 @section Scripts {
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-
-        const defaultLat = 42.6977;
-        const defaultLng = 23.3219;
-
-        const map = L.map('map').setView([defaultLat, defaultLng], 13);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-
-        // Serialize model safely
-        const garages = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model));
-
-        if (garages.length > 0) {
-
-        garages.forEach(g => {
-
-        if (g.latitude && g.longitude) {
-        L.marker([g.latitude, g.longitude])
-        .addTo(map)
-        .bindPopup(`<b>${g.name}</b>`);
-        }
-
-        });
-
-        // Center map on first garage
-        map.setView([garages[0].latitude, garages[0].longitude], 14);
-        }
-        });
-    </script>
 }

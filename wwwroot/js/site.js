@@ -1,8 +1,8 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
 
-    // =========================
-    // License plate formatting
-    // =========================
+    // ==========================================
+    // 1. LICENSE PLATE FORMATTING
+    // ==========================================
     const plateInputs = document.querySelectorAll('input[name*="CarPlateNumber"]');
     plateInputs.forEach(input => {
         input.addEventListener('input', function () {
@@ -10,9 +10,9 @@
         });
     });
 
-    // =========================
-    // Form submit spinner
-    // =========================
+    // ==========================================
+    // 2. FORM SUBMIT SPINNER
+    // ==========================================
     document.addEventListener("submit", function (e) {
         const form = e.target;
         if (!form.checkValidity()) return;
@@ -30,99 +30,130 @@
         }
     });
 
-    // =========================
-    // MAP VARIABLES
-    // =========================
-    let map;
-    let selectedLat = null;
-    let selectedLng = null;
-    let marker = null;
+    // ==========================================
+    // 3. UNIFIED LEAFLET MAP LOGIC
+    // ==========================================
+    const mapElement = document.getElementById("map");
 
-    // =========================
-    // MAP INIT
-    // =========================
-    function initMap() {
-        const lat = 42.6977;
-        const lng = 23.3219;
+    // Only proceed if a map div exists on the current page
+    if (mapElement) {
+        const mode = mapElement.dataset.mode;
 
-        map = L.map('map').setView([lat, lng], 13);
+        // Initial setup (Default: Sofia center if no data provided)
+        const map = L.map('map').setView([42.6977, 23.3219], 13);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
-        L.marker([lat, lng]).addTo(map)
-            .bindPopup('Sofia City Center')
-            .openPopup();
+        // --- MODE A: Single Garage Preview (Details View) ---
+        if (mode === "preview") {
+            const lat = parseFloat(mapElement.dataset.lat);
+            const lng = parseFloat(mapElement.dataset.lng);
+            const name = mapElement.dataset.name || "Garage Location";
 
-        // CLICK EVENT
-        map.on('click', function (e) {
-            selectedLat = e.latlng.lat;
-            selectedLng = e.latlng.lng;
-
-            if (marker) {
-                map.removeLayer(marker);
+            if (!isNaN(lat) && !isNaN(lng)) {
+                map.setView([lat, lng], 15);
+                L.marker([lat, lng]).addTo(map)
+                    .bindPopup(`<b>${name}</b>`)
+                    .openPopup();
             }
+        }
 
-            marker = L.marker([selectedLat, selectedLng])
-                .addTo(map)
-                .bindPopup("Selected location")
-                .openPopup();
+        // --- MODE B: Nearby Garages (List View) ---
+        else if (mode === "nearby") {
+            const garagesData = mapElement.dataset.garages;
+            if (garagesData) {
+                const garages = JSON.parse(garagesData);
+                const markers = [];
+
+                garages.forEach(g => {
+                    // Check for both C# casing (Latitude) and JS casing (latitude)
+                    const lat = g.Latitude || g.latitude;
+                    const lng = g.Longitude || g.longitude;
+                    const name = g.Name || g.name;
+                    const id = g.Id || g.id;
+
+                    if (lat && lng) {
+                        const m = L.marker([lat, lng])
+                            .addTo(map)
+                            .bindPopup(`<b>${name}</b><br><a href="/Garages/Details/${id}" class="btn btn-sm btn-link">View Details</a>`);
+                        markers.push(m);
+                    }
+                });
+
+                if (markers.length > 0) {
+                    const group = new L.featureGroup(markers);
+                    map.fitBounds(group.getBounds().pad(0.2));
+                }
+            }
+        }
+
+        // --- MODE C: Manual Location Picker (Home/Search View) ---
+        else {
+            let pickerMarker = null;
+
+            map.on('click', function (e) {
+                const lat = e.latlng.lat;
+                const lng = e.latlng.lng;
+
+                // Update hidden data attributes on the map element for the 'Use Selected' button
+                mapElement.dataset.selectedLat = lat;
+                mapElement.dataset.selectedLng = lng;
+
+                if (pickerMarker) {
+                    map.removeLayer(pickerMarker);
+                }
+
+                pickerMarker = L.marker([lat, lng])
+                    .addTo(map)
+                    .bindPopup("Selected location")
+                    .openPopup();
+            });
+        }
+    }
+
+    // ==========================================
+    // 4. BUTTON EVENT BINDINGS
+    // ==========================================
+    const btnUseSelected = document.getElementById("btnUseSelected");
+    if (btnUseSelected) {
+        btnUseSelected.addEventListener("click", function () {
+            const mapEl = document.getElementById("map");
+            const lat = mapEl.dataset.selectedLat;
+            const lng = mapEl.dataset.selectedLng;
+
+            if (!lat || !lng) {
+                alert("Please click on the map to select a location first.");
+                return;
+            }
+            window.location.href = `/Garages/GetNearbyGarages?lat=${lat}&lng=${lng}`;
         });
     }
 
-    // =========================
-    // Use Selected Location
-    // =========================
-    function useSelectedLocation() {
-        if (!selectedLat || !selectedLng) {
-            alert("Please select a location on the map.");
-            return;
-        }
-
-        window.location.href = `/Garages/GetNearbyGarages?lat=${selectedLat}&lng=${selectedLng}`;
-    }
-
-    // =========================
-    // Search Area
-    // =========================
     const btnSearchArea = document.getElementById("btnSearchArea");
     if (btnSearchArea) {
         btnSearchArea.addEventListener("click", () => {
             const query = document.getElementById("searchBox").value;
-            console.log("Search for:", query);
+            console.log("Searching for location name:", query);
+            // ToDo: Add Geocoding logic here if needed later
         });
-    }
-
-    // =========================
-    // Bind NEW button
-    // =========================
-    const btnUseSelected = document.getElementById("btnUseSelected");
-    if (btnUseSelected) {
-        btnUseSelected.addEventListener("click", useSelectedLocation);
-    }
-
-    // =========================
-    // INIT MAP ONLY IF PRESENT
-    // =========================
-    if (document.getElementById("map")) {
-        initMap();
     }
 });
 
-
-// =========================
-// GLOBAL FUNCTION
-// =========================
+// ==========================================
+// 5. GLOBAL GEOLOCATION FUNCTION
+// ==========================================
 function findNearest() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
-
             window.location.href = `/Garages/GetNearbyGarages?lat=${lat}&lng=${lng}`;
+        }, function (error) {
+            alert("Unable to retrieve your location. Please ensure location services are enabled.");
         });
     } else {
-        alert("Geolocation is not supported.");
+        alert("Geolocation is not supported by your browser.");
     }
 }
