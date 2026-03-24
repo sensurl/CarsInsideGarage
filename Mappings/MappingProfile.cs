@@ -81,6 +81,12 @@ namespace CarsInsideGarage.Mappings
                 .ForMember(dest => dest.DistanceInKm,
                     opt => opt.Ignore());
 
+            CreateMap<Car, CarSelectionDto>()
+                .ForMember(dest => dest.Id, opt => 
+                    opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.CarPlateNumber, opt => 
+                    opt.MapFrom(src => src.CarPlateNumber));
+
             CreateMap<PricingRule, PricingRuleDetailsDto>();
 
             // =========================

@@ -21,26 +21,7 @@ namespace CarsInsideGarage.Data.Configurations
             builder.HasIndex(c => c.CarPlateNumber)
                 .IsUnique();
 
-            /*
-			// Seed data
-            builder.HasData(
-                new Entities.Car
-                {
-                    Id = 1,
-                    CarPlateNumber = "ABC123"
-                },
-                new Entities.Car
-                {
-                    Id = 2,
-                    CarPlateNumber = "XYZ789"
-                },
-                new Entities.Car
-                {
-                    Id = 3,
-                    CarPlateNumber = "LMN456"
-                }
-                );
-			*/
+            
         }
     }
 }

@@ -28,24 +28,29 @@ namespace CarsInsideGarage.Services.GarageSession
         // START SESSION (Driver Only - Secure)
         // ==========================================
 
-        public async Task StartSessionAsync(int garageId, string userId)
+        public async Task StartSessionAsync(int garageId, int carId, string userId)
         {
             var garage = await _unitOfWork.Garages.GetByIdAsync(garageId);
 
             if (garage == null)
                 throw new Exception("Garage not found");
 
-            var car = await _unitOfWork.Cars
-            .FirstOrDefaultAsync(c => c.UserId == userId);
+            //var car = await _unitOfWork.Cars
+            //.FirstOrDefaultAsync(c => c.UserId == userId);
+
+            var car = await _unitOfWork.Cars.GetByIdAsync(carId);
 
             if (car == null)
                 throw new Exception("Driver has no registered car.");
+
+            if (car.UserId != userId)
+                throw new UnauthorizedAccessException("This Car does not belong to this Driver.");
 
             var existingActive = await _unitOfWork.Sessions
             .GetActiveSessionByCarIdAsync(car.Id);
 
             if (existingActive != null)
-                throw new Exception("Car already has active session.");
+                throw new Exception($"Car already parked in Garage: {garage.Name}.");
 
             var policy = garage.PricingPolicy;
 
@@ -72,29 +77,49 @@ namespace CarsInsideGarage.Services.GarageSession
         // DRIVER ACTIVE SESSION (Secure)
         // ==========================================
 
-       
-        public async Task<SessionActiveViewModel?> GetActiveSessionForDriverAsync(string userId)
+
+        public async Task<SessionActiveViewModel?> GetActiveSessionDetailsAsync(int sessionId, string userId)
         {
-            var car = await _unitOfWork.Cars
-                .FirstOrDefaultAsync(c => c.UserId == userId);
+            var session = await _unitOfWork.Sessions.GetByIdAsync(sessionId);
 
-            if (car == null)
-                return null;
+            if (session == null || session.ExitTime != null) return null;
 
-            var session = await _unitOfWork.Sessions
-                .GetActiveSessionByCarIdAsync(car.Id);
+            var car = await _unitOfWork.Cars.GetByIdAsync(session.CarId);
 
-            if (session == null)
-                return null;
+            if (car == null || car.UserId != userId)
+                throw new UnauthorizedAccessException("You do not have permission to view this session.");
 
             var dto = _mapper.Map<SessionDto>(session);
             var vm = _mapper.Map<SessionActiveViewModel>(dto);
 
-           
             vm.AccruedAmount = _pricingCalculator.CalculateTotal(session);
 
-
             return vm;
+        }
+
+        public async Task<IEnumerable<SessionActiveViewModel?>> GetActiveSessionsForDriverAsync(string userId)
+        {
+            // 1. Get all cars belonging to the user
+            var userCars = await _unitOfWork.Cars.WhereAsync(c => c.UserId == userId && !c.IsDeleted);
+            var carIds = userCars.Select(c => c.Id).ToList();
+
+            // 2. Get all active sessions for those car IDs
+            var activeSessions = await _unitOfWork.Sessions
+                .WhereAsync(s => carIds.Contains(s.CarId) && s.ExitTime == null);
+
+            // 3. Map to DTO => ViewModels
+            var vms = new List<SessionActiveViewModel>();
+
+            foreach (var session in activeSessions)
+            {
+                var dto = _mapper.Map<SessionDto>(session);
+                var vm = _mapper.Map<SessionActiveViewModel>(dto);
+                vm.AccruedAmount = _pricingCalculator.CalculateTotal(session);
+                vms.Add(vm);
+            }
+
+            return vms;
+          
         }
 
         public async Task<int> GetCarIdBySessionIdAsync(int sessionId)

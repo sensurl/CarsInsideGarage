@@ -47,14 +47,27 @@ namespace CarsInsideGarage.Controllers
         }
 
         // ==========================================
-        // DRIVER 
+        // DRIVER
         // ==========================================
 
         [Authorize(Roles = "Driver")]
-        public async Task<IActionResult> Active()
+        public async Task<IActionResult> MySessions()
         {
-            var session = await _service
-            .GetActiveSessionForDriverAsync(GetUserId());
+            var sessions = await _service.GetActiveSessionsForDriverAsync(GetUserId());
+
+            if (!sessions.Any())
+                return View("NoActiveSession");
+
+            return View(sessions);
+        }
+
+        [Authorize(Roles = "Driver")]
+        public async Task<IActionResult> Active(int? id)
+        {
+            if (id == null) return RedirectToAction(nameof(MySessions));
+
+            // Uses your existing service method GetActiveSessionDetailsAsync
+            var session = await _service.GetActiveSessionDetailsAsync(id.Value, GetUserId());
 
             if (session == null)
                 return View("NoActiveSession");
@@ -62,14 +75,52 @@ namespace CarsInsideGarage.Controllers
             return View(session);
         }
 
+
         [Authorize(Roles = "Driver")]
         [HttpPost]
-        public async Task<IActionResult> Start(int garageId)
+        public async Task<IActionResult> Start(int garageId, int? carId)
         {
             try
             {
-                await _service.StartSessionAsync(garageId, GetUserId());
-                return RedirectToAction(nameof(Active));
+                // If carId is null, the user clicked "Park" from the Garage list
+                if (carId == null)
+                {
+                    // We need to check how many cars the user has. 
+                    // You can use your existing _unitOfWork or a Service call here.
+                    var userId = GetUserId();
+                    var cars = await _userManager.Users
+                        .Include(u => u.Cars)
+                        .Where(u => u.Id == userId)
+                        .SelectMany(u => u.Cars)
+                        .Where(c => !c.IsDeleted)
+                        .ToListAsync();
+
+                    if (cars.Count == 0)
+                    {
+                        TempData["Error"] = "Please register a car first.";
+                        return RedirectToAction("Index", "Cars");
+                    }
+
+                    if (cars.Count > 1)
+                    {
+                        // REDIRECT TO SELECT CAR VIEW
+                        var vm = new SelectCarViewModel
+                        {
+                            GarageId = garageId,
+                            AvailableCars = _mapper.Map<IEnumerable<CarSelectionDto>>(cars)
+                        };
+                        return View("SelectCar", vm);
+                    }
+
+                    // If only one car, take its ID
+                    carId = cars.First().Id;
+                }
+
+                // Call the service with the specific carId
+                await _service.StartSessionAsync(garageId, carId.Value, GetUserId());
+
+                // Redirect to MySessions so they see their new parked car in the list
+                return RedirectToAction(nameof(MySessions));
             }
             catch (Exception ex)
             {

@@ -49,40 +49,4 @@ namespace CarsInsideGarage.Data.Configurations
     }
 }
 
-            /*
-			// Seed data
-
-            builder.HasData(
-                new ParkingSession
-                {
-                    Id = 1,
-                    GarageId = 1,
-                    CarId = 1,
-                    EntryTime = new DateTime(2024, 1, 1, 10, 0, 0),
-                    ExitTime = new DateTime(2024, 1, 1, 12, 0, 0),
-                    AmountPaid = 5.00m,
-                    IsCleared = true
-                },
-                new ParkingSession
-                {
-                    Id = 2,
-                    GarageId = 1,
-                    CarId = 2,
-                    EntryTime = new DateTime(2024, 2, 2, 10, 0, 0),
-                    ExitTime = new DateTime(2024, 2, 2, 12, 0, 0),
-                    AmountPaid = 0.00m,
-                    IsCleared = false
-                },
-                new ParkingSession
-                {
-                    Id = 3,
-                    GarageId = 2,
-                    CarId = 3,
-                    EntryTime = new DateTime(2024, 3, 3, 10, 0, 0),
-                    ExitTime = new DateTime(2024, 3, 3, 12, 0, 0),
-                    AmountPaid = 25.00m,
-                    IsCleared = true
-                }
-            );
-			*/
-        
+           
