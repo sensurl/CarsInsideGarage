@@ -137,13 +137,13 @@ namespace CarsInsideGarage.Controllers
             try
             {
                 await _service.PayAsync(sessionId, amount, GetUserId());
-                return RedirectToAction(nameof(Active));
+                return RedirectToAction(nameof(MySessions));
             }
             catch (Exception ex)
             {
                 // Showing why payment failed (e.g. negative amount)
                 TempData["Error"] = ex.Message;
-                return RedirectToAction(nameof(Active));
+                return RedirectToAction(nameof(MySessions));
             }
         }
 
@@ -159,13 +159,13 @@ namespace CarsInsideGarage.Controllers
             try
             {
                 await _service.EndSessionAsync(sessionId, GetUserId());
-                return RedirectToAction(nameof(Active));
+                return RedirectToAction(nameof(MySessions));
             }
             catch (Exception ex)
             {
                 // This catches the "Outstanding balance" exception from Service
                 TempData["Error"] = ex.Message;
-                return RedirectToAction(nameof(Active));
+                return RedirectToAction(nameof(MySessions));
             }
         }
 

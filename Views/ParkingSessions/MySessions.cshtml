@@ -1,0 +1,57 @@
+﻿@model IEnumerable<CarsInsideGarage.Models.ViewModels.SessionActiveViewModel>
+
+@{
+    ViewData["Title"] = "My Active Sessions";
+    }
+
+<h2 class="mb-4">My Active Parking Sessions</h2>
+
+@if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+        @TempData["Error"]
+        </div>
+    }
+
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+            <th>Garage</th>
+            <th>Car</th>
+            <th>Entry Time</th>
+            <th>Accrued</th>
+            <th>Paid</th>
+            <th>Remaining</th>
+            <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var session in Model)
+            {
+                <tr>
+                <td>@session.GarageName</td>
+                <td>@session.CarPlateNumber</td>
+                <td>@session.EntryTime.ToLocalTime().ToString("g")</td>
+                <td>@session.AccruedAmount.ToString("C")</td>
+                <td>@session.AmountPaid.ToString("C")</td>
+                    <td>
+                    @if (session.RemainingAmount > 0)
+                        {
+                            <span class="text-danger fw-bold">
+                            @session.RemainingAmount.ToString("C")
+                            </span>
+                        }
+                    else
+                        {
+                        <span class="text-success fw-bold">Paid</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Active" asp-route-id="@session.Id" class="btn btn-primary btn-sm">
+                        Details
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
