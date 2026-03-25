@@ -82,12 +82,13 @@ namespace CarsInsideGarage.Controllers
         {
             try
             {
-                // If carId is null, the user clicked "Park" from the Garage list
+                // If carId is null, the user clicks "Park" from the Garage list
                 if (carId == null)
                 {
-                    // We need to check how many cars the user has. 
-                    // You can use your existing _unitOfWork or a Service call here.
+                    // Check how many Cars the user has. 
+                   
                     var userId = GetUserId();
+
                     var cars = await _userManager.Users
                         .Include(u => u.Cars)
                         .Where(u => u.Id == userId)

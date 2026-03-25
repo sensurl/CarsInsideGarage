@@ -7,15 +7,14 @@ namespace CarsInsideGarage.Data.Entities
     {
         private Garage() { }   // EF Core needs this
 
-        public Garage(string name, int capacity, int locationId, PricingPolicy pricingPolicy, string userId)
+        public Garage(string name, int capacity, Location location, PricingPolicy pricingPolicy, string userId)
         {
             Name = name;
             Capacity = capacity;
-            LocationId = locationId;
+            Location = location;
             PricingPolicy = pricingPolicy;
             UserId = userId;
         }
-
 
         [Key]
         public int Id { get; set; }
@@ -24,7 +23,6 @@ namespace CarsInsideGarage.Data.Entities
 
         public int Capacity { get; set; }
 
-        public int LocationId { get; set; }
         public Location Location { get; set; } = null!;
 
         public PricingPolicy PricingPolicy { get; private set; } = null!;
@@ -43,7 +41,6 @@ namespace CarsInsideGarage.Data.Entities
         public bool IsDeleted { get; set; } = false;
         public DateTime? DeletedAt { get; set; }
         public string? DeletedByUserId { get; set; }
-
 
     }
 }

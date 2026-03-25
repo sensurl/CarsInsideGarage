@@ -22,7 +22,9 @@ namespace CarsInsideGarage.Models.ViewModels
         [Required(ErrorMessage = "Coordinates are required")]
         [Display(Name = "e.g 42.659892717892355, 23.315800826629413")]
         [RegularExpression(@"^-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$", ErrorMessage = "Coordinates must be in 'lat,lng' format.")]
-        public string ParkingCoordinates { get; set; } = null!;
+        public double Lat { get; set; }
+        public double Lng { get; set; }
+
 
         [Required]
         [Range(1, 10)]

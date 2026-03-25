@@ -1,6 +1,7 @@
 ﻿using CarsInsideGarage.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using CarsInsideGarage.Data.Enums;
 
 namespace CarsInsideGarage.Data.Configurations
     {
@@ -15,11 +16,6 @@ namespace CarsInsideGarage.Data.Configurations
             builder.Property(e => e.Name)
                   .IsRequired()
                   .HasMaxLength(50);
-
-            builder.HasOne(g => g.Location)
-                .WithOne()
-                .HasForeignKey<Garage>(g => g.LocationId)
-                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(g => g.User)
                 .WithMany()
@@ -64,37 +60,41 @@ namespace CarsInsideGarage.Data.Configurations
                 pricing.Navigation(p => p.Rules)
                     .UsePropertyAccessMode(PropertyAccessMode.Field);
             });
-            }
+
+            builder.OwnsOne(g => g.Location, location =>
+            {
+                location.Property(l => l.Area)
+                    .HasConversion(
+                    v => v.ToString(),
+                    v => (Area)Enum.Parse(typeof(Area), v))
+                .HasMaxLength(20)
+                .IsRequired();
+
+                location.Property(l => l.Latitude)
+        .IsRequired();
+
+                location.Property(l => l.Longitude)
+                    .IsRequired();
+
+                location.Property(l => l.ParkingCoordinates)
+                    .HasColumnType("geography")
+                    .IsRequired();
+            });
+
+            builder.OwnsOne(g => g.Location, location =>
+            {
+                location.Property(l => l.Latitude)
+                    .HasColumnName("Latitude")
+                    .IsRequired();
+
+                location.Property(l => l.Longitude)
+                    .HasColumnName("Longitude")
+                    .IsRequired();
+            });
+
+            builder.HasIndex("Latitude", "Longitude").IsUnique();
+
+
         }
     }
-/*
-// Seed data
-            builder.HasData(
-                new Garage
-                {
-                    Id = 1,
-                    Name = "Uptown Garage",
-                    LocationId = 1,
-                    Capacity = 150,
-                    GarageFeeId = 1
-
-                },
-                new Garage
-                {
-                    Id = 2,
-                    Name = "Downtown Garage",
-                    LocationId = 2,
-                    Capacity = 60,
-                    GarageFeeId = 2
-                },
-                new Garage
-                {
-                    Id = 3,
-                    Name = "Suburban Garage",
-                    LocationId = 3,
-                    Capacity = 200,
-                    GarageFeeId = 1
-                }
-
-            );
-*/
+    }

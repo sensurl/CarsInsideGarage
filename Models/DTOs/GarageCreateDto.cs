@@ -5,7 +5,10 @@
         public string Name { get; set; } = null!;
         public int Capacity { get; set; }
         public string Area { get; set; } = null!;
-        public string ParkingCoordinates { get; set; } = null!;
+
+        public double Lat { get; set; }
+        public double Lng { get; set; }
+
         // PricingPolicy snapshot
         public decimal HourlyRate { get; set; }
         public decimal DailyRate { get; set; }

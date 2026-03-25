@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
 using System.Globalization;
-using System.Runtime.ConstrainedExecution;
 
 namespace CarsInsideGarage.Services.Garage
 {
@@ -19,17 +18,11 @@ namespace CarsInsideGarage.Services.Garage
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-      
-        private readonly GeometryFactory _geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
-
-        //private readonly GarageDbContext _context;
-        
 
         public GarageService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-           _unitOfWork = unitOfWork;
-            _mapper = mapper;  
-           
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         // ================================
@@ -38,36 +31,11 @@ namespace CarsInsideGarage.Services.Garage
 
         public async Task<IEnumerable<GarageListDto>> GetAllAsync(CurrentUser user)
         {
-            //// 1. Get the current logged-in user
-            //var user = _httpContextAccessor.HttpContext?.User;
-            //var userId = _userManager.GetUserId(user);
-
-            //// In case of user not logged in (no user), return an empty list 
-
-            //if (user == null || !user.Identity.IsAuthenticated)
-            //    {
-            //    return Enumerable.Empty<GarageListDto>();
-            //    }
-
-            //// 2. Start the query
-            //var query = _context.Garages.AsQueryable();
-
-            //// 3. Filter: If they aren't an Admin, only show their own garages
-            //if (!user.IsInRole("Admin"))
-            //    {
-            //    query = query.Where(g => g.UserId == userId);
-            //    }
-
-            //// 4. Project and return
-            //return await query
-            //    .ProjectTo<GarageListDto>(_mapper.ConfigurationProvider)
-            //    .ToListAsync();
-
             var garages = await _unitOfWork.Garages.GetAllAsync();
 
-               garages = user.IsAdmin
-                    ? garages
-                    : garages.Where(g => g.UserId == user.UserId);
+            garages = user.IsAdmin
+                 ? garages
+                 : garages.Where(g => g.UserId == user.UserId);
 
             return _mapper.Map<List<GarageListDto>>(garages);
         }
@@ -79,39 +47,38 @@ namespace CarsInsideGarage.Services.Garage
 
         public async Task<int> CreateAsync(GarageCreateDto dto, CurrentUser user)
         {
+            var location = new CarsInsideGarage.Data.Entities.Location(
+                Enum.Parse<Area>(dto.Area),
+                dto.Lat, 
+                dto.Lng);
 
-            var location = new CarsInsideGarage.Data.Entities.Location
+            // Build pricing policy
+            var policy = new PricingPolicy(
+                dto.HourlyRate,
+                dto.DailyRate,
+                dto.MonthlyRate
+            );
+
+            if (dto.Rules != null)
             {
-                Area = Enum.Parse<Area>(dto.Area),
-                ParkingCoordinates = ParseCoordinates(dto.ParkingCoordinates)
-            };
+                foreach (var rule in dto.Rules)
+                {
+                    policy.AddRule(new PricingRule(
+                        rule.StartHour,
+                        rule.EndHour,
+                        rule.Multiplier,
+                        rule.Adjustment
+                    ));
+                }
+            }
 
-            await _unitOfWork.Locations.AddAsync(location);
-            await _unitOfWork.CompleteAsync();
-
-// Build pricing policy
-    var policy = new PricingPolicy(
-        dto.HourlyRate,
-        dto.DailyRate,
-        dto.MonthlyRate
-    );
-	
-	if (dto.Rules != null)
-    {
-        foreach (var rule in dto.Rules)
-        {
-            policy.AddRule(new PricingRule(
-                rule.StartHour,
-                rule.EndHour,
-                rule.Multiplier,
-                rule.Adjustment
-            ));
-        }
-    }
-	
             var garage = new CarsInsideGarage.Data.Entities.Garage
             (
-                dto.Name, dto.Capacity, location.Id, policy,user.UserId
+                dto.Name, 
+                dto.Capacity, 
+                location, 
+                policy, 
+                user.UserId
             );
 
             await _unitOfWork.Garages.AddAsync(garage);
@@ -150,7 +117,7 @@ namespace CarsInsideGarage.Services.Garage
         {
             var garage = await _unitOfWork.Garages.GetGarageWithDetailsAsync(id);
 
-            if (garage == null) 
+            if (garage == null)
                 return null;
 
             return new GarageDetailsViewModel
@@ -164,9 +131,8 @@ namespace CarsInsideGarage.Services.Garage
                             garage.Sessions.Count(s => s.ExitTime == null),
 
                 HourlyRate = garage.PricingPolicy.HourlyRate,
-DailyRate = garage.PricingPolicy.DailyRate,
-MonthlyRate = garage.PricingPolicy.MonthlyRate,
-
+                DailyRate = garage.PricingPolicy.DailyRate,
+                MonthlyRate = garage.PricingPolicy.MonthlyRate,
 
                 CanSeeRevenue = user.IsOwner,
                 TotalRevenue = user.IsOwner
@@ -193,15 +159,13 @@ MonthlyRate = garage.PricingPolicy.MonthlyRate,
                 ParkingCoordinates = FormatPoint(garage.Location.ParkingCoordinates)
             };
 
-            // Admin can delete any car
-            // Driver can delete only their own car
+            // Admin can delete any Garage
+            // Owner can only delete their own Garages
             if (!user.IsAdmin && !user.IsOwner)
                 throw new UnauthorizedAccessException();
 
-
             if (!user.IsAdmin && garage.UserId != user.UserId)
                 throw new UnauthorizedAccessException();
-
 
             _unitOfWork.Garages.Remove(garage);
             await _unitOfWork.CompleteAsync();
@@ -218,24 +182,6 @@ MonthlyRate = garage.PricingPolicy.MonthlyRate,
         {
             return $"{point.Y.ToString(CultureInfo.InvariantCulture)}, " +
                    $"{point.X.ToString(CultureInfo.InvariantCulture)}";
-        }
-
-        private NetTopologySuite.Geometries.Point ParseCoordinates(string coordinates)
-        {
-            var parts = coordinates.Split(',', StringSplitOptions.TrimEntries);
-
-            if (parts.Length != 2)
-                throw new ArgumentException("Invalid coordinates format. Expected 'lat,lng'.");
-
-            if (!double.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var lat))
-                throw new ArgumentException("Latitude is invalid.");
-
-            if (!double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var lng))
-                throw new ArgumentException("Longitude is invalid.");
-
-            var point = _geometryFactory.CreatePoint(new Coordinate(lng, lat));
-            point.SRID = 4326;
-            return point;
         }
 
 
@@ -256,9 +202,15 @@ MonthlyRate = garage.PricingPolicy.MonthlyRate,
             return decimal.Round(total, 2);
         }
 
-       
+        public async Task<CarsInsideGarage.Data.Entities.Garage?> GetNearestAsync(double lat, double lng)
+        {
+            return await _unitOfWork.Garages.GetNearestAsync(lat, lng);
+        }
 
-
+        public async Task<IEnumerable<CarsInsideGarage.Data.Entities.Garage>> GetNearestManyAsync(double lat, double lng, int count)
+        {
+            return await _unitOfWork.Garages.GetNearestManyAsync(lat, lng, count);
+        }
 
     }
 }

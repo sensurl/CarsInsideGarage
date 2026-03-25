@@ -8,7 +8,7 @@ namespace CarsInsideGarage.Interfaces
         IParkingSessionRepository Sessions { get; }
 
         IRepository<Car> Cars { get; }
-        IRepository<Location> Locations { get; }
+       
        
 
         Task<int> CompleteAsync();

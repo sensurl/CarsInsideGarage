@@ -10,7 +10,6 @@ using CarsInsideGarage.Services.Car;
 using CarsInsideGarage.Services.CarService;
 using CarsInsideGarage.Services.Garage;
 using CarsInsideGarage.Services.GarageSession;
-using CarsInsideGarage.Services.Location;
 using CarsInsideGarage.Services.PricingCalculator;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -60,9 +59,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
 builder.Services.AddScoped<ICarService, CarService>();
 builder.Services.AddScoped<IGarageService, GarageService>();
-builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IParkingSessionService, ParkingSessionService>();
-builder.Services.AddScoped<IGarageLocationService, GarageLocationService>();
 builder.Services.AddScoped<IPricingCalculator, PricingCalculator>();
 
 builder.Services.AddHttpContextAccessor();

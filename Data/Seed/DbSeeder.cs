@@ -111,27 +111,21 @@ namespace CarsInsideGarage.Data.Seed
     new { Name = "Lyulin Garage", Lat = 42.7200, Lng = 23.2500, Area = Area.Lyulin }
 };
 
-                var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
-
             foreach (var g in garagesData)
             {
 
                 var location = new CarsInsideGarage.Data.Entities.Location
-                {
-                    Area = g.Area,
-                    ParkingCoordinates = geometryFactory.CreatePoint(new Coordinate(g.Lng, g.Lat))
+               (g.Area,
+               g.Lat,
+               g.Lng);
 
-                };
-
-                context.Locations.Add(location);
-                await context.SaveChangesAsync();
-
+               
                 var policy = new PricingPolicy(2, 15, 200);
 
                 var garage = new Garage(
                     g.Name,
                     50,
-                    location.Id,
+                    location,
                     policy,
                     owner.Id
                 );

@@ -5,7 +5,6 @@ using CarsInsideGarage.Models.Auth;
 using CarsInsideGarage.Models.DTOs;
 using CarsInsideGarage.Models.ViewModels;
 using CarsInsideGarage.Services.Garage;
-using CarsInsideGarage.Services.Location;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,22 +14,20 @@ namespace CarsInsideGarage.Controllers
 {
     public class GaragesController : Controller
     {
-        private readonly ILocationService _locationService;
+        
         private readonly IGarageService _garageService;
-		private readonly IGarageLocationService _garageLocationService;
+		
         private readonly GarageDbContext _context;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         
 
-        public GaragesController(IGarageService garageService, ILocationService locationService, IGarageLocationService garageLocationService, GarageDbContext context, IMapper mapper, UserManager<ApplicationUser> userManager)
+        public GaragesController(IGarageService garageService, GarageDbContext context, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
              _garageService = garageService;
-            _locationService = locationService;
             _context = context;
             _mapper = mapper;
             _userManager = userManager;
-			_garageLocationService = garageLocationService;
         }
 
         private CurrentUser BuildCurrentUser()
@@ -108,9 +105,8 @@ namespace CarsInsideGarage.Controllers
                 Name = model.Name,
                 Capacity = model.Capacity,
                 Area = model.SelectedArea.ToString(),
-                ParkingCoordinates = model.ParkingCoordinates,
-				
-				// 🔥 Pricing now comes directly
+                Lat = model.Lat,
+               Lng = model.Lng,
                 HourlyRate = model.HourlyRate,
                 DailyRate = model.DailyRate,
                 MonthlyRate = model.MonthlyRate,
@@ -175,19 +171,17 @@ namespace CarsInsideGarage.Controllers
         // NEARBY GARAGE SEARCH
         // =============================
 
-       
-               
         [HttpGet]
         public async Task<IActionResult> GetNearbyGarages(double lat, double lng, int count = 5)
         {
-            var garages = await _garageLocationService.GetNearestManyAsync(lat, lng, count);
+            var garages = await _garageService.GetNearestManyAsync(lat, lng, count);
 
             var dtos = garages.Select(g => new GarageNearbyDto
                 {
                 Id = g.Id,
                 Name = g.Name,
-                Latitude = g.Location!.ParkingCoordinates!.Y,
-                Longitude = g.Location!.ParkingCoordinates!.X,
+                Latitude = g.Location.Latitude,
+                Longitude = g.Location.Longitude,
                 FreeSpots = g.Capacity - (g.Sessions?.Count(s => s.ExitTime == null) ?? 0),
                 Distance = 0
                 }).ToList();
@@ -196,7 +190,6 @@ namespace CarsInsideGarage.Controllers
 
             return View(viewModels);
             }
-       
 
         }
     }

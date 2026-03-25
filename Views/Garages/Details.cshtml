@@ -46,12 +46,18 @@
                          data-name="@Model.Name">
                     </div>
 
-                    @if (User.IsInRole("Driver"))
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary btn-lg">
+                            Log in to Park
+                        </a>
+                    }
+                    else if (User.IsInRole("Driver"))
                         {
                         if (Model.FreeSpots > 0)
                             {
                                 <form asp-controller="ParkingSessions" asp-action="Start" method="post" class="d-inline">
-                                @* Pass the Garage ID hidden so the controller receives 'int garageId' *@
+                               
                                 <input type="hidden" name="garageId" value="@Model.Id" />
             
                                     <button type="submit" class="btn btn-primary btn-lg px-5 shadow-sm position-relative">

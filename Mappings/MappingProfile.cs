@@ -73,14 +73,6 @@ namespace CarsInsideGarage.Mappings
                 .ForMember(dest => dest.GarageName,
                     opt => opt.MapFrom(src => src.Garage.Name));
                 
-            CreateMap<Location, LocationDto>()
-                .ForMember(dest => dest.Latitude,
-                    opt => opt.MapFrom(src => src.ParkingCoordinates.Y))
-                .ForMember(dest => dest.Longitude,
-                    opt => opt.MapFrom(src => src.ParkingCoordinates.X))
-                .ForMember(dest => dest.DistanceInKm,
-                    opt => opt.Ignore());
-
             CreateMap<Car, CarSelectionDto>()
                 .ForMember(dest => dest.Id, opt => 
                     opt.MapFrom(src => src.Id))
@@ -111,9 +103,6 @@ namespace CarsInsideGarage.Mappings
                 .ForMember(dest => dest.IsCleared, opt => 
                      opt.Ignore());
 
-            CreateMap<LocationDto, Location>()
-                .ForMember(dest => dest.ParkingCoordinates,
-                    opt => opt.Ignore());
 
             // =========================
             // Entity <=> DTO

@@ -14,7 +14,7 @@ namespace CarsInsideGarage.Repositories
         public IRepository<Car> Cars { get; }
 
 
-        public IRepository<Location> Locations { get; }
+        
 
         public UnitOfWork(GarageDbContext context)
         {
@@ -23,7 +23,7 @@ namespace CarsInsideGarage.Repositories
             Garages = new GarageRepository(_context);
             Sessions = new ParkingSessionRepository(_context);
             Cars = new Repository<Car>(_context);
-            Locations = new Repository<Location>(_context);
+            
         }
 
         public async Task<int> CompleteAsync()

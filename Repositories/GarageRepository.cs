@@ -31,10 +31,41 @@ namespace CarsInsideGarage.Repositories
                 .FirstOrDefaultAsync(predicate);
         }
 
-        // ToDo
-        public Task<IEnumerable<Garage>> GetWithinRadiusAsync(double latitude, double longitude, double radiusInKm)
+   
+        public async Task<IEnumerable<Garage>> GetWithinRadiusAsync(
+    double latitude,
+    double longitude,
+    double radiusInKm)
         {
-            throw new NotImplementedException();
+            var point = new NetTopologySuite.Geometries.Point(longitude, latitude) { SRID = 4326 };
+
+            return await _context.Garages
+                .Where(g => g.Location.ParkingCoordinates.Distance(point) <= radiusInKm * 1000)
+                .Include(g => g.Location)
+                .ToListAsync();
         }
+
+        public async Task<Garage?> GetNearestAsync(double lat, double lng)
+        {
+            var point = new NetTopologySuite.Geometries.Point(lng, lat) { SRID = 4326 };
+
+            return await _context.Garages
+                .Include(g => g.Location)
+                .OrderBy(g => g.Location.ParkingCoordinates.Distance(point))
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<Garage>> GetNearestManyAsync(double lat, double lng, int count)
+        {
+            var point = new NetTopologySuite.Geometries.Point(lng, lat) { SRID = 4326 };
+
+            return await _context.Garages
+                .Include(g => g.Location)
+                .Include(g => g.Sessions)
+                .OrderBy(g => g.Location.ParkingCoordinates.Distance(point))
+                .Take(count)
+                .ToListAsync();
+        }
+
     }
 }

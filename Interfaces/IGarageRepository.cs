@@ -10,6 +10,10 @@ namespace CarsInsideGarage.Interfaces
 
         Task<IEnumerable<Garage>> GetWithinRadiusAsync(double latitude, double longitude, double radiusInKm);
 
+        Task<Garage?> GetNearestAsync(double lat, double lng);
+
+        Task<IEnumerable<Garage>> GetNearestManyAsync(double lat, double lng, int count);
+
 
     }
 }
