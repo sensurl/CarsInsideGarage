@@ -27,22 +27,24 @@
 
                     <div class="mb-3">
                         <label class="text-muted small text-uppercase fw-bold d-block">GPS Coordinates</label>
-                        <code class="text-info fs-6">@Model.ParkingCoordinates</code>
+                        <code class="text-info fs-6">
+                            @Model.Latitude.ToString("F6"), @Model.Longitude.ToString("F6")
+                        </code>
+
                     </div>
                 </div>
 
                 <div class="col-md-6 text-end">
                     @{
-                        var coords = Model.ParkingCoordinates?.Split(',');
-                        var lat = coords?.Length > 0 ? coords[0].Trim() : "0";
-                        var lng = coords?.Length > 1 ? coords[1].Trim() : "0";
+                        var lat = Model.Latitude;
+                        var lng = Model.Longitude;
                     }
                     <div id="map"
                          style="height: 250px; width: 100%;"
                          class="rounded shadow-sm"
                          data-mode="preview"
-                         data-lat="@lat"
-                         data-lng="@lng"
+                         data-lat="@Model.Latitude.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                         data-lng="@Model.Longitude.ToString(System.Globalization.CultureInfo.InvariantCulture)"
                          data-name="@Model.Name">
                     </div>
 
@@ -113,8 +115,13 @@
                     <i class="bi bi-arrow-left me-1"></i> Back to Garage Map
                 </a>
 
-                @if (User.IsInRole("GarageOwner"))
+                @if (User.IsInRole("GarageOwner") && Model.IsOwner)
                 {
+                    <a asp-action="UpdatePricing" asp-route-id="@Model.Id"
+                           class="btn btn-warning btn-sm me-2">
+                        Edit Pricing
+                    </a>
+
                     <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
                         @Html.AntiForgeryToken()
                         <button type="submit"

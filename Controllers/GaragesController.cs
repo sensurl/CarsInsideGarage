@@ -14,18 +14,13 @@ namespace CarsInsideGarage.Controllers
 {
     public class GaragesController : Controller
     {
-        
         private readonly IGarageService _garageService;
-		
-        private readonly GarageDbContext _context;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
-        
 
-        public GaragesController(IGarageService garageService, GarageDbContext context, IMapper mapper, UserManager<ApplicationUser> userManager)
+        public GaragesController(IGarageService garageService, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
              _garageService = garageService;
-            _context = context;
             _mapper = mapper;
             _userManager = userManager;
         }
@@ -51,6 +46,8 @@ namespace CarsInsideGarage.Controllers
 
             var garages = await _garageService.GetAllAsync(user);
 
+            ViewBag.Step = 1; // Share geolocation
+
             return View(garages);
         }
 
@@ -68,6 +65,8 @@ namespace CarsInsideGarage.Controllers
                 return NotFound();
 
             var viewModel = _mapper.Map<GarageDetailsViewModel>(garageDto);
+            
+            ViewBag.Step = 2; // Select a parking lot
 
             return View(viewModel);
         }
@@ -106,15 +105,13 @@ namespace CarsInsideGarage.Controllers
                 Capacity = model.Capacity,
                 Area = model.SelectedArea.ToString(),
                 Lat = model.Lat,
-               Lng = model.Lng,
+                Lng = model.Lng,
                 HourlyRate = model.HourlyRate,
                 DailyRate = model.DailyRate,
                 MonthlyRate = model.MonthlyRate,
-
                 Rules = model.Rules == null
-    ? new List<PricingRuleCreateDto>()
-    : _mapper.Map<List<PricingRuleCreateDto>>(model.Rules)
-
+                    ? new List<PricingRuleCreateDto>()
+                    : _mapper.Map<List<PricingRuleCreateDto>>(model.Rules)
 			};
 
             var createdGarageId = await _garageService.CreateAsync(dto, user);
@@ -128,7 +125,7 @@ namespace CarsInsideGarage.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,GarageOwner")]
         public async Task<IActionResult> Delete(int id)
         {
             var user = BuildCurrentUser();
@@ -153,15 +150,15 @@ namespace CarsInsideGarage.Controllers
         // =============================
 
         [HttpGet]
-        [ValidateAntiForgeryToken]
         [Authorize(Roles = "GarageOwner")]
         public async Task<IActionResult> RevenueReport()
         {
-            var garages = await _context.Garages
-                .Include(g => g.Sessions)
-                .ToListAsync();
+            var user = BuildCurrentUser();
 
-            var dtos = _mapper.Map<IEnumerable<RevenueReportDto>>(garages);
+            if (string.IsNullOrEmpty(user.UserId)) 
+                return Unauthorized();
+
+            var dtos = await _garageService.GetRevenueReportAsync(user);
             var vm = _mapper.Map<IEnumerable<RevenueReportViewModel>>(dtos);
 
             return View(vm);
@@ -188,8 +185,61 @@ namespace CarsInsideGarage.Controllers
 
             var viewModels = _mapper.Map<IEnumerable<GarageNearbyViewModel>>(dtos);
 
+
+            // NOTE: This returns a View intentionally.
+            // JSON responses will be handled by the API layer in the next phase.
+
             return View(viewModels);
             }
 
+        // =============================
+        // PRICING POLICY MANAGEMENT
+        // =============================
+
+        [HttpGet]
+        [Authorize(Roles = "GarageOwner")]
+        public async Task<IActionResult> UpdatePricing(int id)
+        {
+            var user = BuildCurrentUser();
+
+            if (string.IsNullOrEmpty(user.UserId))
+                return Unauthorized();
+
+            var garage = await _garageService.GetDetailsViewModelAsync(id, user);
+
+            if (garage == null)
+                return NotFound();
+
+            // Map to PricingUpdateViewModel
+            var vm = new PricingUpdateViewModel
+            {
+                GarageId = garage.Id,
+                HourlyRate = garage.HourlyRate,
+                DailyRate = garage.DailyRate,
+                MonthlyRate = garage.MonthlyRate,
+                Rules = new List<PricingRuleDetailsViewModel>() // start empty for now
+            };
+
+            return View(vm);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "GarageOwner")]
+        public async Task<IActionResult> UpdatePricing(PricingUpdateViewModel model)
+        {
+            var user = BuildCurrentUser();
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var dto = _mapper.Map<PricingUpdateDto>(model);
+
+            await _garageService.UpdatePricingAsync(model.GarageId, dto, user);
+
+            return RedirectToAction(nameof(Details), new { id = model.GarageId });
+        }
+
+
     }
+}

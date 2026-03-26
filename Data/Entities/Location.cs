@@ -22,8 +22,8 @@ namespace CarsInsideGarage.Data.Entities
             Latitude = lat;
             Longitude = lng;
             var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
-            ParkingCoordinates.SRID = 4326;
             ParkingCoordinates = geometryFactory.CreatePoint(new Coordinate(lng, lat));
+            ParkingCoordinates.SRID = 4326;
         }
 
     }

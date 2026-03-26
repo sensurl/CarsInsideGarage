@@ -45,6 +45,17 @@
                             </li>
                         }
 
+                        @if (User.IsInRole("Driver") && !User.IsInRole("Admin"))
+                        {
+                            <div class="driver-steps d-none d-lg-flex">
+                                <span class="step @(ViewBag.Step >= 0 ? "done" : "")" data-title="Register Car">0</span>
+                                <span class="step @(ViewBag.Step >= 1 ? "done" : "")" data-title="Location">1</span>
+                                <span class="step @(ViewBag.Step >= 2 ? "done" : "")" data-title="Select Garage">2</span>
+                                <span class="step @(ViewBag.Step >= 3 ? "done" : "")" data-title="Park">3</span>
+                                <span class="step @(ViewBag.Step >= 4 ? "done" : "")" data-title="Pay & Exit">4</span>
+                            </div>
+                        }
+
                         @if (User.IsInRole("GarageOwner") || User.IsInRole("Admin"))
                         {
                             <li class="nav-item dropdown me-2">
@@ -52,7 +63,7 @@
                                     <i class="bi bi-person-workspace me-1"></i> Owner Panel
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-dark">
-                                    <li><a class="dropdown-item text-accent" asp-area="" asp-controller="Garages" asp-action="Create fw-bold"><i class="bi bi-plus-lg me-1"></i>Register New Garage</a></li>
+                                    <li><a class="dropdown-item text-accent" asp-area="" asp-controller="Garages" asp-action="Create"><i class="bi bi-plus-lg me-1"></i>Register New Garage</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Garages" asp-action="Index">My Garages</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="ParkingSessions" asp-action="ActiveList">Current Occupancy</a></li>

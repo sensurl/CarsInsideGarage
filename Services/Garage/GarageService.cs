@@ -125,7 +125,8 @@ namespace CarsInsideGarage.Services.Garage
                 Id = garage.Id,
                 Name = garage.Name,
                 Area = garage.Location.Area,
-                ParkingCoordinates = FormatPoint(garage.Location.ParkingCoordinates),
+                Latitude = garage.Location.Latitude,
+                Longitude = garage.Location.Longitude,
 
                 FreeSpots = garage.Capacity -
                             garage.Sessions.Count(s => s.ExitTime == null),
@@ -133,7 +134,7 @@ namespace CarsInsideGarage.Services.Garage
                 HourlyRate = garage.PricingPolicy.HourlyRate,
                 DailyRate = garage.PricingPolicy.DailyRate,
                 MonthlyRate = garage.PricingPolicy.MonthlyRate,
-
+                IsOwner = user.IsOwner && garage.UserId == user.UserId,
                 CanSeeRevenue = user.IsOwner,
                 TotalRevenue = user.IsOwner
                     ? CalculateTotalRevenue(garage.Sessions)
@@ -167,8 +168,92 @@ namespace CarsInsideGarage.Services.Garage
             if (!user.IsAdmin && garage.UserId != user.UserId)
                 throw new UnauthorizedAccessException();
 
-            _unitOfWork.Garages.Remove(garage);
+            if (user.IsAdmin)
+            {
+                _unitOfWork.Garages.Remove(garage); // HARD delete
+            }
+            else
+            {
+                garage.DeletedByUserId = user.UserId;
+                _unitOfWork.Garages.SoftDelete(garage); // SOFT delete
+            }
+
             await _unitOfWork.CompleteAsync();
+
+            return result;
+        }
+
+
+        // ================================
+        // PRICE UPDATE & REVENUE REPORT
+        // ================================
+
+        public async Task UpdatePricingAsync(int garageId, PricingUpdateDto dto, CurrentUser user)
+        {
+            if (string.IsNullOrEmpty(user.UserId))
+                throw new UnauthorizedAccessException();
+
+            var garage = await _unitOfWork.Garages
+                .GetGarageWithDetailsAsync(garageId);
+
+            if (garage == null)
+                throw new Exception("Garage not found");
+
+            if (!user.IsOwner || garage.UserId != user.UserId)
+                throw new UnauthorizedAccessException();
+
+            // Build new pricing policy
+            var newPolicy = new PricingPolicy(
+                dto.HourlyRate,
+                dto.DailyRate,
+                dto.MonthlyRate
+            );
+
+            // Add rules if any
+            if (dto.Rules != null && dto.Rules.Any())
+            {
+                foreach (var rule in dto.Rules)
+                {
+                    var pricingRule = new PricingRule(
+                        rule.StartHour,
+                        rule.EndHour,
+                        rule.Multiplier,
+                        rule.Adjustment
+                    );
+
+                    newPolicy.AddRule(pricingRule);
+                }
+            }
+
+            garage.UpdatePricingPolicy(newPolicy);
+
+            await _unitOfWork.CompleteAsync();
+        }
+
+
+        public async Task<IEnumerable<RevenueReportDto>> GetRevenueReportAsync(CurrentUser user)
+        {
+            if (!user.IsOwner || string.IsNullOrEmpty(user.UserId))
+                return Enumerable.Empty<RevenueReportDto>();
+
+            var garages = await _unitOfWork.Garages
+                .WhereAsync(g => g.UserId == user.UserId);
+
+            var result = new List<RevenueReportDto>();
+
+            foreach (var garage in garages)
+            {
+                // IMPORTANT: we need sessions here
+                var detailedGarage = await _unitOfWork.Garages
+                    .GetGarageWithDetailsAsync(garage.Id);
+
+                result.Add(new RevenueReportDto
+                {
+                    GarageId = detailedGarage.Id,
+                    GarageName = detailedGarage.Name,
+                    TotalRevenue = CalculateTotalRevenue(detailedGarage.Sessions)                    
+                });
+            }
 
             return result;
         }

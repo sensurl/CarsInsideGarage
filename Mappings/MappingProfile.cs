@@ -170,6 +170,10 @@ namespace CarsInsideGarage.Mappings
             // ViewModel => DTO
             // =========================
 
+            CreateMap<PricingUpdateViewModel, PricingUpdateDto>();
+            CreateMap<PricingRuleDetailsViewModel, PricingRuleDetailsDto>();
+
+
             CreateMap<GarageCreateViewModel, GarageCreateDto>()
                 .ForMember(dest => dest.Area, opt =>
                      opt.MapFrom(src => src.SelectedArea.ToString()));

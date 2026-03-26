@@ -4,42 +4,38 @@
     ViewData["Title"] = "Login";
 }
 
-<div class="row justify-content-center">
+<div class="row justify-content-center mt-5">
     <div class="col-md-5">
-        <div class="card bg-dark text-light shadow-lg">
+        <div class="card shadow-lg border-0">
             <div class="card-header text-center">
-                <h4>Login</h4>
+                <h4 class="mb-0">Login</h4>
                 <p class="text-muted small mb-0">Access Your Parking Spot</p>
             </div>
-            <div class="card-body">
-
+            <div class="card-body p-4">
                 <form asp-action="Login" method="post">
-
                     <div class="mb-3">
-                        <label asp-for="Email" class="form-label"></label>
-                        <input asp-for="Email" class="form-control bg-secondary text-light border-0" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
+                        <label asp-for="Email" class="form-label small text-muted text-uppercase"></label>
+                        <input asp-for="Email" class="form-control" placeholder="name@example.com" />
+                        <span asp-validation-for="Email"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Password" class="form-label"></label>
-                        <input asp-for="Password" class="form-control bg-secondary text-light border-0" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
+                        <label asp-for="Password" class="form-label small text-muted text-uppercase"></label>
+                        <input asp-for="Password" type="password" class="form-control" />
+                        <span asp-validation-for="Password"></span>
                     </div>
 
-                    <div class="form-check mb-3">
+                    <div class="form-check mb-4">
                         <input asp-for="RememberMe" class="form-check-input" />
-                        <label asp-for="RememberMe" class="form-check-label"></label>
+                        <label asp-for="RememberMe" class="form-check-label small"></label>
                     </div>
 
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-success">
-                            Login
+                        <button type="submit" class="btn btn-primary py-2">
+                            Login <i class="bi bi-box-arrow-in-right ms-2"></i>
                         </button>
                     </div>
-
                 </form>
-
             </div>
         </div>
     </div>

@@ -89,12 +89,8 @@ namespace CarsInsideGarage.Services.GarageSession
             if (car == null || car.UserId != userId)
                 throw new UnauthorizedAccessException("You do not have permission to view this session.");
 
-            var dto = _mapper.Map<SessionDto>(session);
-            var vm = _mapper.Map<SessionActiveViewModel>(dto);
-
-            vm.AccruedAmount = _pricingCalculator.CalculateTotal(session);
-
-            return vm;
+            // Using the helper
+            return MapToActiveVm(session);
         }
 
         public async Task<IEnumerable<SessionActiveViewModel?>> GetActiveSessionsForDriverAsync(string userId)
@@ -110,16 +106,27 @@ namespace CarsInsideGarage.Services.GarageSession
             // 3. Map to DTO => ViewModels
             var vms = new List<SessionActiveViewModel>();
 
-            foreach (var session in activeSessions)
-            {
-                var dto = _mapper.Map<SessionDto>(session);
-                var vm = _mapper.Map<SessionActiveViewModel>(dto);
-                vm.AccruedAmount = _pricingCalculator.CalculateTotal(session);
-                vms.Add(vm);
-            }
+            //foreach (var session in activeSessions)
+            //{
+            //    var dto = _mapper.Map<SessionDto>(session);
+            //    var vm = _mapper.Map<SessionActiveViewModel>(dto);
+            //    vm.AccruedAmount = _pricingCalculator.CalculateTotal(session);
+            //    vms.Add(vm);
+            //}
 
-            return vms;
-          
+            //return vms;
+
+            // Using the helper
+            return activeSessions.Select(MapToActiveVm);
+        }
+
+        // DRY helper
+        private SessionActiveViewModel MapToActiveVm(ParkingSession session)
+        {
+            var dto = _mapper.Map<SessionDto>(session);
+            var vm = _mapper.Map<SessionActiveViewModel>(dto);
+            vm.AccruedAmount = _pricingCalculator.CalculateTotal(session);
+            return vm;
         }
 
         public async Task<int> GetCarIdBySessionIdAsync(int sessionId)

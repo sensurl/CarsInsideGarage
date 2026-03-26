@@ -42,5 +42,10 @@ namespace CarsInsideGarage.Data.Entities
         public DateTime? DeletedAt { get; set; }
         public string? DeletedByUserId { get; set; }
 
+        public void UpdatePricingPolicy(PricingPolicy policy)
+        {
+            PricingPolicy = policy;
+        }
+
     }
 }

@@ -18,6 +18,9 @@
     /* Borders */
     --border: #334155;
     --warning-pink: #e722cb;
+    /* Errors and Warnings */
+    --accent-error: #c9e723;
+    --system-persistent: #23c9e7;
 }
 
 /* --- Global Styles --- */
@@ -300,4 +303,104 @@ body {
 
 .border-dashed:hover i, .border-dashed:hover p {
     color: var(--accent) !important;
+}
+
+/* Step-Map Container */
+.driver-steps {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-left: 20px;
+    padding: 5px 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 50px;
+    border: 1px solid var(--border);
+}
+
+    /* Individual Step Circle */
+    .driver-steps .step {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--bg-main);
+        border: 2px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: bold;
+        color: var(--text-muted);
+        position: relative;
+        z-index: 2;
+    }
+
+        /* The Connecting Line */
+        .driver-steps .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 22px;
+            top: 50%;
+            width: 15px;
+            height: 2px;
+            background: var(--border);
+            z-index: 1;
+        }
+
+        /* Active/Done State */
+        .driver-steps .step.done {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 8px rgba(34, 231, 161, 0.2);
+        }
+
+            .driver-steps .step.done:not(:last-child)::after {
+                background: var(--accent);
+            }
+
+        /* Tooltip on Hover */
+        .driver-steps .step:hover::before {
+            content: attr(data-title);
+            position: absolute;
+            top: 30px;
+            font-size: 10px;
+            white-space: nowrap;
+            background: var(--bg-surface);
+            color: var(--accent);
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+/* --- Validation & Error Overrides --- */
+
+/* Target the validation spans */
+.field-validation-error,
+.text-danger,
+.validation-summary-errors {
+    color: var(--accent-error) !important;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+    /* Style the summary list */
+    .validation-summary-errors ul {
+        list-style: none;
+        padding-left: 0;
+        margin-bottom: 0;
+    }
+
+/* Remove red borders on invalid inputs and use our Yellow instead */
+.input-validation-error {
+    border-color: var(--accent-error) !important;
+}
+
+/* Persistent System Info (Blue) */
+.text-info-system {
+    color: var(--system-persistent) !important;
+}
+
+/* Overriding the default checkbox/radio accent color */
+.form-check-input:checked {
+    background-color: var(--accent) !important;
+    border-color: var(--accent) !important;
 }

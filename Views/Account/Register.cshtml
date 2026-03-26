@@ -4,55 +4,55 @@
     ViewData["Title"] = "Register";
 }
 
-<div class="row justify-content-center">
+<div class="row justify-content-center mt-5">
     <div class="col-md-6">
-        <div class="card bg-dark text-light shadow-lg">
+        <div class="card shadow-lg border-0">
             <div class="card-header text-center">
-                <h4>Create Account</h4>
+                <h4 class="mb-0">Create Account</h4>
                 <p class="text-muted small mb-0">Join Your Parking Spot</p>
             </div>
-            <div class="card-body">
-
+            <div class="card-body p-4">
                 <form asp-action="Register" method="post">
                     @Html.AntiForgeryToken()
-                    <div asp-validation-summary="All" class="text-danger"></div>
+                    
+                    @* This summary will now show up in your new Yellow *@
+                    <div asp-validation-summary="All" class="mb-3"></div>
 
                     <div class="mb-3">
-                        <label asp-for="Email" class="form-label"></label>
-                        <input asp-for="Email" class="form-control bg-secondary text-light border-0" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
+                        <label asp-for="Email" class="form-label small text-muted text-uppercase"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email"></span>
                     </div>
 
-                    <div class="mb-3">
-                        <label asp-for="Password" class="form-label"></label>
-                        <input asp-for="Password" class="form-control bg-secondary text-light border-0" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label asp-for="ConfirmPassword" class="form-label"></label>
-                        <input asp-for="ConfirmPassword" class="form-control bg-secondary text-light border-0" />
-                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Password" class="form-label small text-muted text-uppercase"></label>
+                            <input asp-for="Password" type="password" class="form-control" />
+                            <span asp-validation-for="Password"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ConfirmPassword" class="form-label small text-muted text-uppercase"></label>
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                            <span asp-validation-for="ConfirmPassword"></span>
+                        </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="form-label">Select Role</label>
-                        <select asp-for="Role" class="form-select bg-secondary text-light border-0">
+                        <label class="form-label small text-muted text-uppercase">Role Selection</label>
+                        <select asp-for="Role" class="form-select">
                             <option value="">-- Choose Role --</option>
                             <option value="Driver">Driver</option>
                             <option value="GarageOwner">Garage Owner</option>
                         </select>
-                        <span asp-validation-for="Role" class="text-danger"></span>
+                        <span asp-validation-for="Role"></span>
                     </div>
 
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-success">
-                            Register
+                        <button type="submit" class="btn btn-primary py-2">
+                            Register Account
                         </button>
                     </div>
-
                 </form>
-
             </div>
         </div>
     </div>

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CarsInsideGarage.Controllers
 {
+   
     public class CarsController : Controller
     {
         private readonly ICarService _carService;
@@ -36,7 +37,7 @@ namespace CarsInsideGarage.Controllers
 
 
         // ================================
-        // LIST ALL
+        // LIST ALL - VISIBLE TO ALL ROLES
         // ================================
 
         public async Task<IActionResult> Index()
@@ -51,9 +52,10 @@ namespace CarsInsideGarage.Controllers
         }
 
         // ================================
-        // DETAILS PER UNIT
+        // DETAILS PER UNIT - DRIVER ONLY
         // ================================
 
+        [Authorize(Roles = "Driver")]
         public async Task<IActionResult> Details(int id)
         {
             var user = BuildCurrentUser();
@@ -69,9 +71,9 @@ namespace CarsInsideGarage.Controllers
         }
 
         // ================================
-        // CREATE
+        // CREATE - ALL ROLES
         // ================================
-
+     
         [HttpPost]
         public async Task<IActionResult> Create(CarViewModel carViewModel)
         {
@@ -87,8 +89,10 @@ namespace CarsInsideGarage.Controllers
                 // 2. Save and get the database-generated ID
                 int newId = await _carService.AddCarAsync(carDto, user!);
 
+                ViewBag.Step = 0; // Register Vehicle
+
                 // 3. REDIRECT: Only send the ID
-                return RedirectToAction("AddSuccess", new { newId });
+                return RedirectToAction("AddSuccess", new { carId = newId });
             }
             catch (Exception ex)
             {
@@ -155,7 +159,7 @@ namespace CarsInsideGarage.Controllers
 
 
         // ================================
-        // RESTORE
+        // RESTORE - ADMIN ONLY
         // ================================
 
         [HttpPost]

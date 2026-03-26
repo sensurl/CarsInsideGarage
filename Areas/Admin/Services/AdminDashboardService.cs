@@ -1,6 +1,7 @@
 ﻿using CarsInsideGarage.Areas.Admin.Models;
 using CarsInsideGarage.Interfaces;
 using CarsInsideGarage.Models.Auth;
+using CarsInsideGarage.Models.DTOs;
 using CarsInsideGarage.Repositories;
 using CarsInsideGarage.Services.Garage;
 using CarsInsideGarage.Services.GarageSession;
@@ -20,6 +21,7 @@ namespace CarsInsideGarage.Areas.Admin.Services
 
         public async Task<DashboardStatsDto> GetDashboardStatsAsync()
         {
+            // ToDo - avoid hardcoding Admin privileges
             var garages = await _garageService.GetAllAsync(new CurrentUser { IsAdmin = true });
 
             // 1. Get all active sessions globally
@@ -32,5 +34,6 @@ namespace CarsInsideGarage.Areas.Admin.Services
                 TotalActiveSessions = activeSessions.Count()
             };
         }
+
     }
 }

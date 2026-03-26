@@ -12,9 +12,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
+
 namespace CarsInsideGarage.Controllers
 {
-    [Authorize]
+   
     public class ParkingSessionsController : Controller
     {
         private readonly IParkingSessionService _service;
@@ -50,6 +51,7 @@ namespace CarsInsideGarage.Controllers
         // DRIVER
         // ==========================================
 
+        // MySessions.cshtml is the user's landing page. It shows a list.
         [Authorize(Roles = "Driver")]
         public async Task<IActionResult> MySessions()
         {
@@ -61,16 +63,22 @@ namespace CarsInsideGarage.Controllers
             return View(sessions);
         }
 
+        // Active.cshtml shows after the Driver clicks "Details & Payment" in the MysSessions.cshtml. This page focuses strictly on the financial transaction and the physical exit. 
         [Authorize(Roles = "Driver")]
         public async Task<IActionResult> Active(int? id)
         {
-            if (id == null) return RedirectToAction(nameof(MySessions));
+            // If no session ID is provided, we dont know which Car they mean. We send them back to the list so they can pick a Car.
+            if (id == null) 
+                return RedirectToAction(nameof(MySessions));
 
-            // Uses your existing service method GetActiveSessionDetailsAsync
             var session = await _service.GetActiveSessionDetailsAsync(id.Value, GetUserId());
 
+            // If the session doesn't exist or is already closed, send them back
             if (session == null)
-                return View("NoActiveSession");
+            {
+                TempData["Error"] = "This session is no longer active.";
+                return RedirectToAction(nameof(MySessions));
+            }
 
             return View(session);
         }
@@ -120,7 +128,9 @@ namespace CarsInsideGarage.Controllers
                 // Call the service with the specific carId
                 await _service.StartSessionAsync(garageId, carId.Value, GetUserId());
 
-                // Redirect to MySessions so they see their new parked car in the list
+                ViewBag.Step = 3; // Start parking session; Car Parked
+
+                // Driver only: A "Dashboard" of the user's parked cars. This is the New List View.
                 return RedirectToAction(nameof(MySessions));
             }
             catch (Exception ex)
@@ -138,20 +148,31 @@ namespace CarsInsideGarage.Controllers
             try
             {
                 await _service.PayAsync(sessionId, amount, GetUserId());
-                return RedirectToAction(nameof(MySessions));
+
+                ViewBag.Step = 4; // pay & exit
+
+                // SUCCESS → redirect to success page
+                return RedirectToAction(nameof(PaymentSuccess), new { sessionId });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
             }
             catch (Exception ex)
             {
-                // Showing why payment failed (e.g. negative amount)
                 TempData["Error"] = ex.Message;
                 return RedirectToAction(nameof(MySessions));
             }
+
+        }
+
+        [Authorize(Roles = "Driver")]
+        public IActionResult PaymentSuccess(int sessionId)
+        {
+            return View(model: sessionId);
         }
 
 
-        // =====================================================
-        // DRIVER - EXIT (CLOSE OWN SESSION)
-        // =====================================================
 
         [Authorize(Roles = "Driver")]
         [HttpPost]
@@ -160,33 +181,42 @@ namespace CarsInsideGarage.Controllers
             try
             {
                 await _service.EndSessionAsync(sessionId, GetUserId());
-                return RedirectToAction(nameof(MySessions));
+                return RedirectToAction(nameof(ExitSuccess), new { sessionId });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
             }
             catch (Exception ex)
             {
-                // This catches the "Outstanding balance" exception from Service
                 TempData["Error"] = ex.Message;
                 return RedirectToAction(nameof(MySessions));
             }
+
         }
+
+        [Authorize(Roles = "Driver")]
+        public IActionResult ExitSuccess(int sessionId)
+        {
+            return View(model: sessionId);
+        }
+
 
         // =====================================================
         // GARAGE OWNER / ADMIN ZONE
         // =====================================================
 
+        // ActiveList.cshtml is the equivalent of the MySessions.cshtml for the Garage Owner. It shows all active sessions in the owner's garage(s). This is the "Occupancy" monitoring page.
         [Authorize(Roles = "GarageOwner,Admin")]
         public async Task<IActionResult> ActiveList()
             {
-            // The service now returns IEnumerable<ActiveSessionListViewModel>
+            
             var vm = await _service.GetActiveSessionsForGarageOwnerAsync(GetUserId());
 
             return View(vm);
 
             }
 
-        // =====================================================
-        // GARAGE OWNER / ADMIN - STOP SESSION
-        // =====================================================
 
         [Authorize(Roles = "GarageOwner,Admin")]
         [HttpPost]
@@ -198,6 +228,7 @@ namespace CarsInsideGarage.Controllers
             if (!success)
                 return Forbid();
 
+            // Owner/Admin: High-level "Occupancy" monitoring. No personal "Pay" or "Exit" buttons.
             return RedirectToAction(nameof(ActiveList));
         }
     }

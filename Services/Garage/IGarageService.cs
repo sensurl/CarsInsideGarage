@@ -6,6 +6,7 @@ namespace CarsInsideGarage.Services.Garage
 {
     public interface IGarageService
     {
+    
         Task<IEnumerable<GarageListDto>> GetAllAsync(CurrentUser user);
         Task<GarageDetailsViewModel?> GetDetailsViewModelAsync(int garageId, CurrentUser user);
         Task<int> CreateAsync(GarageCreateDto dto, CurrentUser user);
@@ -13,5 +14,10 @@ namespace CarsInsideGarage.Services.Garage
         Task<CarsInsideGarage.Data.Entities.Garage?> GetNearestAsync(double lat, double lng);
 
         Task<IEnumerable<CarsInsideGarage.Data.Entities.Garage>> GetNearestManyAsync(double lat, double lng, int count);
+
+        Task<IEnumerable<RevenueReportDto>> GetRevenueReportAsync(CurrentUser user);
+
+        Task UpdatePricingAsync(int garageId, PricingUpdateDto dto, CurrentUser user);
+
     }
 }

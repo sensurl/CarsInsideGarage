@@ -1,0 +1,30 @@
+﻿@model CarsInsideGarage.Models.ViewModels.PricingUpdateViewModel
+
+<h2>Update Pricing</h2>
+
+<form asp-action="UpdatePricing" method="post">
+    <input type="hidden" asp-for="GarageId" />
+
+    <div>
+        <label>Hourly Rate</label>
+        <input asp-for="HourlyRate" />
+    </div>
+
+    <div>
+        <label>Daily Rate</label>
+        <input asp-for="DailyRate" />
+    </div>
+
+    <div>
+        <label>Monthly Rate</label>
+        <input asp-for="MonthlyRate" />
+    </div>
+
+    <h4>Pricing Rules</h4>
+
+    <div id="rules-container">
+        <!-- Optional: dynamic rules later -->
+    </div>
+
+    <button type="submit">Save</button>
+</form>

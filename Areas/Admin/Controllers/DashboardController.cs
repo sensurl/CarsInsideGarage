@@ -1,6 +1,7 @@
 ﻿using CarsInsideGarage.Areas.Admin.Models;
 using CarsInsideGarage.Areas.Admin.Services;
 using CarsInsideGarage.Data.Entities;
+using CarsInsideGarage.Interfaces;
 using CarsInsideGarage.Models.Auth;
 using CarsInsideGarage.Services.Garage;
 using CarsInsideGarage.Services.GarageSession;
@@ -17,6 +18,7 @@ namespace CarsInsideGarage.Areas.Admin.Controllers
         {
         private readonly IAdminDashboardService _adminDashboardService;
         private readonly UserManager<ApplicationUser> _userManager;
+        
         public DashboardController(IAdminDashboardService adminDashboardService, UserManager<ApplicationUser> userManager)
             {
             _adminDashboardService = adminDashboardService;
@@ -72,6 +74,8 @@ namespace CarsInsideGarage.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
             }
 
-        }
+       
+
+    }
 
     }

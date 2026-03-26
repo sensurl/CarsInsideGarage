@@ -15,8 +15,10 @@ namespace CarsInsideGarage.Models.ViewModels
         public Area Area { get; set; }
 
         [Required]
-        [StringLength(40)]
-        public string ParkingCoordinates { get; set; } = null!;
+        public double Latitude { get; set; }
+
+        [Required]
+        public double Longitude { get; set; }
 
 
         [Required]
@@ -27,6 +29,8 @@ namespace CarsInsideGarage.Models.ViewModels
         public decimal MonthlyRate { get; set; }
 
         public bool CanSeeRevenue { get; set; }
+
+        public bool IsOwner { get; set; }
 
         public decimal TotalRevenue { get; set; }
     }
