@@ -25,6 +25,11 @@ namespace CarsInsideGarage.Areas.Admin.Controllers
             _userManager = userManager;
             }
 
+
+        // ================================
+        // STATISTICS
+        // ================================
+
         public async Task<IActionResult> Index()
             {
             var statsDto = await _adminDashboardService.GetDashboardStatsAsync();
@@ -40,12 +45,17 @@ namespace CarsInsideGarage.Areas.Admin.Controllers
             return View(viewModel);
             }
 
-        public async Task<IActionResult> ListUsers()
+
+        // ================================
+        // USERS
+        // ================================
+
+        public async Task<IActionResult> ListDeletedUsers()
             {
-            // Use .IgnoreQueryFilters() so the Admin can see the deleted users to restore them
+            // See the deleted users to restore them
             var users = await _userManager.Users
                 .IgnoreQueryFilters()
-                .Where(u => u.IsDeleted) // Maybe only show deleted ones in this view?
+                .Where(u => u.IsDeleted) 
                 .ToListAsync();
 
             return View(users);
@@ -71,11 +81,34 @@ namespace CarsInsideGarage.Areas.Admin.Controllers
                     }
                 }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ListDeletedUsers));
             }
 
-       
+        // ================================
+        // GARAGES
+        // ================================
+
+        public async Task<IActionResult> ListDeletedGarages()
+        {
+            var garages = await _adminDashboardService.GetDeletedGaragesAsync();
+            return View(garages); 
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RestoreGarage(int garageId)
+        {
+            var restored = await _adminDashboardService.RestoreGarageAsync(garageId);
+
+            if (!restored)
+                return NotFound();
+
+            return RedirectToAction(nameof(ListDeletedGarages));
+        }
+
+        
 
     }
 
-    }
+}

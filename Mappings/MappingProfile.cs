@@ -139,16 +139,30 @@ namespace CarsInsideGarage.Mappings
             // =========================
 
             CreateMap<GarageDetailsDto, GarageDetailsViewModel>()
-                .ForMember(dest => dest.ParkingCoordinates, opt =>
-                    opt.MapFrom(src => src.ParkingCoordinates))
-                .ForMember(dest => dest.FreeSpots, opt =>
-                    opt.MapFrom(src => src.Capacity - src.ActiveCarsCount))
-                .ForMember(dest => dest.Area, opt =>
-                    opt.MapFrom(src => Enum.Parse<Area>(src.Area)))
-                .ForMember(dest => dest.CanSeeRevenue, opt =>
-                    opt.MapFrom(src => true))
-                .ForMember(dest => dest.TotalRevenue, opt =>
-                    opt.MapFrom(src => src.TotalRevenue));
+     // 1. Extract Latitude from the DTO string
+     .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src =>
+         double.Parse(src.ParkingCoordinates.Split(',', StringSplitOptions.None)[0].Trim())))
+
+     // 2. Extract Longitude from the DTO string
+     .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src =>
+         double.Parse(src.ParkingCoordinates.Split(',', StringSplitOptions.None)[1].Trim())))
+
+     // 3. Keep your existing logic for the rest
+     .ForMember(dest => dest.FreeSpots, opt =>
+         opt.MapFrom(src => src.Capacity - src.ActiveCarsCount))
+
+     .ForMember(dest => dest.Area, opt =>
+         opt.MapFrom(src => Enum.Parse<Area>(src.Area)))
+
+     .ForMember(dest => dest.CanSeeRevenue, opt =>
+         opt.MapFrom(src => true))
+
+     .ForMember(dest => dest.TotalRevenue, opt =>
+         opt.MapFrom(src => src.TotalRevenue))
+
+     // ignore the missing property error 
+
+     .ForSourceMember(src => src.ParkingCoordinates, opt => opt.DoNotValidate());
 
             CreateMap<SessionDto, SessionActiveViewModel>()
                 .ForMember(dest => dest.AccruedAmount, opt =>

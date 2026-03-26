@@ -1,0 +1,43 @@
+﻿@model IEnumerable<CarsInsideGarage.Data.Entities.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Deleted Users";
+}
+
+<h2 class="mb-4">Deleted Users</h2>
+
+<table class="table table-dark table-striped">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>User Id</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@user.Id</td>
+                <td>
+                    <form asp-area="Admin"
+                          asp-controller="Dashboard"
+                          asp-action="RestoreUser"
+                          method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="userId" value="@user.Id" />
+
+                        <button class="btn btn-success btn-sm">
+                            <i class="bi bi-arrow-counterclockwise"></i> Restore
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary mt-3">
+    Back to Dashboard
+</a>

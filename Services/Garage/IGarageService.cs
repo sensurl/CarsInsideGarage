@@ -19,5 +19,9 @@ namespace CarsInsideGarage.Services.Garage
 
         Task UpdatePricingAsync(int garageId, PricingUpdateDto dto, CurrentUser user);
 
+        // ADMIN AREA
+
+        Task<IEnumerable<CarsInsideGarage.Data.Entities.Garage?>> GetDeletedAsync();
+        Task<bool> RestoreAsync(int garageId);
     }
 }

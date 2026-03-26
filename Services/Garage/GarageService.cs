@@ -297,5 +297,29 @@ namespace CarsInsideGarage.Services.Garage
             return await _unitOfWork.Garages.GetNearestManyAsync(lat, lng, count);
         }
 
+        // ================================
+        // ADMIN AREA - VIEW DELETED & RESTORE
+        // ================================
+
+        public async Task<IEnumerable<CarsInsideGarage.Data.Entities.Garage?>> GetDeletedAsync()
+        {
+            return await _unitOfWork.Garages.WhereAsync(g => g.IsDeleted);
+        }
+
+        public async Task<bool> RestoreAsync(int garageId)
+        {
+            var garage = await _unitOfWork.Garages.GetByIdAsync(garageId);
+            if (garage == null || !garage.IsDeleted)
+                return false;
+
+            garage.IsDeleted = false;
+            garage.DeletedAt = null;
+            garage.DeletedByUserId = null;
+
+            await _unitOfWork.CompleteAsync();
+            return true;
+        }
+
+        
     }
 }

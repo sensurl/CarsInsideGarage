@@ -19,7 +19,7 @@ namespace CarsInsideGarage.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // This automatically filters out any "Soft Deleted" users from queries
+            // Filter out soft deleted entities from queries
             modelBuilder.Entity<ApplicationUser>()
                 .HasQueryFilter(u => !u.IsDeleted);
 
