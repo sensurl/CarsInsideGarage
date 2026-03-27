@@ -153,9 +153,6 @@ namespace CarsInsideGarage.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -169,34 +166,9 @@ namespace CarsInsideGarage.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.HasIndex("LocationId")
-                        .IsUnique();
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Garages", (string)null);
-                });
-
-            modelBuilder.Entity("CarsInsideGarage.Data.Entities.Location", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Area")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<Point>("ParkingCoordinates")
-                        .IsRequired()
-                        .HasColumnType("geography");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("CarsInsideGarage.Data.Entities.ParkingSession", b =>
@@ -400,17 +372,44 @@ namespace CarsInsideGarage.Migrations
                         .WithMany("OwnedGarages")
                         .HasForeignKey("ApplicationUserId");
 
-                    b.HasOne("CarsInsideGarage.Data.Entities.Location", "Location")
-                        .WithOne()
-                        .HasForeignKey("CarsInsideGarage.Data.Entities.Garage", "LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("CarsInsideGarage.Data.Entities.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.OwnsOne("CarsInsideGarage.Data.Entities.Location", "Location", b1 =>
+                        {
+                            b1.Property<int>("GarageId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Area")
+                                .IsRequired()
+                                .HasMaxLength(20)
+                                .HasColumnType("nvarchar(20)");
+
+                            b1.Property<double>("Latitude")
+                                .HasColumnType("float")
+                                .HasColumnName("Latitude");
+
+                            b1.Property<double>("Longitude")
+                                .HasColumnType("float")
+                                .HasColumnName("Longitude");
+
+                            b1.Property<Point>("ParkingCoordinates")
+                                .IsRequired()
+                                .HasColumnType("geography");
+
+                            b1.HasKey("GarageId");
+
+                            b1.HasIndex("Latitude", "Longitude")
+                                .IsUnique();
+
+                            b1.ToTable("Garages");
+
+                            b1.WithOwner()
+                                .HasForeignKey("GarageId");
+                        });
 
                     b.OwnsOne("CarsInsideGarage.Data.Entities.PricingPolicy", "PricingPolicy", b1 =>
                         {
@@ -474,7 +473,8 @@ namespace CarsInsideGarage.Migrations
                             b1.Navigation("Rules");
                         });
 
-                    b.Navigation("Location");
+                    b.Navigation("Location")
+                        .IsRequired();
 
                     b.Navigation("PricingPolicy")
                         .IsRequired();

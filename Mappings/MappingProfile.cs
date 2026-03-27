@@ -160,9 +160,12 @@ namespace CarsInsideGarage.Mappings
      .ForMember(dest => dest.TotalRevenue, opt =>
          opt.MapFrom(src => src.TotalRevenue))
 
-     // ignore the missing property error 
+        .ForMember(dest => dest.IsOwner, opt => opt.Ignore())
+    .ForSourceMember(src => src.ParkingCoordinates, opt => opt.DoNotValidate());
 
-     .ForSourceMember(src => src.ParkingCoordinates, opt => opt.DoNotValidate());
+    
+
+
 
             CreateMap<SessionDto, SessionActiveViewModel>()
                 .ForMember(dest => dest.AccruedAmount, opt =>

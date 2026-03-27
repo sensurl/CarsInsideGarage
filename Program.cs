@@ -62,6 +62,7 @@ builder.Services.AddScoped<IGarageService, GarageService>();
 builder.Services.AddScoped<IParkingSessionService, ParkingSessionService>();
 builder.Services.AddScoped<IPricingCalculator, PricingCalculator>();
 
+
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

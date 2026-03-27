@@ -7,7 +7,7 @@ using NetTopologySuite.Geometries;
 namespace CarsInsideGarage.Migrations
 {
     /// <inheritdoc />
-    public partial class CarFleet : Migration
+    public partial class AppDone : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,20 +51,6 @@ namespace CarsInsideGarage.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Locations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Area = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    ParkingCoordinates = table.Column<Point>(type: "geography", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Locations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -204,7 +190,10 @@ namespace CarsInsideGarage.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Capacity = table.Column<int>(type: "int", nullable: false),
-                    LocationId = table.Column<int>(type: "int", nullable: false),
+                    Location_Area = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Latitude = table.Column<double>(type: "float", nullable: false),
+                    Longitude = table.Column<double>(type: "float", nullable: false),
+                    Location_ParkingCoordinates = table.Column<Point>(type: "geography", nullable: false),
                     PricingPolicy_HourlyRate = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     PricingPolicy_DailyRate = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     PricingPolicy_MonthlyRate = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
@@ -228,12 +217,6 @@ namespace CarsInsideGarage.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Garages_Locations_LocationId",
-                        column: x => x.LocationId,
-                        principalTable: "Locations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -349,9 +332,9 @@ namespace CarsInsideGarage.Migrations
                 column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Garages_LocationId",
+                name: "IX_Garages_Latitude_Longitude",
                 table: "Garages",
-                column: "LocationId",
+                columns: new[] { "Latitude", "Longitude" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -410,9 +393,6 @@ namespace CarsInsideGarage.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Locations");
         }
     }
 }

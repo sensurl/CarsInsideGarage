@@ -62,37 +62,31 @@ namespace CarsInsideGarage.Data.Configurations
             });
 
             builder.OwnsOne(g => g.Location, location =>
-            {
-                location.Property(l => l.Area)
-                    .HasConversion(
-                    v => v.ToString(),
-                    v => (Area)Enum.Parse(typeof(Area), v))
-                .HasMaxLength(20)
-                .IsRequired();
-
-                location.Property(l => l.Latitude)
+{
+    location.Property(l => l.Area)
+        .HasConversion(
+            v => v.ToString(),
+            v => (Area)Enum.Parse(typeof(Area), v))
+        .HasMaxLength(20)
         .IsRequired();
 
-                location.Property(l => l.Longitude)
-                    .IsRequired();
+    location.Property(l => l.Latitude)
+        .HasColumnName("Latitude")
+        .IsRequired();
 
-                location.Property(l => l.ParkingCoordinates)
-                    .HasColumnType("geography")
-                    .IsRequired();
-            });
+    location.Property(l => l.Longitude)
+        .HasColumnName("Longitude")
+        .IsRequired();
 
-            builder.OwnsOne(g => g.Location, location =>
-            {
-                location.Property(l => l.Latitude)
-                    .HasColumnName("Latitude")
-                    .IsRequired();
+    location.Property(l => l.ParkingCoordinates)
+        .HasColumnType("geography")
+        .IsRequired();
 
-                location.Property(l => l.Longitude)
-                    .HasColumnName("Longitude")
-                    .IsRequired();
-            });
+    location.HasIndex(l => new { l.Latitude, l.Longitude })
+            .IsUnique();
+});
 
-            builder.HasIndex("Latitude", "Longitude").IsUnique();
+          
 
 
         }
