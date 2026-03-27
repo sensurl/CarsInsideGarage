@@ -128,7 +128,7 @@ namespace CarsInsideGarage.Controllers
                 // Call the service with the specific carId
                 await _service.StartSessionAsync(garageId, carId.Value, GetUserId());
 
-                ViewBag.Step = 3; // Start parking session; Car Parked
+                TempData["Step"] = 3; // Start parking session; Car Parked
 
                 // Driver only: A "Dashboard" of the user's parked cars. This is the New List View.
                 return RedirectToAction(nameof(MySessions));
@@ -149,7 +149,7 @@ namespace CarsInsideGarage.Controllers
             {
                 await _service.PayAsync(sessionId, amount, GetUserId());
 
-                ViewBag.Step = 4; // pay & exit
+                TempData["Step"] = 4; // pay & exit
 
                 // SUCCESS → redirect to success page
                 return RedirectToAction(nameof(PaymentSuccess), new { sessionId });

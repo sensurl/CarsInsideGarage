@@ -46,7 +46,7 @@ namespace CarsInsideGarage.Controllers
 
             var garages = await _garageService.GetAllAsync(user);
 
-            ViewBag.Step = 1; // Share geolocation
+            TempData["Step"] = 1; // Share geolocation
 
             return View(garages);
         }
@@ -65,8 +65,8 @@ namespace CarsInsideGarage.Controllers
                 return NotFound();
 
             var viewModel = _mapper.Map<GarageDetailsViewModel>(garageDto);
-            
-            ViewBag.Step = 2; // Select a parking lot
+
+            TempData["Step"] = 2; // Select a parking lot
 
             return View(viewModel);
         }

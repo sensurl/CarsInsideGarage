@@ -89,7 +89,7 @@ namespace CarsInsideGarage.Controllers
                 // 2. Save and get the database-generated ID
                 int newId = await _carService.AddCarAsync(carDto, user!);
 
-                ViewBag.Step = 0; // Register Vehicle
+                TempData["Step"] = 0; // Register Vehicle
 
                 // 3. REDIRECT: Only send the ID
                 return RedirectToAction("AddSuccess", new { carId = newId });

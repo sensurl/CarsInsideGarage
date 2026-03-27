@@ -116,15 +116,17 @@
     // ==========================================
     // 4. BUTTON EVENT BINDINGS
     // ==========================================
+
     const btnUseSelected = document.getElementById("btnUseSelected");
     if (btnUseSelected) {
         btnUseSelected.addEventListener("click", function () {
+            // Using the dataset attributes updated by clicks or search
             const mapEl = document.getElementById("map");
             const lat = mapEl.dataset.selectedLat;
             const lng = mapEl.dataset.selectedLng;
 
             if (!lat || !lng) {
-                alert("Please click on the map to select a location first.");
+                alert("Please select a location on the map first.");
                 return;
             }
             window.location.href = `/Garages/GetNearbyGarages?lat=${lat}&lng=${lng}`;
@@ -132,14 +134,60 @@
     }
 
     const btnSearchArea = document.getElementById("btnSearchArea");
-    if (btnSearchArea) {
+    const searchBox = document.getElementById("searchBox");
+
+    if (btnSearchArea && searchBox) {
         btnSearchArea.addEventListener("click", () => {
-            const query = document.getElementById("searchBox").value;
-            console.log("Searching for location name:", query);
-            // ToDo: Add Geocoding logic here if needed later
+            const query = searchBox.value;
+            if (!query) return;
+
+            // Simple visual feedback: change button text while searching
+            const originalText = btnSearchArea.innerHTML;
+            btnSearchArea.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Searching...';
+            btnSearchArea.classList.add("disabled");
+
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    btnSearchArea.innerHTML = originalText;
+                    btnSearchArea.classList.remove("disabled");
+
+                    if (data && data.length > 0) {
+                        const lat = parseFloat(data[0].lat);
+                        const lng = parseFloat(data[0].lon);
+
+                        // 1. Move the map beautifully
+                        map.flyTo([lat, lng], 14, { animate: true, duration: 2 });
+
+                        // 2. Update the "Selected" state so 'Use Selected' works right away
+                        mapElement.dataset.selectedLat = lat;
+                        mapElement.dataset.selectedLng = lng;
+
+                        // 3. Drop a temporary marker at the searched center
+                        L.marker([lat, lng]).addTo(map)
+                            .bindPopup(`<b>${data[0].display_name}</b><br>Area selected.`)
+                            .openPopup();
+                    } else {
+                        alert("Area not found. Please try a different name.");
+                    }
+                })
+                .catch(err => {
+                    btnSearchArea.innerHTML = originalText;
+                    btnSearchArea.classList.remove("disabled");
+                    console.error("Geocoding error:", err);
+                });
+        });
+
+        // Allow pressing "Enter" in the search box to trigger search
+        searchBox.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                btnSearchArea.click();
+            }
         });
     }
-});
 
 // ==========================================
 // 5. GLOBAL GEOLOCATION FUNCTION

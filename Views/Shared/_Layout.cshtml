@@ -47,12 +47,18 @@
 
                         @if (User.IsInRole("Driver") && !User.IsInRole("Admin"))
                         {
+
                             <div class="driver-steps d-none d-lg-flex">
-                                <span class="step @(ViewBag.Step >= 0 ? "done" : "")" data-title="Register Car">0</span>
-                                <span class="step @(ViewBag.Step >= 1 ? "done" : "")" data-title="Location">1</span>
-                                <span class="step @(ViewBag.Step >= 2 ? "done" : "")" data-title="Select Garage">2</span>
-                                <span class="step @(ViewBag.Step >= 3 ? "done" : "")" data-title="Park">3</span>
-                                <span class="step @(ViewBag.Step >= 4 ? "done" : "")" data-title="Pay & Exit">4</span>
+                                @{
+                                    var step = TempData["Step"] != null ? (int)TempData["Step"] : -1;
+                                    TempData.Keep("Step"); 
+                                }
+
+                                <span class="step @(step >= 0 ? "done" : "")" data-title="Register Car">0</span>
+                                <span class="step @(step >= 1 ? "done" : "")" data-title="Location">1</span>
+                                <span class="step @(step >= 2 ? "done" : "")" data-title="Select Garage">2</span>
+                                <span class="step @(step >= 3 ? "done" : "")" data-title="Park">3</span>
+                                <span class="step @(step >= 4 ? "done" : "")" data-title="Pay & Exit">4</span>
                             </div>
                         }
 
@@ -91,7 +97,7 @@
                                     <i class="bi bi-person-circle"></i> @User.Identity.Name
                                 </span>
                                 <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="m-0">
-                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    <button type="submit" class="btn btn-info px-4 py-2" style="color: var(--text-muted) !important; border-color: var(--border) !important;">
                                         Logout
                                     </button>
                                 </form>

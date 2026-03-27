@@ -18,12 +18,16 @@ namespace CarsInsideGarage.Models.ViewModels
         [Required(ErrorMessage = "Please select an area")]
         public Area SelectedArea { get; set; }
 
-
-        [Required(ErrorMessage = "Coordinates are required")]
-        [Display(Name = "e.g 42.659892717892355, 23.315800826629413")]
-        [RegularExpression(@"^-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$", ErrorMessage = "Coordinates must be in 'lat,lng' format.")]
+        [Required(ErrorMessage = "Latitude is required")]
+        [Display(Name = "Latitude (e.g. 42.6977)")]
+        [Range(-90, 90, ErrorMessage = "Latitude must be between -90 and 90")]
         public double Lat { get; set; }
+
+        [Required(ErrorMessage = "Longitude is required")]
+        [Display(Name = "Longitude (e.g. 23.3219)")]
+        [Range(-180, 180, ErrorMessage = "Longitude must be between -180 and 180")]
         public double Lng { get; set; }
+
 
 
         [Required]

@@ -262,7 +262,7 @@ body {
 
 /* Darken the map tiles using CSS filters */
 .leaflet-tile-pane {
-    filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+    filter: brightness(0.6) invert(1) contrast(1.2) hue-rotate(245deg) saturate(1.5) brightness(0.8);
 }
 
 /* Style the Leaflet Popups to match cards */
@@ -270,6 +270,7 @@ body {
     background-color: var(--bg-surface) !important;
     color: var(--text-main) !important;
     border: 1px solid var(--border);
+    border-radius: 8px;
 }
 
 /* Custom Scrollbar for the garage list */
