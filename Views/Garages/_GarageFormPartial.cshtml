@@ -38,22 +38,30 @@
             <span asp-validation-for="SelectedArea" class="text-danger"></span>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="Lat" class="form-label">Latitude</label>
-            <input asp-for="Lat" class="form-control" placeholder="e.g. 42.6977" />
+            <div class="col-md-4 mb-3">
+            <label asp-for="Lat" class="form-label text-muted small fw-bold text-uppercase">Latitude</label>
+                <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary text-accent">#</span>
+               
+                <input asp-for="Lat" step="any" class="form-control" type="number" placeholder="e.g. 42.6977" onfocus="this.select();" />
+                </div>
             <span asp-validation-for="Lat" class="text-danger"></span>
-        </div>
+            </div>
 
-        <div class="mb-3">
-            <label asp-for="Lng" class="form-label">Longitude</label>
-            <input asp-for="Lng" class="form-control" placeholder="e.g. 23.3219" />
+            <div class="col-md-4 mb-3">
+            <label asp-for="Lng" class="form-label text-muted small fw-bold text-uppercase">Longitude</label>
+                <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary text-accent">#</span>
+               
+                <input asp-for="Lng" step="any" class="form-control" type="number" placeholder="e.g. 23.3219" onfocus="this.select();" />
+                </div>
             <span asp-validation-for="Lng" class="text-danger"></span>
-        </div>
+            </div>
 
         <div class="mb-3 text-start">
             <label asp-for="HourlyRate" class="form-label text-muted small fw-bold">HourlyRate</label>
             <div class="input-group">
-                <span class="input-group-text bg-dark border-secondary text-accent">#</span>
+                <span class="input-group-text bg-dark border-secondary text-accent">€</span>
                 <input asp-for="HourlyRate"
                        type="number"
                        step="1"
@@ -67,7 +75,7 @@
         <div class="mb-3 text-start">
             <label asp-for="DailyRate" class="form-label text-muted small fw-bold">DailyRate</label>
             <div class="input-group">
-                <span class="input-group-text bg-dark border-secondary text-accent">#</span>
+                <span class="input-group-text bg-dark border-secondary text-accent">€</span>
                 <input asp-for="DailyRate"
                        type="number"
                        step="1"
@@ -81,7 +89,7 @@
         <div class="mb-3 text-start">
             <label asp-for="MonthlyRate" class="form-label text-muted small fw-bold">MonthlyRate</label>
             <div class="input-group">
-                <span class="input-group-text bg-dark border-secondary text-accent">#</span>
+                <span class="input-group-text bg-dark border-secondary text-accent">€</span>
                 <input asp-for="MonthlyRate"
                        type="number"
                        step="1"

@@ -73,7 +73,14 @@ namespace CarsInsideGarage.Controllers
         // ================================
         // CREATE - ALL ROLES
         // ================================
-     
+
+        [HttpGet]
+        public IActionResult Create()
+            {
+            // We send an empty ViewModel to the view so the form knows what fields to show
+            return View(new CarViewModel());
+            }
+
         [HttpPost]
         public async Task<IActionResult> Create(CarViewModel carViewModel)
         {
@@ -101,12 +108,7 @@ namespace CarsInsideGarage.Controllers
             }
         }
 
-        [HttpGet]
-        public IActionResult Create()
-        {
-            // We send an empty ViewModel to the view so the form knows what fields to show
-            return View(new CarViewModel());
-        }
+       
 
         [HttpGet]
         public async Task<IActionResult> AddSuccess(int carId)

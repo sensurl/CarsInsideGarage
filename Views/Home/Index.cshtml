@@ -13,9 +13,9 @@
 
         <!-- Option 1: Use current location -->
         <div class="col-md-5 mb-4">
-            <div class="card shadow-sm p-3">
-                <h4>Use My Location</h4>
-                <p>See available parking spots around where you are right now.</p>
+                <div class="card shadow-sm p-3 bg-surface border-0">
+                <h4 class="text-accent">Use My Location</h4>
+                <p class="text-muted small">See available parking spots around where you are right now.</p>
                 <button id="btnUseLocation" class="btn btn-primary btn-lg w-100" onclick="findNearest()">
                     Share My Location
                 </button>
@@ -46,10 +46,18 @@
     </div>
 
 
-    <div class="mt-5">
-        <!-- Interactive Google Map here -->
-        <div id="map" style="height: 300px; width: 90%;"></div>
-    </div>
+    <!-- Inside the mt-5 div in Index.cshtml -->
+        <div class="mt-5">
+            <div class="d-flex justify-content-between align-items-end mb-2">
+            <h4 class="text-white">Or select a spot on the map:</h4>
+                <button id="btnUseSelected" class="btn btn-outline-info btn-sm">
+                <i class="bi bi-geo-fill me-1"></i> Use Selected Location
+                </button>
+            </div>
+    
+        <!-- Added 'position-relative' and checked styles -->
+        <div id="map" class="shadow rounded" style="height: 450px; width: 90%; border: 2px solid #333;"></div>
+        </div>
 
 </div>
 

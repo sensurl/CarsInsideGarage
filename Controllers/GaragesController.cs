@@ -72,7 +72,7 @@ namespace CarsInsideGarage.Controllers
         }
 
         // =============================
-        // CREATE - GET
+        // CREATE
         // =============================
 
         [HttpGet]
@@ -81,10 +81,6 @@ namespace CarsInsideGarage.Controllers
         {
             return View(new GarageCreateViewModel());
         }
-
-        // =============================
-        // CREATE - POST
-        // =============================
 
         [HttpPost]
         [ValidateAntiForgeryToken]

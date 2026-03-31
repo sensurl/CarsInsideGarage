@@ -168,6 +168,8 @@ namespace CarsInsideGarage.Mappings
 
 
             CreateMap<SessionDto, SessionActiveViewModel>()
+                .ForMember(dest => dest.GarageName, opt =>
+        opt.MapFrom(src => src.GarageName != null ? src.GarageName : "Unknown Garage"))
                 .ForMember(dest => dest.AccruedAmount, opt =>
                     opt.Ignore());
 

@@ -254,17 +254,6 @@ body {
     color: var(--accent) !important;
 }
 
-/* Make Leaflet blend with the dark theme */
-.leaflet-container {
-    background: var(--bg-main) !important;
-    outline: none;
-}
-
-/* Darken the map tiles using CSS filters */
-.leaflet-tile-pane {
-    filter: brightness(0.6) invert(1) contrast(1.2) hue-rotate(245deg) saturate(1.5) brightness(0.8);
-}
-
 /* Style the Leaflet Popups to match cards */
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
     background-color: var(--bg-surface) !important;
@@ -404,4 +393,29 @@ body {
 .form-check-input:checked {
     background-color: var(--accent) !important;
     border-color: var(--accent) !important;
+}
+
+/* --- Missing Accent Outline Button --- */
+.btn-outline-accent {
+    color: var(--accent) !important;
+    background-color: transparent !important;
+    border: 1px solid var(--accent) !important;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+}
+
+    .btn-outline-accent:hover {
+        background-color: var(--accent) !important;
+        color: var(--bg-main) !important; /* Mint background, dark text on hover */
+        box-shadow: 0 0 12px rgba(34, 231, 161, 0.3);
+    }
+
+/* --- Custom Status Badge (Yellow/Lime) --- */
+.badge-ready {
+    background-color: rgba(201, 231, 35, 0.15) !important; /* 15% opacity of your yellow */
+    color: var(--accent-error) !important; /* The solid yellow #c9e723 */
+    border: 1px solid rgba(201, 231, 35, 0.3) !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }

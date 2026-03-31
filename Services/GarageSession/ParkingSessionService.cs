@@ -84,6 +84,8 @@ namespace CarsInsideGarage.Services.GarageSession
 
             if (session == null || session.ExitTime != null) return null;
 
+            
+
             var car = await _unitOfWork.Cars.GetByIdAsync(session.CarId);
 
             if (car == null || car.UserId != userId)
