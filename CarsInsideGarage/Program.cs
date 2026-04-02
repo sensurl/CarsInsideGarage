@@ -77,8 +77,13 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    
+
     var services = scope.ServiceProvider;
+
+    var db = services.GetRequiredService<GarageDbContext>();
+
+    await db.Database.MigrateAsync();
+
     await DbSeeder.SeedAsync(services);
 
 

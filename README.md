@@ -61,66 +61,86 @@ Make sure you have the following installed before running the project:
 
 ---
 
-🚀 Getting Started
-Follow these steps to get the project running locally.
+## 🚀 Getting Started
 
-1. Clone the repository
+### 1. Clone the repository
 
-Bash
+```bash
 git clone https://github.com/sensurl/CarsInsideGarage.git
 cd CarsInsideGarage
+```
 
-3. Restore dependencies
+### 2. Restore dependencies
 
-Bash
+```bash
 dotnet restore
+```
 
-4. Set Environment and Update Database
+### 3. Apply database migrations
+The application will automatically apply migrations on startup.
 
-The project logic relies on the Staging environment. 
-Run the command that matches your terminal:
-
-For Windows (Command Prompt - CMD):
-
-DOS
-set ASPNETCORE_ENVIRONMENT=Staging
+Alternatively:
+```bash
 dotnet ef database update
+```
 
-For Windows (PowerShell):
+### 4. Run the application
+```bash
+dotnet running
+```
 
-PowerShell
-$env:ASPNETCORE_ENVIRONMENT='Staging'
-dotnet ef database update
+The app will be available at:
 
-For macOS / Linux / Git Bash:
+https://localhost:7212
+http://localhost:5190
 
-Bash
-export ASPNETCORE_ENVIRONMENT=Staging
-dotnet ef database update
+## 🔄 CI/CD
+This project uses **GitHub Actions** for continuous integration.
 
-4. Run the application
+On every push or pull request:
+- The project is restored
+- Built in Release mode
+- All tests are executed
 
-When running the app, ensure the environment flag is passed to maintain the "Staging" logic:
-Bash
-dotnet run --environment Staging
+Workflow file:
+.github/workflows/dotnet.yml
 
-The app is available at https://localhost:7212 or http://localhost:5190.
+## ☁️ Deployment
+The application is designed for deployment on **Azure App Service**.
+
+Key features:
+- Environment-based configuration
+- SQL Server support with NetTopologySuite
+- Automatic migrations on startup
+
+For production:
+- Set `ASPNETCORE_ENVIRONMENT=Production`
+- Configure connection string via Azure Configuration
 
 ## 📁 Project Structure
 
 ```
 CarsInsideGarage/
-│
-├── Controllers/             # MVC Controllers
-├── Data/                    # DbContext and Entities
-├── Mappings/                # AutoMapper MappingProfile
-├── Migrations/              # Database migrations
-├── Models/                  # Domain models and ViewModels
-├── Services/                # Business logic / service layer
-├── Views/                   # Razor Views (.cshtml)
-├── wwwroot/                 # Static files (CSS, JS, images)
-├── appsettings.Staging.json # App configuration
-└── Program.cs               # App entry point and middleware setup
+├──CarsInsideGarage/
+    │
+	├── Areas/					 # Admin Area
+		│
+		├── Controllers/
+		├── Models/
+		├── Services/
+		├── Views/
+    ├── Controllers/             # MVC Controllers
+    ├── Data/                    # DbContext and Entities
+	├── docs/ 					 # Video walk through the project
+	├── Interfaces/				 # IRepository & IUnitOfWork
+    ├── Mappings/                # AutoMapper MappingProfile
+    ├── Migrations/              # Database migrations
+    ├── Models/                  # Domain models and ViewModels
+	├── Repositories/ 			 # Contracts repositories
+    ├── Services/                # Business logic / service layer
+    ├── Views/                   # Razor Views (.cshtml)
+    ├── wwwroot/                 # Static files (CSS, JS, images)
+    └── Program.cs               # App entry point and middleware setup
 ```
 
 ---
@@ -157,48 +177,20 @@ To access the features of the app after launching:
 3. Your Parking Revenue shows the income accumulated in real time.
 ```
 
-> 💡 Take a look at the screenshots: (docs/screenshots.png)
+> 💡 Steps shown in the video: (docs/)
 
 ---
 
 ## 🗄️ Database Setup
 
-The project uses **Entity Framework Core** with a Code-First approach.
+The project uses **Entity Framework Core** with a Code-First approach. Initial data is automatically seeded on startup.
 
-Connection string is configured in `appsettings.Staging.json`:
-
-```json
-"ConnectionStrings": {
-    "DefaultConnection": "Server=localhost,1433;Database=ParkingLots;User Id=sa;Password=MYPASSWORD;TrustServerCertificate=True"
-}
-```
-
-To create the database:
-
-```bash
-export ASPNETCORE_ENVIRONMENT=Staging
-dotnet ef database update
-```
-
-**Database is empty and has no seeded data. 
-Registering an Owner and a Driver and their corresponding entity [Car, Garage] is a prerequisite.**
 ---
 
 ## ⚙️ Configuration
 
-Key settings in `appsettings.Staging.json`:
 
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost,1433;Database=ParkingLots;User Id=sa;Password=MYPASSWORD;TrustServerCertificate=True"
-  },
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information"
-    }
-  }
-}
+
 ```
 ## 🤝 Contributing
 
