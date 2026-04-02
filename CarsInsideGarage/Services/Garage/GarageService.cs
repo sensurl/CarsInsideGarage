@@ -6,6 +6,7 @@ using CarsInsideGarage.Interfaces;
 using CarsInsideGarage.Models.Auth;
 using CarsInsideGarage.Models.DTOs;
 using CarsInsideGarage.Models.ViewModels;
+using CarsInsideGarage.Services.Time;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
@@ -18,11 +19,13 @@ namespace CarsInsideGarage.Services.Garage
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public GarageService(IUnitOfWork unitOfWork, IMapper mapper)
+        public GarageService(IUnitOfWork unitOfWork, IMapper mapper, IDateTimeProvider dateTimeProvider)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         // ================================
@@ -243,7 +246,6 @@ namespace CarsInsideGarage.Services.Garage
 
             foreach (var garage in garages)
             {
-                // IMPORTANT: we need sessions here
                 var detailedGarage = await _unitOfWork.Garages
                     .GetGarageWithDetailsAsync(garage.Id);
 
@@ -272,7 +274,7 @@ namespace CarsInsideGarage.Services.Garage
 
         private decimal CalculateTotalRevenue(IEnumerable<ParkingSession> sessions)
         {
-            var now = DateTime.UtcNow;
+            var now = _dateTimeProvider.UtcNow;
             decimal total = 0;
 
             foreach (var session in sessions)
@@ -319,7 +321,5 @@ namespace CarsInsideGarage.Services.Garage
             await _unitOfWork.CompleteAsync();
             return true;
         }
-
-        
     }
 }

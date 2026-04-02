@@ -6,6 +6,7 @@ using CarsInsideGarage.Models.Auth;
 using CarsInsideGarage.Models.DTOs;
 using CarsInsideGarage.Models.ViewModels;
 using CarsInsideGarage.Services.PricingCalculator;
+using CarsInsideGarage.Services.Time;
 using Microsoft.EntityFrameworkCore;
 using System.Net.NetworkInformation;
 
@@ -16,12 +17,14 @@ namespace CarsInsideGarage.Services.GarageSession
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IPricingCalculator _pricingCalculator;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public ParkingSessionService(IUnitOfWork unitOfWork, IMapper mapper, IPricingCalculator pricingCalculator)
+        public ParkingSessionService(IUnitOfWork unitOfWork, IMapper mapper, IPricingCalculator pricingCalculator, IDateTimeProvider dateTimeProvider)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _pricingCalculator = pricingCalculator;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         // ==========================================
@@ -59,7 +62,7 @@ namespace CarsInsideGarage.Services.GarageSession
 
             // SNAPSHOT RATE CALCULATED ONCE
             var effectiveHourlyRate =
-                policy.GetEffectiveHourlyRate(DateTime.UtcNow);
+                policy.GetEffectiveHourlyRate(_dateTimeProvider.UtcNow);
 
             var session = new ParkingSession(
                 garage.Id,
@@ -83,8 +86,6 @@ namespace CarsInsideGarage.Services.GarageSession
             var session = await _unitOfWork.Sessions.GetByIdAsync(sessionId);
 
             if (session == null || session.ExitTime != null) return null;
-
-            
 
             var car = await _unitOfWork.Cars.GetByIdAsync(session.CarId);
 

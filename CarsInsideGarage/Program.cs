@@ -11,6 +11,7 @@ using CarsInsideGarage.Services.CarService;
 using CarsInsideGarage.Services.Garage;
 using CarsInsideGarage.Services.GarageSession;
 using CarsInsideGarage.Services.PricingCalculator;
+using CarsInsideGarage.Services.Time;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -61,6 +62,7 @@ builder.Services.AddScoped<ICarService, CarService>();
 builder.Services.AddScoped<IGarageService, GarageService>();
 builder.Services.AddScoped<IParkingSessionService, ParkingSessionService>();
 builder.Services.AddScoped<IPricingCalculator, PricingCalculator>();
+builder.Services.AddScoped<IDateTimeProvider, DateTimeProviderService>();
 
 
 builder.Services.AddHttpContextAccessor();
