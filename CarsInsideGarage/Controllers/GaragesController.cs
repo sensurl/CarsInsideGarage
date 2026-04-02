@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CarsInsideGarage.Data;
 using CarsInsideGarage.Data.Entities;
+using CarsInsideGarage.Models;
 using CarsInsideGarage.Models.Auth;
 using CarsInsideGarage.Models.DTOs;
 using CarsInsideGarage.Models.ViewModels;
@@ -161,32 +162,41 @@ namespace CarsInsideGarage.Controllers
         }
 
         // =============================
-        // NEARBY GARAGE SEARCH
+        // NEARBY GARAGE PAGED SEARCH
         // =============================
-
         [HttpGet]
-        public async Task<IActionResult> GetNearbyGarages(double lat, double lng, int count = 5)
+        public async Task<IActionResult> GetNearbyGarages(
+            double lat,
+            double lng,
+            int pageNumber = 1,
+            int pageSize = 5)
         {
-            var garages = await _garageService.GetNearestManyAsync(lat, lng, count);
+            var pagedResult = await _garageService
+                .GetNearestPagedAsync(lat, lng, pageNumber, pageSize);
 
-            var dtos = garages.Select(g => new GarageNearbyDto
-                {
+            var dtos = pagedResult.Items.Select(g => new GarageNearbyDto
+            {
                 Id = g.Id,
                 Name = g.Name,
                 Latitude = g.Location.Latitude,
                 Longitude = g.Location.Longitude,
                 FreeSpots = g.Capacity - (g.Sessions?.Count(s => s.ExitTime == null) ?? 0),
                 Distance = 0
-                }).ToList();
+            }).ToList();
 
             var viewModels = _mapper.Map<IEnumerable<GarageNearbyViewModel>>(dtos);
 
+            // Wrap into a paged VM
+            var vm = new PagedResult<GarageNearbyViewModel>
+            {
+                Items = viewModels.ToList(),
+                PageNumber = pagedResult.PageNumber,
+                PageSize = pagedResult.PageSize,
+                TotalCount = pagedResult.TotalCount
+            };
 
-            // NOTE: This returns a View intentionally.
-            // JSON responses will be handled by the API layer in the next phase.
-
-            return View(viewModels);
-            }
+            return View(vm);
+        }
 
         // =============================
         // PRICING POLICY MANAGEMENT

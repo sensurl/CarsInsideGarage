@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CarsInsideGarage.Models.ViewModels.GarageNearbyViewModel>
+﻿@model PagedResult<CarsInsideGarage.Models.ViewModels.GarageNearbyViewModel>
 
 @{
     ViewData["Title"] = "Nearby Garages";
@@ -9,7 +9,7 @@
 
     <div class="row g-4">
         <div class="col-lg-5">
-            @if (!Model.Any())
+            @if (!Model.Items.Any())
             {
                 <div class="alert alert-warning shadow-sm">
                     <i class="bi bi-exclamation-triangle me-2"></i> No garages found nearby. Try searching another area.
@@ -18,7 +18,7 @@
             else
             {
                 <div class="garage-list-container" style="max-height: 600px; overflow-y: auto; padding-right: 10px;">
-                    @foreach (var g in Model)
+                    @foreach (var g in Model.Items)
                     {
                         <div class="card mb-3 shadow-sm border-0" style="background-color: var(--bg-surface); border: 1px solid var(--border) !important;">
                             <div class="card-body">
@@ -55,7 +55,7 @@
                      style="height: 600px; width: 100%;"
                      class="rounded shadow-lg"
                      data-mode="nearby"
-                     data-garages='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model))'>
+                     data-garages='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Items))'>
                 </div>
             </div>
         </div>

@@ -3,6 +3,7 @@ using CarsInsideGarage.Data;
 using CarsInsideGarage.Data.Entities;
 using CarsInsideGarage.Data.Enums;
 using CarsInsideGarage.Interfaces;
+using CarsInsideGarage.Models;
 using CarsInsideGarage.Models.Auth;
 using CarsInsideGarage.Models.DTOs;
 using CarsInsideGarage.Models.ViewModels;
@@ -297,6 +298,30 @@ namespace CarsInsideGarage.Services.Garage
         public async Task<IEnumerable<CarsInsideGarage.Data.Entities.Garage>> GetNearestManyAsync(double lat, double lng, int count)
         {
             return await _unitOfWork.Garages.GetNearestManyAsync(lat, lng, count);
+        }
+
+        public async Task<PagedResult<CarsInsideGarage.Data.Entities.Garage>> GetNearestPagedAsync(
+    double lat,
+    double lng,
+    int pageNumber,
+    int pageSize)
+        {
+            var all = await _unitOfWork.Garages.GetNearestManyAsync(lat, lng, 1000); 
+
+            var totalCount = all.Count();
+
+            var items = all
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return new PagedResult<CarsInsideGarage.Data.Entities.Garage>
+            {
+                Items = items,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount
+            };
         }
 
         // ================================

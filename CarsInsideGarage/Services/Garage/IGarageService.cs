@@ -1,4 +1,5 @@
-﻿using CarsInsideGarage.Models.Auth;
+﻿using CarsInsideGarage.Models;
+using CarsInsideGarage.Models.Auth;
 using CarsInsideGarage.Models.DTOs;
 using CarsInsideGarage.Models.ViewModels;
 
@@ -14,6 +15,8 @@ namespace CarsInsideGarage.Services.Garage
         Task<CarsInsideGarage.Data.Entities.Garage?> GetNearestAsync(double lat, double lng);
 
         Task<IEnumerable<CarsInsideGarage.Data.Entities.Garage>> GetNearestManyAsync(double lat, double lng, int count);
+
+        Task<PagedResult<CarsInsideGarage.Data.Entities.Garage>> GetNearestPagedAsync(double lat, double lng, int pageNumber,int pageSize);
 
         Task<IEnumerable<RevenueReportDto>> GetRevenueReportAsync(CurrentUser user);
 
