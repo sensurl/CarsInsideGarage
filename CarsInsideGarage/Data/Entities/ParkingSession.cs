@@ -76,6 +76,25 @@ namespace CarsInsideGarage.Data.Entities
 
             return hours * HourlyRate;
         }
+
+        internal ParkingSession(
+    int garageId,
+    int carId,
+    DateTime entryTime,
+    decimal hourlyRate,
+    decimal dailyRate,
+    decimal monthlyRate)
+        {
+            GarageId = garageId;
+            CarId = carId;
+            EntryTime = entryTime;
+
+            HourlyRate = hourlyRate;
+            DailyRate = dailyRate;
+            MonthlyRate = monthlyRate;
+
+            Status = ParkingSessionStatus.Active;
+        }
     }
 
 }

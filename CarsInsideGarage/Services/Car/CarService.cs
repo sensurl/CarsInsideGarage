@@ -7,6 +7,7 @@ using CarsInsideGarage.Models.Auth;
 using CarsInsideGarage.Models.DTOs;
 using CarsInsideGarage.Models.ViewModels;
 using CarsInsideGarage.Services.CarService;
+using CarsInsideGarage.Services.Time;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
@@ -19,14 +20,13 @@ namespace CarsInsideGarage.Services.Car
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        
-       // private readonly GeometryFactory _geometryFactory = 
-        //    NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public CarService(IUnitOfWork unitOfWork, IMapper mapper)
+        public CarService(IUnitOfWork unitOfWork, IMapper mapper, IDateTimeProvider dateTimeProvider)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _dateTimeProvider = dateTimeProvider;
          }
 
         // ================================
@@ -127,7 +127,7 @@ namespace CarsInsideGarage.Services.Car
             var vm = new CarDeleteConfirmationViewModel
             {
                 CarPlateNumber = car.CarPlateNumber,
-                ExitTime = DateTime.UtcNow
+                ExitTime = _dateTimeProvider.UtcNow
             };
 
             if (user.IsAdmin)
@@ -139,7 +139,7 @@ namespace CarsInsideGarage.Services.Car
             {
                 // SOFT DELETE
                 car.IsDeleted = true;
-                car.DeletedAt = DateTime.UtcNow;
+                car.DeletedAt = _dateTimeProvider.UtcNow;
             }
 
             await _unitOfWork.CompleteAsync();
@@ -157,7 +157,7 @@ namespace CarsInsideGarage.Services.Car
 
             var car = await _unitOfWork.Cars
                 .GetByIdIncludingDeletedAsync(id);
-
+   
             if (car == null || !car.IsDeleted)
                 return false;
 
