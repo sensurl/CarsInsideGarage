@@ -146,4 +146,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// EXAM
+app.Urls.Add("http://0.0.0.0:10000");
+
 app.Run();
