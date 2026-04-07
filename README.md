@@ -1,6 +1,6 @@
-# 🚀 Project Name
+# 🚀 Getting to know the Project
 
-Your Ultimate Parking Assistant helps drivers find available parking spots in Sofia, Bulgaria.
+"Your Ultimate Parking Assistant" helps drivers find available parking spots in Sofia, Bulgaria.
 
 GitHub version:
 ![.NET Version](https://img.shields.io/badge/.NET-10.0-purple)
@@ -11,6 +11,12 @@ Azure version:
 ![.NET Version](https://img.shields.io/badge/.NET-8.0-purple)
 ![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-8.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
+
+May you take a look at my first ever AI generated video teaser? It was meant to be just for fun, to check the capabilities of my currently most favorite Chat model (Thank you, Gemini!), but I so much enjoyed it, that I decided to keep it:
+![Teaser](https://www.youtube.com/watch?v=N6zwRI9T-NU)
+
+For a deeper dive into the features and actual functionalities of the app, please spare some 15 minutes to check out the presentation video on my channel on YouTube: 
+![Video presentation](https://www.youtube.com/watch?v=TTxnfWC229g)
 
 ---
 
@@ -26,7 +32,7 @@ Azure version:
 
 ## 📖 About the Project
 
-**YOUR ULTIMATE PARKING ASSISTANT** is a full-stack ASP.NET Core MVC application designed to help drivers find available parking spots in Sofia, Bulgaria, while enabling garage owners to manage their parking spaces and generate revenue. The application leverages spatial queries via NetTopologySuite to calculate distances and find nearby garages efficiently.
+**YOUR ULTIMATE PARKING ASSISTANT** is a full-stack ASP.NET Core MVC application designed to help drivers find available parking spots in Sofia, Bulgaria, while enabling garage owners to generate some revenue. The application leverages spatial queries via NetTopologySuite to calculate distances and find nearby garages efficiently.
 
 The system provides:
 - Real-time search for nearby garages using geolocation
@@ -41,7 +47,7 @@ The project follows a clean architecture approach with:
 - DTO/ViewModel mapping via AutoMapper
 - Entity Framework Core with Code-First approach
 
-It is built as part of the **ASP.NET Advanced** course at SoftUni and demonstrates production-ready practices including CI/CD and cloud deployment.
+It is my graduation thesis built according to the requirements of the **ASP.NET Core Advanced 2026** course at **SoftUni** and demonstrates production-ready practices including CI/CD and cloud deployment.
 
 
 ## ⚙️ What tasks we manage?
