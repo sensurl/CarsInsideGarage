@@ -13,10 +13,10 @@ Azure version:
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 May you take a look at my first ever AI generated video teaser? It was meant to be just for fun, to check the capabilities of my currently most favorite Chat model (Thank you, Gemini!), but I so much enjoyed it, that I decided to keep it:
-![Teaser](https://www.youtube.com/watch?v=N6zwRI9T-NU)
+https://www.youtube.com/watch?v=N6zwRI9T-NU
 
 For a deeper dive into the features and actual functionalities of the app, please spare some 15 minutes to check out the presentation video on my channel on YouTube: 
-![Video presentation](https://www.youtube.com/watch?v=TTxnfWC229g)
+https://www.youtube.com/watch?v=TTxnfWC229g
 
 ---
 
